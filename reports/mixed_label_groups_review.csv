@@ -1,0 +1,627 @@
+group,text,category,intent
+36,i do not have a profile and i want to create one,ACCOUNT,create_account
+36,i have not got a profile and i want to create one,ACCOUNT,create_account
+36,i want a profile and i want to create one,ACCOUNT,create_account
+36,i want to create a profile,ACCOUNT,create_account
+36,i have no profile and i want to create one,ACCOUNT,create_account
+36,help me create an profile,ACCOUNT,create_account
+36,i can not create a profile,ACCOUNT,registration_problems
+57,i can not register,ACCOUNT,registration_problems
+57,how to register,ACCOUNT,create_account
+61,i do not want my profile,ACCOUNT,delete_account
+61,i want a profile,ACCOUNT,create_account
+67,i want an online account,ACCOUNT,create_account
+67,i do not have an online account,ACCOUNT,create_account
+67,i have no online account,ACCOUNT,create_account
+67,i do not want my online account,ACCOUNT,delete_account
+67,i have not got an online account,ACCOUNT,create_account
+1617,can you tell me how i can get some invoices?,INVOICES,get_invoice
+1617,"i want to get some invoices, tell me how to do it",INVOICES,get_invoice
+1617,where can i see my invoices?,INVOICES,check_invoices
+1617,where do i see my invoice?,INVOICES,check_invoices
+1617,help me see my invoice,INVOICES,check_invoices
+1617,how can i see my invoices ?,INVOICES,check_invoices
+1617,where to see my invoices,INVOICES,check_invoices
+1617,"i want to get an invoice, tell me how i can do it",INVOICES,get_invoice
+1617,"i want to get an invoice, can you tell me where i can do it?",INVOICES,get_invoice
+1617,can you see an invoice ?,INVOICES,get_invoice
+1617,can u get some fucking invoices?,INVOICES,get_invoice
+1617,how can i see an invoice?,INVOICES,get_invoice
+1617,i want to know how to see some invoices,INVOICES,get_invoice
+1617,"i want to get an invoice, can you tell me how to do it?",INVOICES,get_invoice
+1617,"i want to see an invoice, tell me where to do it",INVOICES,get_invoice
+1617,how can i see my invoices?,INVOICES,check_invoices
+1617,tell me how to get an invoice,INVOICES,get_invoice
+1617,"i want to get some invoices, can you tell me how to do it?",INVOICES,get_invoice
+1617,i want to know how i can see an invoice,INVOICES,get_invoice
+1617,"i wanna get an invoice, tell me where i can do it",INVOICES,get_invoice
+1617,"i want to see some invoices, can you tell me how to do it?",INVOICES,get_invoice
+1617,i want to know how i can get some invoices,INVOICES,get_invoice
+1617,i wanna know how i can see an invoice,INVOICES,get_invoice
+1617,can you tell me how i can see an invoice?,INVOICES,get_invoice
+1617,"i want to get some invoices, can you tell me how i can do it?",INVOICES,get_invoice
+1617,can you tell me how to get an invoice?,INVOICES,get_invoice
+1617,can u get some invoices?,INVOICES,get_invoice
+1617,tell me how to get some invoices,INVOICES,get_invoice
+1617,i want to know how i can see some invoices,INVOICES,get_invoice
+1617,could u ask an agent where to get an invoice?,INVOICES,get_invoice
+1617,"i want to get an invoice, can you tell me how i can do it?",INVOICES,get_invoice
+1617,can you ask an agent if i can see some invoices?,INVOICES,get_invoice
+1617,can you ask an agent how to get an invoice?,INVOICES,get_invoice
+1617,where do i get an invoice?,INVOICES,get_invoice
+1617,tell em how to see an invoice,INVOICES,get_invoice
+1617,i wanna know where i can get an invoice,INVOICES,get_invoice
+1617,tell me if i can get some invoices,INVOICES,get_invoice
+1617,i want to know how to get an invoice,INVOICES,get_invoice
+1617,how can i get some invoices?,INVOICES,get_invoice
+1617,can you tell me if i can get some invoices ?,INVOICES,get_invoice
+1617,can u ask an agent how i can see some invoices?,INVOICES,get_invoice
+1617,where to get an invoice,INVOICES,get_invoice
+1617,can i get an invoice?,INVOICES,get_invoice
+1617,can you ask an agent if i could get some invoices?,INVOICES,get_invoice
+1617,i wanna know where to see an invoice,INVOICES,get_invoice
+1617,i wanna know how i can get an invoice,INVOICES,get_invoice
+1617,i wanna know where to get an invoice,INVOICES,get_invoice
+1617,tell me how i can get some invoices,INVOICES,get_invoice
+1617,can you tell me if i can see some invoices?,INVOICES,get_invoice
+1617,how do i get some invoices ?,INVOICES,get_invoice
+1617,i want to know where i can see an invoice,INVOICES,get_invoice
+1617,"i'd like to see an invoice, can you tell me where i can do it, please?",INVOICES,get_invoice
+1617,can you ask an agent how i could get some invoices?,INVOICES,get_invoice
+1617,"i wanna get an invoice, tell me where to do it",INVOICES,get_invoice
+1617,how can i get an invoice?,INVOICES,get_invoice
+1617,"i wanna see an invoice, tell me where i can do it",INVOICES,get_invoice
+1617,can you ask an agent how to get some invoices?,INVOICES,get_invoice
+1617,see an invoice,INVOICES,get_invoice
+1617,can you tell me if i can see an invoice?,INVOICES,get_invoice
+1617,"i wanna get some invoices, tell me how to do it",INVOICES,get_invoice
+1617,can u ask an agent where to get an invoice?,INVOICES,get_invoice
+1617,tell me how i can see some invoices,INVOICES,get_invoice
+1617,"i want to see an invoice, can you tell me how to do it?",INVOICES,get_invoice
+1617,can i see an invoice?,INVOICES,get_invoice
+1617,"i want to see an invoice, can you tell me where to do it?",INVOICES,get_invoice
+1617,"i wanna get a invoice, tell me how i can do it",INVOICES,get_invoice
+1617,where can i see an invoice?,INVOICES,get_invoice
+1617,"i want to see an invoice, can you tell me where i can do it, please?",INVOICES,get_invoice
+1617,get an invoice,INVOICES,get_invoice
+1617,can u ask an agent where i can get an invoice?,INVOICES,get_invoice
+1617,tell me if i can get an invoice,INVOICES,get_invoice
+1617,i want to know where to see an invoice,INVOICES,get_invoice
+1617,where to see an invoice,INVOICES,get_invoice
+1617,"i want to see some invoices, can you tell me how i can do it?",INVOICES,get_invoice
+1617,can you tell me how to see some invoices?,INVOICES,get_invoice
+1617,tell me where i can see an invoice,INVOICES,get_invoice
+1617,"i wanna see an invoice, tell me how to do it",INVOICES,get_invoice
+1617,how do i get an invoice?,INVOICES,get_invoice
+1617,"i want to see an invoice , can you tell me where i can do it?",INVOICES,get_invoice
+1617,can u ask an agent if i can get some invoices?,INVOICES,get_invoice
+1617,how to get an invoice,INVOICES,get_invoice
+1617,help me see some invoices,INVOICES,get_invoice
+1617,can you tell me how to see an invoice?,INVOICES,get_invoice
+1617,tell me how i can get an invoice,INVOICES,get_invoice
+1617,can you ask an agent if i can get some invoices?,INVOICES,get_invoice
+1617,see some invoices,INVOICES,get_invoice
+1617,"please, could u ask an agent if i could see some invoices?",INVOICES,get_invoice
+1617,"i want to see some invoices , tell me how i can do it",INVOICES,get_invoice
+1617,i want to know if i can see an invoice,INVOICES,get_invoice
+1617,can you tell me how i can get an invoice?,INVOICES,get_invoice
+1617,i want to see an invoice,INVOICES,get_invoice
+1617,can you tell me where to see an invoice?,INVOICES,get_invoice
+1617,i want to know how to see an invoice,INVOICES,get_invoice
+1617,"i want to get an invoice, tell me where to do it",INVOICES,get_invoice
+1617,tell me if i can see some invoices,INVOICES,get_invoice
+1617,"i wanna see an invoice, can you tell me where to do it?",INVOICES,get_invoice
+1617,can you see some invoices?,INVOICES,get_invoice
+1617,how can i see some invoices ?,INVOICES,get_invoice
+1617,"i want to get some invoices, tell me how i can do it",INVOICES,get_invoice
+1617,can you get an invoice?,INVOICES,get_invoice
+1617,could you ask an agent how to get some invoices?,INVOICES,get_invoice
+1617,i wanna know how i can get some invoices,INVOICES,get_invoice
+1617,help me get some invoices,INVOICES,get_invoice
+1617,can u ask an agent if i can see an invoice?,INVOICES,get_invoice
+1617,tell me how i can see an invoice,INVOICES,get_invoice
+1617,can u ask an agent how i can get an invoice?,INVOICES,get_invoice
+1617,can i get some invoices?,INVOICES,get_invoice
+1617,ask an agent how to see some invoices,INVOICES,get_invoice
+1617,i want to know if i can get some invoices,INVOICES,get_invoice
+1617,i want to get some invoices,INVOICES,get_invoice
+1617,can you tell me if i can get an invoice?,INVOICES,get_invoice
+1617,can you tell me how i can see some invoices?,INVOICES,get_invoice
+1617,"please, ask an agent how i can see my invoices",INVOICES,check_invoices
+1617,"i want to see an invoice, tell me how to do it",INVOICES,get_invoice
+1617,i want to know how i can get an invoice,INVOICES,get_invoice
+1617,"i want to see an invoice, can you tell me how i can do it?",INVOICES,get_invoice
+1617,i want to know where to get an invoice,INVOICES,get_invoice
+1617,can u ask an agent where i can see an invoice?,INVOICES,get_invoice
+1617,where do i see an invoice?,INVOICES,get_invoice
+1617,"i want to see some invoices, tell me how to do it",INVOICES,get_invoice
+1617,tell me where to see an invoice,INVOICES,get_invoice
+1617,"i want to get an invoice, can you tell me where to do it?",INVOICES,get_invoice
+1617,could you ask an agent if i could request some fucking invoices?,INVOICES,get_invoice
+1617,ask an agent if i can see some invoices,INVOICES,get_invoice
+1617,"i want to see an invoice, tell me how i can do it",INVOICES,get_invoice
+1617,help me get an invoice,INVOICES,get_invoice
+1617,i wanna know how to see some invoices,INVOICES,get_invoice
+1617,can you tell me where i can get an invoice?,INVOICES,get_invoice
+1617,"i wanna get an invoice, can you tell me how i can do it?",INVOICES,get_invoice
+1617,help me see an invoice,INVOICES,get_invoice
+1617,tell me if i can see an invoice,INVOICES,get_invoice
+1617,tell me where to get an invoice,INVOICES,get_invoice
+1617,i want to see some invoices,INVOICES,get_invoice
+1617,i wanna know how to see an invoice,INVOICES,get_invoice
+1617,"please, can you tell me how to see an invoice?",INVOICES,get_invoice
+1617,can you ask an agent how i can get some invoices?,INVOICES,get_invoice
+1617,can i see some fucking invoices?,INVOICES,get_invoice
+1617,i want to know where i can get an invoice,INVOICES,get_invoice
+1617,could u ask an agent how i can see some invoices?,INVOICES,get_invoice
+1617,"i want to see a invoice, tell me how i can do it",INVOICES,get_invoice
+1617,how do i see some invoices?,INVOICES,get_invoice
+1617,i want to get an invoice,INVOICES,get_invoice
+1617,how to see some invoices,INVOICES,get_invoice
+1617,"i want to get an invoice, tell me how to do it",INVOICES,get_invoice
+1617,can you tell me how to get some invoices?,INVOICES,get_invoice
+1617,can you get some invoices?,INVOICES,get_invoice
+1617,i want to know if i can see some invoices,INVOICES,get_invoice
+1617,tell me how to see some invoices,INVOICES,get_invoice
+1617,i want to know how to get some invoices,INVOICES,get_invoice
+1617,could you ask an agent if i could see some fucking invoices?,INVOICES,get_invoice
+1617,"i want to see an invoice, tell me where i can do it",INVOICES,get_invoice
+1617,get some invoices,INVOICES,get_invoice
+1617,where can i get an invoice?,INVOICES,get_invoice
+1617,can i see some invoices?,INVOICES,get_invoice
+1617,how to get some invoices,INVOICES,get_invoice
+1617,i want to know if i can get an invoice,INVOICES,get_invoice
+1617,i wanna know how i can see some invoices,INVOICES,get_invoice
+1617,"i want to get an invoice, tell me where i can do it",INVOICES,get_invoice
+1617,how do i see my invoices?,INVOICES,check_invoices
+1617,can i see my invoices?,INVOICES,check_invoices
+1617,where can i see my invoice?,INVOICES,check_invoices
+1617,how can i see my invoice?,INVOICES,check_invoices
+1617,could you ask an agent how to see my fucking invoices?,INVOICES,check_invoices
+1617,i want to see my invoices,INVOICES,check_invoices
+1617,could you ask an agent how i could see my invoices?,INVOICES,check_invoices
+1617,how do i see my invoice?,INVOICES,check_invoices
+1617,help me see my invoices,INVOICES,check_invoices
+1617,ask an agent how i could see my invoice,INVOICES,check_invoices
+1617,can i see my invoice?,INVOICES,check_invoices
+1617,could u ask an agent if i can see my invoices?,INVOICES,check_invoices
+1617,where to see my invoice,INVOICES,check_invoices
+1617,where do i see my invoikces?,INVOICES,check_invoices
+1617,how to see my invoices,INVOICES,check_invoices
+1617,"please, could u ask an agent where i can see my invoices?",INVOICES,check_invoices
+1617,ask an agent how i could see my invoices,INVOICES,check_invoices
+1617,"please, can you ask an agent where i can see my invoices?",INVOICES,check_invoices
+1617,ask an agent how i can see my invoices,INVOICES,check_invoices
+1617,could u ask an agent how to see my invoices?,INVOICES,check_invoices
+1617,"please, can you ask an agent where i could check my invoices?",INVOICES,check_invoices
+1625,"please, could u ask an agent how i can see an invoice?",INVOICES,get_invoice
+1625,"please, could u ask an agent how i could view my invoice?",INVOICES,check_invoices
+1625,"please, could u ask an agent if i could see my invoice?",INVOICES,check_invoices
+1648,where do i see my bills?,INVOICES,check_invoices
+1648,how do i see my bill?,INVOICES,check_invoices
+1648,i want to see my bill,INVOICES,check_invoices
+1648,where can i see my bill?,INVOICES,check_invoices
+1648,"please , could u ask an agent how to see my fucking bill?",INVOICES,check_invoices
+1648,how can i see my bill?,INVOICES,check_invoices
+1648,i want to see my bills,INVOICES,check_invoices
+1648,how do i see my bills?,INVOICES,check_invoices
+1648,"please, could you ask an agent how i could view my fucking bill?",INVOICES,check_invoices
+1648,"please, can you ask an agent how to see my bill?",INVOICES,check_invoices
+1648,can i see my bill?,INVOICES,check_invoices
+1648,can u ask an agent where to see my bills?,INVOICES,check_invoices
+1648,can i see my bills?,INVOICES,check_invoices
+1648,help me see my bills,INVOICES,check_invoices
+1648,could u ask an agent where i can see my bill?,INVOICES,check_invoices
+1648,where can i see my bills?,INVOICES,check_invoices
+1648,how can i see y bills?,INVOICES,check_invoices
+1648,how to see my bills,INVOICES,check_invoices
+1648,could u ask an agent if i can see my bills?,INVOICES,check_invoices
+1648,"i want to get a bill, could you tell me how i can do it?",INVOICES,get_invoice
+1648,"please, can you ask an agent if i could see a bill?",INVOICES,get_invoice
+1648,can you tell me how to get some bills?,INVOICES,get_invoice
+1648,i wanna know how i can see some bills,INVOICES,get_invoice
+1648,how can i see a bill?,INVOICES,get_invoice
+1648,"i wanna get a bill, can you tell me how i can do it?",INVOICES,get_invoice
+1648,can you ask an agent how i can get some bills?,INVOICES,get_invoice
+1648,help me see a bill,INVOICES,get_invoice
+1648,where do i see my bill?,INVOICES,check_invoices
+1648,can you tell me how to see a bill?,INVOICES,get_invoice
+1648,how to see my bill,INVOICES,check_invoices
+1648,could u ask an agent how i could see my bill?,INVOICES,check_invoices
+1648,"please, can you ask an agent how i can check my bill?",INVOICES,check_invoices
+1648,how do i get a bill?,INVOICES,get_invoice
+1648,"i want to see a bill, can you tell me where to do it?",INVOICES,get_invoice
+1648,"i want to see a bill, tell me how to do it",INVOICES,get_invoice
+1648,how do i get some bills?,INVOICES,get_invoice
+1648,tell me if i can get a bill,INVOICES,get_invoice
+1648,"i want to get a bill, can you tell me where i can do it?",INVOICES,get_invoice
+1648,"i want to get a bill, can you tell me how i can do it?",INVOICES,get_invoice
+1648,"i want to get some bills , tell me how i can do it",INVOICES,get_invoice
+1648,how to see a bill,INVOICES,get_invoice
+1648,how to get some bills,INVOICES,get_invoice
+1648,help me get some bills,INVOICES,get_invoice
+1648,tell me if i can see a bill,INVOICES,get_invoice
+1648,where can i get a bill?,INVOICES,get_invoice
+1648,can u ask an agent how i can get some bills?,INVOICES,get_invoice
+1648,can you see a bill?,INVOICES,get_invoice
+1648,"i want to see some bills, tell me how i can do it",INVOICES,get_invoice
+1648,"i want to get a bill, tell me where to do it",INVOICES,get_invoice
+1648,can you ask an agent where i can get a bill?,INVOICES,get_invoice
+1648,tell me how i can get some bills,INVOICES,get_invoice
+1648,"i want to get some bills, tell me how i can do it",INVOICES,get_invoice
+1648,"i want to get a bill, tell me how i can do it",INVOICES,get_invoice
+1648,"please, could you ask an agent if i could get a fucking bill?",INVOICES,get_invoice
+1648,i want to know if i can get some bills,INVOICES,get_invoice
+1648,"i want to get a bill, tell me where i can do it",INVOICES,get_invoice
+1648,tell me how i can get a bill,INVOICES,get_invoice
+1648,i want to know if i can see some bills,INVOICES,get_invoice
+1648,"i want to get some bills, tell me how to do it",INVOICES,get_invoice
+1648,how do i see a bill?,INVOICES,get_invoice
+1648,can you tell me how to get a bill?,INVOICES,get_invoice
+1648,can you tell me if i can see some bills?,INVOICES,get_invoice
+1648,"i want to get some bills, can you tell me how to do it?",INVOICES,get_invoice
+1648,"i want to see an bill, can you tell me where i can do it?",INVOICES,get_invoice
+1648,"please, ask an agent if i can see a bill",INVOICES,get_invoice
+1648,"i want to see a bill, can you tell me how i can do it?",INVOICES,get_invoice
+1648,tell me how i can see a bill,INVOICES,get_invoice
+1648,ask an agent how i can get some bills,INVOICES,get_invoice
+1648,"i wanna get a bill, can you tell me how to do it?",INVOICES,get_invoice
+1648,can you tell me if i can get some bills?,INVOICES,get_invoice
+1648,can you tell me where i can get a bill?,INVOICES,get_invoice
+1648,can you get some bills?,INVOICES,get_invoice
+1648,tell me how to get some bills,INVOICES,get_invoice
+1648,tell me where i can get a bill,INVOICES,get_invoice
+1648,can you tell me how i can get some bills?,INVOICES,get_invoice
+1648,how to see some bills,INVOICES,get_invoice
+1648,could u ask an agent how i could see a bill?,INVOICES,get_invoice
+1648,can you see some bills?,INVOICES,get_invoice
+1648,can u ask an agent if i can see some bills?,INVOICES,get_invoice
+1648,can you tell me how i can see some bills?,INVOICES,get_invoice
+1648,can i see a bill?,INVOICES,get_invoice
+1648,ask an agent how i could get some bills,INVOICES,get_invoice
+1648,can you ask an agent where to see a bill?,INVOICES,get_invoice
+1648,can you tell me how to see some bills?,INVOICES,get_invoice
+1648,how can i get an bill?,INVOICES,get_invoice
+1648,could you ask an agent how to get an bill?,INVOICES,get_invoice
+1648,can i get some bills ?,INVOICES,get_invoice
+1648,can you tell me how i can see a bill ?,INVOICES,get_invoice
+1648,"please, i want to know if i can get some bills",INVOICES,get_invoice
+1648,ask an agent if i can see a bill,INVOICES,get_invoice
+1648,"i want to see a bill, tell me where to do it",INVOICES,get_invoice
+1648,tell me how to get a bill,INVOICES,get_invoice
+1648,where do i see a bill?,INVOICES,get_invoice
+1648,can you ask an agent if i could see some bills?,INVOICES,get_invoice
+1648,i want to know how i can get some bills,INVOICES,get_invoice
+1648,"i want to get some bills, can you tell me how i can do it?",INVOICES,get_invoice
+1648,"i wanna see some bills, tell me how i can do it",INVOICES,get_invoice
+1648,get some bills,INVOICES,get_invoice
+1648,"i want to see a bill, can you tell me how to do it?",INVOICES,get_invoice
+1648,"i want to see a bill, tell me where i can do it",INVOICES,get_invoice
+1648,i want to know how to get some bills,INVOICES,get_invoice
+1648,i want to know how to see some bills,INVOICES,get_invoice
+1648,where can i see a bill?,INVOICES,get_invoice
+1648,i want to see some bills,INVOICES,get_invoice
+1648,"i want to see some fucking bills, can you tell me how i can do it?",INVOICES,get_invoice
+1648,tell me how to see some bills,INVOICES,get_invoice
+1648,help me see some bills,INVOICES,get_invoice
+1648,"please, could u ask an agent where i could see an bill?",INVOICES,get_invoice
+1648,"i want to see some bills, can you tell me how to do it?",INVOICES,get_invoice
+1648,tell me if i can see some bills,INVOICES,get_invoice
+1648,"i want to see a bill, can you tell me where i can do it, please?",INVOICES,get_invoice
+1648,"please, could u ask an agent how i can see a bill?",INVOICES,get_invoice
+1648,"i want to see a bill, tell me how i can do it",INVOICES,get_invoice
+1648,ask an agent if i can see some biols,INVOICES,get_invoice
+1648,where to get a bill,INVOICES,get_invoice
+1648,could you ask an agent where i can see a bill?,INVOICES,get_invoice
+1648,can i see some bills?,INVOICES,get_invoice
+1648,can u ask an agent if i can see an bill?,INVOICES,get_invoice
+1648,"i want to see a bill, can you tell me where i can do it?",INVOICES,get_invoice
+1648,can you ask an agent if i can get a bill?,INVOICES,get_invoice
+1648,"i wanna see a bill, can you tell me how i can do it?",INVOICES,get_invoice
+1648,"i want to get a bill , tell me how to do it",INVOICES,get_invoice
+1648,ask an agent how to get some bills,INVOICES,get_invoice
+1648,i want to see a bill,INVOICES,get_invoice
+1648,can i get a bill?,INVOICES,get_invoice
+1648,can you get a bill?,INVOICES,get_invoice
+1648,how do i see some bills?,INVOICES,get_invoice
+1648,see some bills,INVOICES,get_invoice
+1648,"please, could u ask an agent how to check my bill?",INVOICES,check_invoices
+1648,ask an agent how i can see my bill,INVOICES,check_invoices
+1648,can you ask an agent where i could see my bill?,INVOICES,check_invoices
+1648,can u ask an agent how i can see my bill?,INVOICES,check_invoices
+1648,"i want to get a bill, can you tell me how to do it?",INVOICES,get_invoice
+1648,can you ask an agent if i can see a bill?,INVOICES,get_invoice
+1648,"i want to see some bills, tell me how to do it",INVOICES,get_invoice
+1648,i want to get some bills,INVOICES,get_invoice
+1648,help me see my bill,INVOICES,check_invoices
+1648,"please, could you ask an agent how i could see my fucking bill?",INVOICES,check_invoices
+1648,could you ask an agent if i could see my bill?,INVOICES,check_invoices
+1648,"i wanna see a bill, tell me how to do it",INVOICES,get_invoice
+1648,"i wanna get some bills, can you tell me how i can do it?",INVOICES,get_invoice
+1648,how do i see my bill ?,INVOICES,check_invoices
+1648,"please, ask an agent where i can see my bill",INVOICES,check_invoices
+1648,can u ask an agent where i can see my bills?,INVOICES,check_invoices
+1648,"i wanna see some bills, tell me how to do it",INVOICES,get_invoice
+1648,see a bill,INVOICES,get_invoice
+1648,how can i see some bills?,INVOICES,get_invoice
+1648,"i want to get a bill, can you tell me where to do it?",INVOICES,get_invoice
+1648,where do i get a bill?,INVOICES,get_invoice
+1648,i want to know how i can see some bills,INVOICES,get_invoice
+1648,"i want to see some bills, can you tell me how i can do it?",INVOICES,get_invoice
+1648,"i want to get a bill, tell me where i can do it, please",INVOICES,get_invoice
+1648,i wanna get some bills,INVOICES,get_invoice
+1648,i wanna know if i can see some bills,INVOICES,get_invoice
+1648,how to get a bill,INVOICES,get_invoice
+1648,can you tell me where i can see a bill?,INVOICES,get_invoice
+1648,ask an agent if i can see some bills,INVOICES,get_invoice
+1648,tell me where to get a bill,INVOICES,get_invoice
+1648,can you tell me if i can see a bill?,INVOICES,get_invoice
+1648,can you tell me how i can get a bill?,INVOICES,get_invoice
+1648,could u ask an agent if i could get a bill?,INVOICES,get_invoice
+1671,i need help seeing some bills,INVOICES,get_invoice
+1671,i need help seeing my bill,INVOICES,check_invoices
+1671,i need help seeing a bill,INVOICES,get_invoice
+1671,i need help seeing my bills,INVOICES,check_invoices
+1679,i need help seeing an invboice,INVOICES,get_invoice
+1679,i need help seeing my invoice,INVOICES,check_invoices
+1679,i need help seeing my invoices,INVOICES,check_invoices
+1679,i need help seeing some invoices,INVOICES,get_invoice
+1679,i need help seeing an invoice,INVOICES,get_invoice
+1707,could you ask an agent to show me information about my invoices?,INVOICES,check_invoices
+1707,can u ask an agent for information about my invoices?,INVOICES,check_invoices
+1707,"please, ask an agent to show me information about my invoice",INVOICES,check_invoices
+1707,can u ask an agent to give me information about my invoice?,INVOICES,check_invoices
+1707,can you give me information about my invoices?,INVOICES,check_invoices
+1707,can u give me information about my invoices?,INVOICES,check_invoices
+1707,can u ask an agent to show me information about my invoice?,INVOICES,check_invoices
+1707,can you give me information about my fucking invoice?,INVOICES,check_invoices
+1707,can you show me information about my invoice?,INVOICES,check_invoices
+1707,information about seeing an invoice,INVOICES,get_invoice
+1707,can u ask an agent for information about my invoice?,INVOICES,check_invoices
+1707,can u ask an agent to give me information about my invoices?,INVOICES,check_invoices
+1707,what information do you have about seeing an invoice?,INVOICES,get_invoice
+1707,can you give me information about my invoice?,INVOICES,check_invoices
+1707,what information can u tell me about seeing some invoices?,INVOICES,get_invoice
+1707,can u ask an agent for information about seeing some invoices?,INVOICES,get_invoice
+1707,can you ask an agent for information about seeing some bills?,INVOICES,get_invoice
+1707,tell me about seeing some invoices,INVOICES,get_invoice
+1707,what information do you have about seeing some invoices?,INVOICES,get_invoice
+1707,i want to request information about seeing a bill,INVOICES,get_invoice
+1707,i wanna request information about seeing a bill,INVOICES,get_invoice
+1707,i wanna ask for information about seeing some invoices,INVOICES,get_invoice
+1707,tell me about seeing some bills,INVOICES,get_invoice
+1707,i want to request information about seeing some bills,INVOICES,get_invoice
+1707,what information can you tell me about seeing some bills?,INVOICES,get_invoice
+1707,ask an agent for information about seeing some invoices,INVOICES,get_invoice
+1707,i need information about seeing some invoices,INVOICES,get_invoice
+1707,i want to ask for information about seeing a bill,INVOICES,get_invoice
+1707,i want information about seeing an invoice,INVOICES,get_invoice
+1707,i want to request information about seeing some invoices,INVOICES,get_invoice
+1707,what can you tell me about seeing some bills?,INVOICES,get_invoice
+1707,i want to get information about seeing a bill,INVOICES,get_invoice
+1707,what can you tell me about seeing an invoice?,INVOICES,get_invoice
+1707,i want to ask for information about seeing some invoices,INVOICES,get_invoice
+1707,i want information about seeing some invoices,INVOICES,get_invoice
+1707,i want to get information about seeing some invoices,INVOICES,get_invoice
+1707,what information can you tell me about seeing an invoice?,INVOICES,get_invoice
+1707,can you show me information about my invoices?,INVOICES,check_invoices
+1707,i need information about seeing an invoice,INVOICES,get_invoice
+1707,i wanna request information about seeing some bills,INVOICES,get_invoice
+1707,i need information about seeing some bills,INVOICES,get_invoice
+1707,i want to get information about seeing an invoice,INVOICES,get_invoice
+1707,what information can u tell me about seeing some bills?,INVOICES,get_invoice
+1707,information about seeing some bills,INVOICES,get_invoice
+1707,i want to request information about seeing an invoice,INVOICES,get_invoice
+1707,i want to ask for information about seeing an invoice,INVOICES,get_invoice
+1707,i wanna ask for information about seeing a bill,INVOICES,get_invoice
+1707,i want to ask for information about seeing some bills,INVOICES,get_invoice
+1707,can u ask an agent for information about seeing an invoice?,INVOICES,get_invoice
+1707,what can u tell me about seeing some bills?,INVOICES,get_invoice
+1707,information about seeing some invoices,INVOICES,get_invoice
+1707,ask an agent for information about seeing some bills,INVOICES,get_invoice
+1707,what information do you have about seeing some bills?,INVOICES,get_invoice
+1707,i want information about seeing some bills,INVOICES,get_invoice
+1707,what information can you tell me about seeing some invoices?,INVOICES,get_invoice
+1707,i want information about seeing a bill,INVOICES,get_invoice
+1707,what can you tell me about seeing some invoices?,INVOICES,get_invoice
+1707,"please, i want to ask for information about seeing some bills",INVOICES,get_invoice
+1707,"please, i'd like to ask for information about seeing some bills",INVOICES,get_invoice
+1707,i wanna get information about seeing a bill,INVOICES,get_invoice
+1707,can u ask an agent to show me information about my invoices?,INVOICES,check_invoices
+1707,"please, could u ask an agent to give me information about my invoice?",INVOICES,check_invoices
+1707,can u show me information about my invoice?,INVOICES,check_invoices
+1833,"can you ask an agent if i could get an invoice, please?",INVOICES,get_invoice
+1833,"could you ask an agent if i can get a fucking invoice, please?",INVOICES,get_invoice
+1833,"could you tell me how i could get an invoice, please?",INVOICES,get_invoice
+1833,"could u get an invoice, please?",INVOICES,get_invoice
+1833,"could you ask an agent if i could check my invoice, please?",INVOICES,check_invoices
+2612,i need help viewing the status of my refund,REFUNDS,track_refund
+2612,i need help viewing the status of my order,ORDER,track_order
+3375,"i want to track my refund, what should i do?",REFUNDS,track_refund
+3375,"i want a refund, how can i get one?",REFUNDS,get_refund
+3375,"i want a refund, how do i get one?",REFUNDS,get_refund
+3375,"i need a refund, what should i do?",REFUNDS,get_refund
+3375,"i want to track my refund, what can i do?",REFUNDS,track_refund
+3375,"i need a refund, how can i get one?",REFUNDS,get_refund
+3375,"i want a refund, help me get one",REFUNDS,get_refund
+3375,"i need a refund, how do i get one?",REFUNDS,get_refund
+3375,"i want to track my refund, what do i have to do?",REFUNDS,track_refund
+3375,"i need a refund, what should i do to get one?",REFUNDS,get_refund
+3375,"i want a refund, what can i do?",REFUNDS,get_refund
+3375,"i wanna get a refund, what do i have to do?",REFUNDS,get_refund
+3375,"i want a refund, what should i do?",REFUNDS,get_refund
+3375,"i want a refund, get one",REFUNDS,get_refund
+3375,"i want a refund, can i get one, please?",REFUNDS,get_refund
+3375,"i need a refund, can i get one, please?",REFUNDS,get_refund
+3375,"i need a refund, what can i do to get one?",REFUNDS,get_refund
+3375,"i want a refund, what do i have to do?",REFUNDS,get_refund
+3375,"i need a refund, what do i have to do to get one?",REFUNDS,get_refund
+3375,"i need a refund, help me get one",REFUNDS,get_refund
+3375,"i need a refund, what can i do?",REFUNDS,get_refund
+3375,"i want to get a refund, what should i do?",REFUNDS,get_refund
+3375,"i want a refund, can i get one?",REFUNDS,get_refund
+3375,"i want a refund, what do i have to do to get one?",REFUNDS,get_refund
+3375,"i want a refund, what should i do to get one?",REFUNDS,get_refund
+3375,"i want to get a refund, what do i have to do?",REFUNDS,get_refund
+3375,"i need a refund, can i get one?",REFUNDS,get_refund
+3376,"i want a reimbursement, request one",REFUNDS,get_refund
+3376,"i want a reimbursement, what do i have to do?",REFUNDS,get_refund
+3376,"i want to obtain a reimbursement, can u help me?",REFUNDS,get_refund
+3376,"i need a reimbursement, how do i obtain one?",REFUNDS,get_refund
+3376,where to get a reimbursement,REFUNDS,get_refund
+3376,where do i track my reimbursement?,REFUNDS,track_refund
+3376,"could u ask an agent where i could get a reimbursement, please?",REFUNDS,get_refund
+3376,"please, ask an agent where i can track my reimbursement",REFUNDS,track_refund
+3376,"i want a reimbursement, what should i do to request on?",REFUNDS,get_refund
+3376,"please, could you ask an agent where i can obtain a reimbursement?",REFUNDS,get_refund
+3376,how could i request a reimbursement?,REFUNDS,get_refund
+3376,"i want a reimbursement, what should i do to obtain one?",REFUNDS,get_refund
+3376,"i need a reimbursement, how can i get one?",REFUNDS,get_refund
+3376,"i want to obtain a reimbursement, can you help me?",REFUNDS,get_refund
+3376,how do i obtain a reimbursement?,REFUNDS,get_refund
+3376,where do i obtain a reimbursement?,REFUNDS,get_refund
+3376,"i want a reimbursement, help me get one",REFUNDS,get_refund
+3376,"i need a reimbursement, what should i do to get one?",REFUNDS,get_refund
+3376,how can i obtain a reimbursement?,REFUNDS,get_refund
+3376,ask an agent to request a reimbursement,REFUNDS,get_refund
+3376,where to track my fucking reimbursement,REFUNDS,track_refund
+3376,ask an agent where i can track my reimbursement,REFUNDS,track_refund
+3376,i want to track my reimbursement,REFUNDS,track_refund
+3376,help me track my reimbursement,REFUNDS,track_refund
+3376,"i want to track my reimbursement, can you help me?",REFUNDS,track_refund
+3376,how can i get a reimbursement?,REFUNDS,get_refund
+3376,"can you ask an agent how i can request a fucking reimbursement, please?",REFUNDS,get_refund
+3376,how do i track my reimbursement?,REFUNDS,track_refund
+3376,can i track my reimbursement?,REFUNDS,track_refund
+3376,"i want to track my reimbursement, what can i do?",REFUNDS,track_refund
+3376,"i need a reimbursement, what should i do to obtain one?",REFUNDS,get_refund
+3376,wjere can i obtain a reimbursement?,REFUNDS,get_refund
+3376,"i want to request a reimbursement, what can i do?",REFUNDS,get_refund
+3376,how to get a reimbursement,REFUNDS,get_refund
+3376,when will i obtain a reimbursement?,REFUNDS,get_refund
+3376,ask an agent to get a reimbursement,REFUNDS,get_refund
+3376,"please, ask an agent to request a reimbursement",REFUNDS,get_refund
+3376,"i need a reimbursement, what can i do?",REFUNDS,get_refund
+3376,"please, can u ask an agent where i can obtain a fucking reimbursement?",REFUNDS,get_refund
+3376,"i want to get a fucking reimbursement , what should i do?",REFUNDS,get_refund
+3376,"could u ask an agent where i could obtain a reimbursement, please?",REFUNDS,get_refund
+3376,where can i request a reimbursement?,REFUNDS,get_refund
+3376,"i need a reimbursement, what can i do to obtain one?",REFUNDS,get_refund
+3376,"i need a reimbursement, obtain one",REFUNDS,get_refund
+3376,"i want a reimbursement, can i request one ?",REFUNDS,get_refund
+3376,"i need a reimbursement, help me get one",REFUNDS,get_refund
+3376,ask an agent how to request a reimbursement,REFUNDS,get_refund
+3376,"i want a reimbursement, what should i do?",REFUNDS,get_refund
+3376,help me obtain a reimbursement,REFUNDS,get_refund
+3376,"i want to request a reimbursement, what should i do?",REFUNDS,get_refund
+3376,"i want a reimbursement, how do i get one?",REFUNDS,get_refund
+3376,"i need a reimbursement, can i request one, please?",REFUNDS,get_refund
+3376,can u ask an agent how can obtain a reimbursement?,REFUNDS,get_refund
+3376,i want to get a reimbursement,REFUNDS,get_refund
+3376,help me get a reimbursement,REFUNDS,get_refund
+3376,can u ask an agent where to request a reimbursement?,REFUNDS,get_refund
+3376,"i want a fucking reimbursement, help me request one",REFUNDS,get_refund
+3376,can u ask an agent if i can get a reimbursement?,REFUNDS,get_refund
+3376,"i want to obtain a reimbursement, what can i do?",REFUNDS,get_refund
+3376,"i want a reimbursement, what do i have to do to get one?",REFUNDS,get_refund
+3376,"i want a reimbursement, help me obtain one",REFUNDS,get_refund
+3376,"i need a reimbursement, what do i have to do to get one?",REFUNDS,get_refund
+3376,"i wanna obtain a reimbursement, what should i do?",REFUNDS,get_refund
+3376,"i need a reimbursement, what should i do to request one?",REFUNDS,get_refund
+3376,"i want a reimbursement, how do i obtain one?",REFUNDS,get_refund
+3376,"i want a reimbursement, can i get one?",REFUNDS,get_refund
+3376,"please, can you ask an agent how to get a fucking reimbursement?",REFUNDS,get_refund
+3376,"i need a reimbursement, can you help me?",REFUNDS,get_refund
+3376,ask an agent how i can obtain a reimbursement,REFUNDS,get_refund
+3376,can i request a reimbursement?,REFUNDS,get_refund
+3376,"i want a reimbursement, how can i request one?",REFUNDS,get_refund
+3376,"please, could you ask an agent where to get a reimbursement?",REFUNDS,get_refund
+3376,help me request a reimbursement,REFUNDS,get_refund
+3376,"i need a reimbursement, what can i do to request one?",REFUNDS,get_refund
+3376,"i want a reimbursement, how do i request one?",REFUNDS,get_refund
+3376,can i get a reimbursement?,REFUNDS,get_refund
+3376,can i obtain an reimbursement?,REFUNDS,get_refund
+3376,"i need a reimbursement, how can i obtain one?",REFUNDS,get_refund
+3376,"can you ask an agent where i could obtain a reimbursement, please?",REFUNDS,get_refund
+3376,"i want a reimbursement, what can i do to request one?",REFUNDS,get_refund
+3376,can u ask an agent when i will obtain a reimbursement?,REFUNDS,get_refund
+3376,"i want to request a reimbursement, can you help me?",REFUNDS,get_refund
+3376,"please, can u ask an agent if i could get a reimbursement?",REFUNDS,get_refund
+3376,ask an agent where to obtain a reimbursement,REFUNDS,get_refund
+3376,"i want to request a reimbursement, what do i have to do?",REFUNDS,get_refund
+3376,ask an agent if i can obtain a reimbursement,REFUNDS,get_refund
+3376,ask an agent where i could obtain a reimbursement,REFUNDS,get_refund
+3376,where can i get a reimbursement?,REFUNDS,get_refund
+3376,"i want to track my reimbursement, what do i have to do?",REFUNDS,track_refund
+3376,"i wanna track my reimbursement, what do i have to do?",REFUNDS,track_refund
+3376,how can i track my reimbursement?,REFUNDS,track_refund
+3376,"i want to track my reimbursement, what should i do?",REFUNDS,track_refund
+3376,where can i track my reimbursement?,REFUNDS,track_refund
+3376,where to track my reimbursement,REFUNDS,track_refund
+3376,can u ask an agent to request a reimbursement?,REFUNDS,get_refund
+3376,can i obtain a reimbursement ?,REFUNDS,get_refund
+3376,"i want a reimbursement, what do i have to do to obtain one?",REFUNDS,get_refund
+3376,"i need a reimbursement, how do i get one?",REFUNDS,get_refund
+3376,i want to request a reimbursement,REFUNDS,get_refund
+3376,"i need a reimbursement, how can i request one?",REFUNDS,get_refund
+3376,"i want a reimbursement, obtain one",REFUNDS,get_refund
+3376,"i need a reimbursement, request one",REFUNDS,get_refund
+3376,"i want a reimbursement, get one",REFUNDS,get_refund
+3376,"i want to get a reimbursement, what can i do?",REFUNDS,get_refund
+3376,"please, can you ask an agent where to get a reimbursement?",REFUNDS,get_refund
+3376,"ask an agent how to obtain a reimbursement, please",REFUNDS,get_refund
+3376,ask an agent where i can obtain a reimbursement,REFUNDS,get_refund
+3376,can u ask an agent where i can request a reimbursement?,REFUNDS,get_refund
+3376,"i want to get a reimbursement, can you help me?",REFUNDS,get_refund
+3376,"i want a reimbursement, how can i get one?",REFUNDS,get_refund
+3376,"can you ask an agent if i can obtain a reimbursement, please?",REFUNDS,get_refund
+3376,"i need a reimbursement, what do i have to do to obtain one?",REFUNDS,get_refund
+3376,"can u ask an agent to get a reimbursement, please?",REFUNDS,get_refund
+3376,could u ask an agent how i can request a reimbursement?,REFUNDS,get_refund
+3376,"i want a reimbursement, what do i have to do to request one?",REFUNDS,get_refund
+3376,"ask an agent how i can request a reimbursement, please",REFUNDS,get_refund
+3376,"i want to get a reimbursement, what should i do?",REFUNDS,get_refund
+3376,"i need a reimbursement, what do i have to do?",REFUNDS,get_refund
+3376,"i need a reimbursement, how do i request one?",REFUNDS,get_refund
+3376,"i need a reimbursement, help me request one",REFUNDS,get_refund
+3376,"i need a fucking reimbursement, can i request one, please?",REFUNDS,get_refund
+3376,"i want a reimbursement, can i obtain one?",REFUNDS,get_refund
+3376,"i need a reimbursement, get one",REFUNDS,get_refund
+3376,"i want to get a reimbursement, what do i have to do?",REFUNDS,get_refund
+3376,"i wanna get a reimbursement, can u help me?",REFUNDS,get_refund
+3376,"can you ask an agent if i could get a reimbursement, please?",REFUNDS,get_refund
+3376,"i want a reimbursement, can i request one?",REFUNDS,get_refund
+3376,"i wanna get a reimbursement, what can i do?",REFUNDS,get_refund
+3376,"please, ask an agent where i could obtain a reimbursement",REFUNDS,get_refund
+3376,how can i request a reimbursement?,REFUNDS,get_refund
+3376,"i want a reimbursement, how can i obtain one?",REFUNDS,get_refund
+3376,"please, could u ask an agent how to get a reimbursement?",REFUNDS,get_refund
+3376,can u ask an agent if i can request a reimbursement?,REFUNDS,get_refund
+3376,"i need a reimbursement, can i request one?",REFUNDS,get_refund
+3376,where to request a reimbursement,REFUNDS,get_refund
+3376,"i want to obtain a reimbursement, could u help me?",REFUNDS,get_refund
+3376,"i want a reimbursement, what can i do to get one ?",REFUNDS,get_refund
+3376,where do i get a reimbursement?,REFUNDS,get_refund
+3376,where can i obtain a fucking reimbursement?,REFUNDS,get_refund
+3376,"i want an reimbursement, what should i do to get one?",REFUNDS,get_refund
+3376,can u ask an agent to obtain a reimbursement?,REFUNDS,get_refund
+3376,"i wanna request a reimbursement, can u help me?",REFUNDS,get_refund
+3376,can i request an reimbursement?,REFUNDS,get_refund
+3376,"i want a reimbursement, what can i do to obtain one?",REFUNDS,get_refund
+3376,"can you ask an agent how i could get a reimbursement, please?",REFUNDS,get_refund
+3376,could you ask an agent if i could obtain a reimbursement?,REFUNDS,get_refund
+3376,"i need a reimbursement, what should i do?",REFUNDS,get_refund
+3376,"please, ask an agent what i can obtain a fucking reimbursement for",REFUNDS,get_refund
+3376,"i need a reimbursement, can i get one?",REFUNDS,get_refund
+3376,"i want to obtain a reimbursement, what should i do?",REFUNDS,get_refund
+3376,"i need a reimbursement, what do i have to do to request one?",REFUNDS,get_refund
+3376,"i want a reimbursement, can you help me?",REFUNDS,get_refund
+3376,"i need a reimbursement, what can i do to get one?",REFUNDS,get_refund
+3376,"i want to get an reimbursement, what can i do ?",REFUNDS,get_refund
+3376,how to request an reimbursement,REFUNDS,get_refund
+3376,where do i request a reimbursement?,REFUNDS,get_refund
+3376,can u ask an agent how i can request a reimbursement?,REFUNDS,get_refund
+3376,can u ask an agent where i can obtain a reimbursement?,REFUNDS,get_refund
+3376,i want to obtain a reimbursement,REFUNDS,get_refund
+3376,where can i obtain a reimbursement?,REFUNDS,get_refund
+3376,"i want to obtain a reimbursement, what do i have to do?",REFUNDS,get_refund

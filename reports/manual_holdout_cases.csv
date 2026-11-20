@@ -1,0 +1,34 @@
+text,category,role,source,used_for_training
+My login credentials no longer work and I need to reset the password.,ACCOUNT,post_selection_diagnostic,author_written,False
+I want to replace the email associated with my customer profile.,ACCOUNT,post_selection_diagnostic,author_written,False
+Please erase my registered user account.,ACCOUNT,post_selection_diagnostic,author_written,False
+"Before I cancel, tell me the amount of the cancellation penalty.",CANCELLATION_FEE,post_selection_diagnostic,author_written,False
+Do you deduct a cancellation charge when a booking is called off?,CANCELLATION_FEE,post_selection_diagnostic,author_written,False
+What is the fee for cancelling my reservation?,CANCELLATION_FEE,post_selection_diagnostic,author_written,False
+I need a phone number for the customer care team.,CONTACT,post_selection_diagnostic,author_written,False
+Could you transfer this chat to a real person from support?,CONTACT,post_selection_diagnostic,author_written,False
+How do I reach a human advisor instead of the bot?,CONTACT,post_selection_diagnostic,author_written,False
+"Before placing a purchase, I want to know the usual delivery timeframe.",DELIVERY,post_selection_diagnostic,author_written,False
+Can customers choose next-day delivery instead of the standard service?,DELIVERY,post_selection_diagnostic,author_written,False
+Which delivery services can I choose at checkout?,DELIVERY,post_selection_diagnostic,author_written,False
+The assistant was extremely helpful and I would like to post a review.,FEEDBACK,post_selection_diagnostic,author_written,False
+I am writing to complain about the treatment I received from your staff.,FEEDBACK,post_selection_diagnostic,author_written,False
+The service was disappointing; where can I submit my feedback?,FEEDBACK,post_selection_diagnostic,author_written,False
+Could you supply the billing document for my purchase for accounting purposes?,INVOICES,post_selection_diagnostic,author_written,False
+I need a duplicate of the invoice that was issued last month.,INVOICES,post_selection_diagnostic,author_written,False
+How can I view the invoices attached to previous transactions?,INVOICES,post_selection_diagnostic,author_written,False
+Please take my email off the list used for advertising campaigns.,NEWSLETTER,post_selection_diagnostic,author_written,False
+Your sale announcements are filling my inbox and I want them to end.,NEWSLETTER,post_selection_diagnostic,author_written,False
+Sign me up to receive the store newsletter.,NEWSLETTER,post_selection_diagnostic,author_written,False
+I placed a purchase last week; can you locate the parcel for me?,ORDER,post_selection_diagnostic,author_written,False
+I ordered the wrong quantity and want to amend the items in my purchase.,ORDER,post_selection_diagnostic,author_written,False
+Please call off the purchase I submitted a few minutes ago.,ORDER,post_selection_diagnostic,author_written,False
+The checkout rejects my debit card whenever I attempt payment.,PAYMENT,post_selection_diagnostic,author_written,False
+Is paying by bank transfer supported by your store?,PAYMENT,post_selection_diagnostic,author_written,False
+"The payment failed, although my card has sufficient funds.",PAYMENT,post_selection_diagnostic,author_written,False
+The reimbursement was approved but the money has not reached my bank yet.,REFUNDS,post_selection_diagnostic,author_written,False
+Please explain the conditions for receiving my money back.,REFUNDS,post_selection_diagnostic,author_written,False
+I would like to request reimbursement for the returned purchase.,REFUNDS,post_selection_diagnostic,author_written,False
+The destination address saved for deliveries is outdated; how can I replace it?,SHIPPING,post_selection_diagnostic,author_written,False
+I need to enter my home address as a new shipping destination.,SHIPPING,post_selection_diagnostic,author_written,False
+Please correct the house number in the delivery address on my purchase.,SHIPPING,post_selection_diagnostic,author_written,False

@@ -1,0 +1,201 @@
+intent,n_train,n_test,remaining_class_train_n,class_starvation_warning,category,status,recall,n_groups_removed,n_training_rows_removed_for_group_overlap,model
+get_invoice,11245,690,367,False,INVOICES,PASS,0.4782608695652174,2,35,lr_word (baseline)
+payment_issue,9591,2379,161,True,PAYMENT,PASS,0.5304749894913829,0,0,lr_word (baseline)
+delete_account,11490,475,1915,False,ACCOUNT,PASS,0.9873684210526316,2,5,lr_word (baseline)
+review,11632,338,535,False,FEEDBACK,PASS,0.7218934911242604,0,0,lr_word (baseline)
+edit_account,11868,102,2293,False,ACCOUNT,PASS,0.9705882352941176,0,0,lr_word (baseline)
+track_refund,11584,240,840,False,REFUNDS,PASS,0.03333333333333333,2,146,lr_word (baseline)
+registration_problems,11882,88,2307,False,ACCOUNT,PASS,0.5227272727272727,0,0,lr_word (baseline)
+check_refund_policy,11742,228,997,False,REFUNDS,PASS,0.2982456140350877,0,0,lr_word (baseline)
+contact_customer_service,10768,1202,434,False,CONTACT,PASS,0.4400998336106489,0,0,lr_word (baseline)
+check_payment_methods,11809,161,2379,False,PAYMENT,PASS,0.2857142857142857,0,0,lr_word (baseline)
+create_account,10837,1131,1262,False,ACCOUNT,PASS,0.9336870026525199,2,2,lr_word (baseline)
+check_invoices,11439,402,561,False,INVOICES,PASS,0.5348258706467661,2,129,lr_word (baseline)
+get_refund,11197,757,452,False,REFUNDS,PASS,0.8467635402906208,1,16,lr_word (baseline)
+place_order,11930,40,1261,False,ORDER,PASS,0.95,0,0,lr_word (baseline)
+change_shipping_address,11928,42,78,True,SHIPPING,PASS,0.8809523809523809,0,0,lr_word (baseline)
+set_up_shipping_address,11892,78,42,True,SHIPPING,PASS,0.9743589743589743,0,0,lr_word (baseline)
+cancel_order,11948,22,1279,False,ORDER,PASS,1.0,0,0,lr_word (baseline)
+recover_password,11509,461,1934,False,ACCOUNT,PASS,0.6919739696312365,0,0,lr_word (baseline)
+complaint,11435,535,338,False,FEEDBACK,PASS,0.9233644859813084,0,0,lr_word (baseline)
+change_order,11429,541,760,False,ORDER,PASS,0.9796672828096118,0,0,lr_word (baseline)
+delivery_period,11941,29,308,False,DELIVERY,PASS,0.4827586206896552,0,0,lr_word (baseline)
+switch_account,11832,138,2257,False,ACCOUNT,PASS,0.9927536231884058,0,0,lr_word (baseline)
+track_order,11271,698,603,False,ORDER,PASS,0.15902578796561603,1,1,lr_word (baseline)
+contact_human_agent,11536,434,1202,False,CONTACT,PASS,0.7788018433179723,0,0,lr_word (baseline)
+delivery_options,11662,308,29,True,DELIVERY,PASS,0.7402597402597403,0,0,lr_word (baseline)
+get_invoice,11245,690,367,False,INVOICES,PASS,0.15072463768115943,2,35,sgd_w_a1e-4
+payment_issue,9591,2379,161,True,PAYMENT,PASS,0.19672131147540983,0,0,sgd_w_a1e-4
+delete_account,11490,475,1915,False,ACCOUNT,PASS,0.9873684210526316,2,5,sgd_w_a1e-4
+review,11632,338,535,False,FEEDBACK,PASS,0.7337278106508875,0,0,sgd_w_a1e-4
+edit_account,11868,102,2293,False,ACCOUNT,PASS,0.9803921568627451,0,0,sgd_w_a1e-4
+track_refund,11584,240,840,False,REFUNDS,PASS,0.0625,2,146,sgd_w_a1e-4
+registration_problems,11882,88,2307,False,ACCOUNT,PASS,0.5454545454545454,0,0,sgd_w_a1e-4
+check_refund_policy,11742,228,997,False,REFUNDS,PASS,0.32456140350877194,0,0,sgd_w_a1e-4
+contact_customer_service,10768,1202,434,False,CONTACT,PASS,0.48502495840266224,0,0,sgd_w_a1e-4
+check_payment_methods,11809,161,2379,False,PAYMENT,PASS,0.5590062111801242,0,0,sgd_w_a1e-4
+create_account,10837,1131,1262,False,ACCOUNT,PASS,0.9522546419098143,2,2,sgd_w_a1e-4
+check_invoices,11439,402,561,False,INVOICES,PASS,0.5920398009950248,2,129,sgd_w_a1e-4
+get_refund,11197,757,452,False,REFUNDS,PASS,0.8467635402906208,1,16,sgd_w_a1e-4
+place_order,11930,40,1261,False,ORDER,PASS,0.95,0,0,sgd_w_a1e-4
+change_shipping_address,11928,42,78,True,SHIPPING,PASS,0.07142857142857142,0,0,sgd_w_a1e-4
+set_up_shipping_address,11892,78,42,True,SHIPPING,PASS,0.9743589743589743,0,0,sgd_w_a1e-4
+cancel_order,11948,22,1279,False,ORDER,PASS,1.0,0,0,sgd_w_a1e-4
+recover_password,11509,461,1934,False,ACCOUNT,PASS,0.6724511930585684,0,0,sgd_w_a1e-4
+complaint,11435,535,338,False,FEEDBACK,PASS,0.9327102803738317,0,0,sgd_w_a1e-4
+change_order,11429,541,760,False,ORDER,PASS,0.9630314232902033,0,0,sgd_w_a1e-4
+delivery_period,11941,29,308,False,DELIVERY,PASS,0.41379310344827586,0,0,sgd_w_a1e-4
+switch_account,11832,138,2257,False,ACCOUNT,PASS,1.0,0,0,sgd_w_a1e-4
+track_order,11271,698,603,False,ORDER,PASS,0.1318051575931232,1,1,sgd_w_a1e-4
+contact_human_agent,11536,434,1202,False,CONTACT,PASS,0.9400921658986175,0,0,sgd_w_a1e-4
+delivery_options,11662,308,29,True,DELIVERY,PASS,0.025974025974025976,0,0,sgd_w_a1e-4
+get_invoice,11245,690,367,False,INVOICES,PASS,0.1,2,35,sgd_w_a5e-5
+payment_issue,9591,2379,161,True,PAYMENT,PASS,0.12526271542664985,0,0,sgd_w_a5e-5
+delete_account,11490,475,1915,False,ACCOUNT,PASS,0.9873684210526316,2,5,sgd_w_a5e-5
+review,11632,338,535,False,FEEDBACK,PASS,0.7307692307692307,0,0,sgd_w_a5e-5
+edit_account,11868,102,2293,False,ACCOUNT,PASS,0.9901960784313726,0,0,sgd_w_a5e-5
+track_refund,11584,240,840,False,REFUNDS,PASS,0.058333333333333334,2,146,sgd_w_a5e-5
+registration_problems,11882,88,2307,False,ACCOUNT,PASS,0.6477272727272727,0,0,sgd_w_a5e-5
+check_refund_policy,11742,228,997,False,REFUNDS,PASS,0.25877192982456143,0,0,sgd_w_a5e-5
+contact_customer_service,10768,1202,434,False,CONTACT,PASS,0.48502495840266224,0,0,sgd_w_a5e-5
+check_payment_methods,11809,161,2379,False,PAYMENT,PASS,0.6521739130434783,0,0,sgd_w_a5e-5
+create_account,10837,1131,1262,False,ACCOUNT,PASS,0.9531388152077808,2,2,sgd_w_a5e-5
+check_invoices,11439,402,561,False,INVOICES,PASS,0.44776119402985076,2,129,sgd_w_a5e-5
+get_refund,11197,757,452,False,REFUNDS,PASS,0.6301188903566711,1,16,sgd_w_a5e-5
+place_order,11930,40,1261,False,ORDER,PASS,0.95,0,0,sgd_w_a5e-5
+change_shipping_address,11928,42,78,True,SHIPPING,PASS,0.5238095238095238,0,0,sgd_w_a5e-5
+set_up_shipping_address,11892,78,42,True,SHIPPING,PASS,0.34615384615384615,0,0,sgd_w_a5e-5
+cancel_order,11948,22,1279,False,ORDER,PASS,1.0,0,0,sgd_w_a5e-5
+recover_password,11509,461,1934,False,ACCOUNT,PASS,0.6702819956616052,0,0,sgd_w_a5e-5
+complaint,11435,535,338,False,FEEDBACK,PASS,0.8822429906542056,0,0,sgd_w_a5e-5
+change_order,11429,541,760,False,ORDER,PASS,0.8595194085027726,0,0,sgd_w_a5e-5
+delivery_period,11941,29,308,False,DELIVERY,PASS,0.3103448275862069,0,0,sgd_w_a5e-5
+switch_account,11832,138,2257,False,ACCOUNT,PASS,1.0,0,0,sgd_w_a5e-5
+track_order,11271,698,603,False,ORDER,PASS,0.12464183381088825,1,1,sgd_w_a5e-5
+contact_human_agent,11536,434,1202,False,CONTACT,PASS,0.8663594470046083,0,0,sgd_w_a5e-5
+delivery_options,11662,308,29,True,DELIVERY,PASS,0.22077922077922077,0,0,sgd_w_a5e-5
+get_invoice,11245,690,367,False,INVOICES,PASS,0.07391304347826087,2,35,sgd_w_a2e-5
+payment_issue,9591,2379,161,True,PAYMENT,PASS,0.0903741067675494,0,0,sgd_w_a2e-5
+delete_account,11490,475,1915,False,ACCOUNT,PASS,0.9852631578947368,2,5,sgd_w_a2e-5
+review,11632,338,535,False,FEEDBACK,PASS,0.6952662721893491,0,0,sgd_w_a2e-5
+edit_account,11868,102,2293,False,ACCOUNT,PASS,0.9705882352941176,0,0,sgd_w_a2e-5
+track_refund,11584,240,840,False,REFUNDS,PASS,0.041666666666666664,2,146,sgd_w_a2e-5
+registration_problems,11882,88,2307,False,ACCOUNT,PASS,0.6704545454545454,0,0,sgd_w_a2e-5
+check_refund_policy,11742,228,997,False,REFUNDS,PASS,0.17105263157894737,0,0,sgd_w_a2e-5
+contact_customer_service,10768,1202,434,False,CONTACT,PASS,0.456738768718802,0,0,sgd_w_a2e-5
+check_payment_methods,11809,161,2379,False,PAYMENT,PASS,0.6459627329192547,0,0,sgd_w_a2e-5
+create_account,10837,1131,1262,False,ACCOUNT,PASS,0.9425287356321839,2,2,sgd_w_a2e-5
+check_invoices,11439,402,561,False,INVOICES,PASS,0.31840796019900497,2,129,sgd_w_a2e-5
+get_refund,11197,757,452,False,REFUNDS,PASS,0.46895640686922063,1,16,sgd_w_a2e-5
+place_order,11930,40,1261,False,ORDER,PASS,0.775,0,0,sgd_w_a2e-5
+change_shipping_address,11928,42,78,True,SHIPPING,PASS,0.8333333333333334,0,0,sgd_w_a2e-5
+set_up_shipping_address,11892,78,42,True,SHIPPING,PASS,0.8461538461538461,0,0,sgd_w_a2e-5
+cancel_order,11948,22,1279,False,ORDER,PASS,0.9545454545454546,0,0,sgd_w_a2e-5
+recover_password,11509,461,1934,False,ACCOUNT,PASS,0.6767895878524945,0,0,sgd_w_a2e-5
+complaint,11435,535,338,False,FEEDBACK,PASS,0.7289719626168224,0,0,sgd_w_a2e-5
+change_order,11429,541,760,False,ORDER,PASS,0.7282809611829945,0,0,sgd_w_a2e-5
+delivery_period,11941,29,308,False,DELIVERY,PASS,0.3103448275862069,0,0,sgd_w_a2e-5
+switch_account,11832,138,2257,False,ACCOUNT,PASS,1.0,0,0,sgd_w_a2e-5
+track_order,11271,698,603,False,ORDER,PASS,0.09025787965616046,1,1,sgd_w_a2e-5
+contact_human_agent,11536,434,1202,False,CONTACT,PASS,0.49078341013824883,0,0,sgd_w_a2e-5
+delivery_options,11662,308,29,True,DELIVERY,PASS,0.7305194805194806,0,0,sgd_w_a2e-5
+get_invoice,11245,690,367,False,INVOICES,PASS,0.7260869565217392,2,35,linsvc_w_C0.5
+payment_issue,9591,2379,161,True,PAYMENT,PASS,0.5716687683900799,0,0,linsvc_w_C0.5
+delete_account,11490,475,1915,False,ACCOUNT,PASS,0.9852631578947368,2,5,linsvc_w_C0.5
+review,11632,338,535,False,FEEDBACK,PASS,0.7159763313609467,0,0,linsvc_w_C0.5
+edit_account,11868,102,2293,False,ACCOUNT,PASS,0.9803921568627451,0,0,linsvc_w_C0.5
+track_refund,11584,240,840,False,REFUNDS,PASS,0.075,2,146,linsvc_w_C0.5
+registration_problems,11882,88,2307,False,ACCOUNT,PASS,0.5340909090909091,0,0,linsvc_w_C0.5
+check_refund_policy,11742,228,997,False,REFUNDS,PASS,0.3333333333333333,0,0,linsvc_w_C0.5
+contact_customer_service,10768,1202,434,False,CONTACT,PASS,0.4492512479201331,0,0,linsvc_w_C0.5
+check_payment_methods,11809,161,2379,False,PAYMENT,PASS,0.35403726708074534,0,0,linsvc_w_C0.5
+create_account,10837,1131,1262,False,ACCOUNT,PASS,0.946949602122016,2,2,linsvc_w_C0.5
+check_invoices,11439,402,561,False,INVOICES,PASS,0.7039800995024875,2,129,linsvc_w_C0.5
+get_refund,11197,757,452,False,REFUNDS,PASS,0.9339498018494056,1,16,linsvc_w_C0.5
+place_order,11930,40,1261,False,ORDER,PASS,0.95,0,0,linsvc_w_C0.5
+change_shipping_address,11928,42,78,True,SHIPPING,PASS,0.9523809523809523,0,0,linsvc_w_C0.5
+set_up_shipping_address,11892,78,42,True,SHIPPING,PASS,0.9743589743589743,0,0,linsvc_w_C0.5
+cancel_order,11948,22,1279,False,ORDER,PASS,1.0,0,0,linsvc_w_C0.5
+recover_password,11509,461,1934,False,ACCOUNT,PASS,0.6919739696312365,0,0,linsvc_w_C0.5
+complaint,11435,535,338,False,FEEDBACK,PASS,0.930841121495327,0,0,linsvc_w_C0.5
+change_order,11429,541,760,False,ORDER,PASS,0.9870609981515711,0,0,linsvc_w_C0.5
+delivery_period,11941,29,308,False,DELIVERY,PASS,0.4827586206896552,0,0,linsvc_w_C0.5
+switch_account,11832,138,2257,False,ACCOUNT,PASS,1.0,0,0,linsvc_w_C0.5
+track_order,11271,698,603,False,ORDER,PASS,0.15329512893982808,1,1,linsvc_w_C0.5
+contact_human_agent,11536,434,1202,False,CONTACT,PASS,0.967741935483871,0,0,linsvc_w_C0.5
+delivery_options,11662,308,29,True,DELIVERY,PASS,0.75,0,0,linsvc_w_C0.5
+get_invoice,11245,690,367,False,INVOICES,PASS,0.7028985507246377,2,35,linsvc_w_C1
+payment_issue,9591,2379,161,True,PAYMENT,PASS,0.5523329129886507,0,0,linsvc_w_C1
+delete_account,11490,475,1915,False,ACCOUNT,PASS,0.9852631578947368,2,5,linsvc_w_C1
+review,11632,338,535,False,FEEDBACK,PASS,0.7159763313609467,0,0,linsvc_w_C1
+edit_account,11868,102,2293,False,ACCOUNT,PASS,0.9803921568627451,0,0,linsvc_w_C1
+track_refund,11584,240,840,False,REFUNDS,PASS,0.075,2,146,linsvc_w_C1
+registration_problems,11882,88,2307,False,ACCOUNT,PASS,0.5454545454545454,0,0,linsvc_w_C1
+check_refund_policy,11742,228,997,False,REFUNDS,PASS,0.3333333333333333,0,0,linsvc_w_C1
+contact_customer_service,10768,1202,434,False,CONTACT,PASS,0.4475873544093178,0,0,linsvc_w_C1
+check_payment_methods,11809,161,2379,False,PAYMENT,PASS,0.35403726708074534,0,0,linsvc_w_C1
+create_account,10837,1131,1262,False,ACCOUNT,PASS,0.9487179487179487,2,2,linsvc_w_C1
+check_invoices,11439,402,561,False,INVOICES,PASS,0.7089552238805971,2,129,linsvc_w_C1
+get_refund,11197,757,452,False,REFUNDS,PASS,0.9207397622192867,1,16,linsvc_w_C1
+place_order,11930,40,1261,False,ORDER,PASS,0.95,0,0,linsvc_w_C1
+change_shipping_address,11928,42,78,True,SHIPPING,PASS,0.9523809523809523,0,0,linsvc_w_C1
+set_up_shipping_address,11892,78,42,True,SHIPPING,PASS,0.9743589743589743,0,0,linsvc_w_C1
+cancel_order,11948,22,1279,False,ORDER,PASS,1.0,0,0,linsvc_w_C1
+recover_password,11509,461,1934,False,ACCOUNT,PASS,0.6767895878524945,0,0,linsvc_w_C1
+complaint,11435,535,338,False,FEEDBACK,PASS,0.9271028037383178,0,0,linsvc_w_C1
+change_order,11429,541,760,False,ORDER,PASS,0.9852125693160814,0,0,linsvc_w_C1
+delivery_period,11941,29,308,False,DELIVERY,PASS,0.4482758620689655,0,0,linsvc_w_C1
+switch_account,11832,138,2257,False,ACCOUNT,PASS,0.9927536231884058,0,0,linsvc_w_C1
+track_order,11271,698,603,False,ORDER,PASS,0.12893982808022922,1,1,linsvc_w_C1
+contact_human_agent,11536,434,1202,False,CONTACT,PASS,0.956221198156682,0,0,linsvc_w_C1
+delivery_options,11662,308,29,True,DELIVERY,PASS,0.7467532467532467,0,0,linsvc_w_C1
+get_invoice,11245,690,367,False,INVOICES,PASS,0.6492753623188405,2,35,linsvc_w_C3
+payment_issue,9591,2379,161,True,PAYMENT,PASS,0.537620849096259,0,0,linsvc_w_C3
+delete_account,11490,475,1915,False,ACCOUNT,PASS,0.9873684210526316,2,5,linsvc_w_C3
+review,11632,338,535,False,FEEDBACK,PASS,0.7159763313609467,0,0,linsvc_w_C3
+edit_account,11868,102,2293,False,ACCOUNT,PASS,0.9901960784313726,0,0,linsvc_w_C3
+track_refund,11584,240,840,False,REFUNDS,PASS,0.075,2,146,linsvc_w_C3
+registration_problems,11882,88,2307,False,ACCOUNT,PASS,0.6704545454545454,0,0,linsvc_w_C3
+check_refund_policy,11742,228,997,False,REFUNDS,PASS,0.33771929824561403,0,0,linsvc_w_C3
+contact_customer_service,10768,1202,434,False,CONTACT,PASS,0.4475873544093178,0,0,linsvc_w_C3
+check_payment_methods,11809,161,2379,False,PAYMENT,PASS,0.35403726708074534,0,0,linsvc_w_C3
+create_account,10837,1131,1262,False,ACCOUNT,PASS,0.9504862953138815,2,2,linsvc_w_C3
+check_invoices,11439,402,561,False,INVOICES,PASS,0.6840796019900498,2,129,linsvc_w_C3
+get_refund,11197,757,452,False,REFUNDS,PASS,0.8969616908850726,1,16,linsvc_w_C3
+place_order,11930,40,1261,False,ORDER,PASS,0.95,0,0,linsvc_w_C3
+change_shipping_address,11928,42,78,True,SHIPPING,PASS,0.9523809523809523,0,0,linsvc_w_C3
+set_up_shipping_address,11892,78,42,True,SHIPPING,PASS,0.9743589743589743,0,0,linsvc_w_C3
+cancel_order,11948,22,1279,False,ORDER,PASS,1.0,0,0,linsvc_w_C3
+recover_password,11509,461,1934,False,ACCOUNT,PASS,0.6637744034707158,0,0,linsvc_w_C3
+complaint,11435,535,338,False,FEEDBACK,PASS,0.908411214953271,0,0,linsvc_w_C3
+change_order,11429,541,760,False,ORDER,PASS,0.9852125693160814,0,0,linsvc_w_C3
+delivery_period,11941,29,308,False,DELIVERY,PASS,0.4482758620689655,0,0,linsvc_w_C3
+switch_account,11832,138,2257,False,ACCOUNT,PASS,0.9927536231884058,0,0,linsvc_w_C3
+track_order,11271,698,603,False,ORDER,PASS,0.11461318051575932,1,1,linsvc_w_C3
+contact_human_agent,11536,434,1202,False,CONTACT,PASS,0.9308755760368663,0,0,linsvc_w_C3
+delivery_options,11662,308,29,True,DELIVERY,PASS,0.7207792207792207,0,0,linsvc_w_C3
+get_invoice,11245,690,367,False,INVOICES,PASS,0.9956521739130435,2,35,linsvc_wc_C1
+payment_issue,9591,2379,161,True,PAYMENT,PASS,0.6048759983186213,0,0,linsvc_wc_C1
+delete_account,11490,475,1915,False,ACCOUNT,PASS,1.0,2,5,linsvc_wc_C1
+review,11632,338,535,False,FEEDBACK,PASS,0.7248520710059172,0,0,linsvc_wc_C1
+edit_account,11868,102,2293,False,ACCOUNT,PASS,1.0,0,0,linsvc_wc_C1
+track_refund,11584,240,840,False,REFUNDS,PASS,0.875,2,146,linsvc_wc_C1
+registration_problems,11882,88,2307,False,ACCOUNT,PASS,0.7386363636363636,0,0,linsvc_wc_C1
+check_refund_policy,11742,228,997,False,REFUNDS,PASS,0.3684210526315789,0,0,linsvc_wc_C1
+contact_customer_service,10768,1202,434,False,CONTACT,PASS,0.4168053244592346,0,0,linsvc_wc_C1
+check_payment_methods,11809,161,2379,False,PAYMENT,PASS,0.5962732919254659,0,0,linsvc_wc_C1
+create_account,10837,1131,1262,False,ACCOUNT,PASS,1.0,2,2,linsvc_wc_C1
+check_invoices,11439,402,561,False,INVOICES,PASS,0.9825870646766169,2,129,linsvc_wc_C1
+get_refund,11197,757,452,False,REFUNDS,PASS,0.9537648612945839,1,16,linsvc_wc_C1
+place_order,11930,40,1261,False,ORDER,PASS,0.975,0,0,linsvc_wc_C1
+change_shipping_address,11928,42,78,True,SHIPPING,PASS,1.0,0,0,linsvc_wc_C1
+set_up_shipping_address,11892,78,42,True,SHIPPING,PASS,1.0,0,0,linsvc_wc_C1
+cancel_order,11948,22,1279,False,ORDER,PASS,1.0,0,0,linsvc_wc_C1
+recover_password,11509,461,1934,False,ACCOUNT,PASS,0.720173535791757,0,0,linsvc_wc_C1
+complaint,11435,535,338,False,FEEDBACK,PASS,0.9682242990654205,0,0,linsvc_wc_C1
+change_order,11429,541,760,False,ORDER,PASS,1.0,0,0,linsvc_wc_C1
+delivery_period,11941,29,308,False,DELIVERY,PASS,0.4827586206896552,0,0,linsvc_wc_C1
+switch_account,11832,138,2257,False,ACCOUNT,PASS,1.0,0,0,linsvc_wc_C1
+track_order,11271,698,603,False,ORDER,PASS,0.36103151862464183,1,1,linsvc_wc_C1
+contact_human_agent,11536,434,1202,False,CONTACT,PASS,0.9377880184331797,0,0,linsvc_wc_C1
+delivery_options,11662,308,29,True,DELIVERY,PASS,0.7532467532467533,0,0,linsvc_wc_C1

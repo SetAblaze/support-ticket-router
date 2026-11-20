@@ -1,0 +1,172 @@
+{
+  "seed": 42,
+  "raw_sha256": "19a3031d649ce432202acd807630b1b52884507185f32832d58714f3fac7d82b",
+  "cleaning": {
+    "raw_rows": 21534,
+    "clean_rows": 19700,
+    "deduplicated_rows": 1834,
+    "short_rows_retained": 7,
+    "flags_policy": "union_of_unique_parsed_flags_for_identical_normalized_text",
+    "unrecognized_flag_codes": [],
+    "short_policy": "retained_in_main_splits_and_reported_as_a_slice"
+  },
+  "grouping": {
+    "method": "connected_components_char_wb_3_5_OR_word_1_2",
+    "threshold": 0.85,
+    "views": {
+      "word_1_2": {
+        "cosine_threshold": 0.9,
+        "undirected_edges": 6147,
+        "vocabulary": 7774
+      },
+      "char_wb_3_5": {
+        "cosine_threshold": 0.85,
+        "undirected_edges": 86116,
+        "vocabulary": 14221
+      }
+    },
+    "n_groups": 3646,
+    "largest_group": 1891,
+    "largest_fraction": 0.09598984771573604,
+    "edges_undirected_before_dedup": 92263,
+    "semantic_equivalence_verified": false,
+    "warning": "Heuristic groups can overmerge; inspect largest clusters and cross-label groups"
+  },
+  "overlap_checks": {
+    "train__calibration": {
+      "text": 0,
+      "row_id": 0,
+      "group": 0
+    },
+    "train__val": {
+      "text": 0,
+      "row_id": 0,
+      "group": 0
+    },
+    "train__test": {
+      "text": 0,
+      "row_id": 0,
+      "group": 0
+    },
+    "calibration__val": {
+      "text": 0,
+      "row_id": 0,
+      "group": 0
+    },
+    "calibration__test": {
+      "text": 0,
+      "row_id": 0,
+      "group": 0
+    },
+    "val__test": {
+      "text": 0,
+      "row_id": 0,
+      "group": 0
+    }
+  },
+  "similarity_checks": {
+    "calibration": {
+      "n": 2240,
+      "mean": 0.7739931260444353,
+      "p95": 0.8616469308924349,
+      "n_ge_085": 180,
+      "n_ge_090": 30,
+      "method": "train-only max(word_1_2, char_wb_3_5)",
+      "warning": "Residual lexical similarity remains possible; never prove semantic disjointness"
+    },
+    "val": {
+      "n": 2368,
+      "mean": 0.7776447967259432,
+      "p95": 0.8699650930170907,
+      "n_ge_085": 228,
+      "n_ge_090": 49,
+      "method": "train-only max(word_1_2, char_wb_3_5)",
+      "warning": "Residual lexical similarity remains possible; never prove semantic disjointness"
+    },
+    "test": {
+      "n": 3122,
+      "mean": 0.7799559681225868,
+      "p95": 0.8810670102942474,
+      "n_ge_085": 448,
+      "n_ge_090": 56,
+      "method": "train-only max(word_1_2, char_wb_3_5)",
+      "warning": "Residual lexical similarity remains possible; never prove semantic disjointness"
+    }
+  },
+  "roles": {
+    "train": "model selection and fitting",
+    "calibration": "sigmoid calibration only",
+    "val": "routing policy selection",
+    "test": "final in-corpus evaluation"
+  },
+  "splits": {
+    "train": {
+      "rows": 11970,
+      "sha256": "060223c186a21b18b62f62f6c59bb6d4da3e69f767aed09dc116f999dcca3b0b",
+      "class_counts": {
+        "PAYMENT": 2540,
+        "ACCOUNT": 2395,
+        "CONTACT": 1636,
+        "ORDER": 1301,
+        "REFUNDS": 1225,
+        "INVOICES": 1092,
+        "FEEDBACK": 873,
+        "DELIVERY": 337,
+        "CANCELLATION_FEE": 283,
+        "NEWSLETTER": 168,
+        "SHIPPING": 120
+      }
+    },
+    "calibration": {
+      "rows": 2240,
+      "sha256": "99823306265a0b3226ef33fa155f8ca85923156753cc2e18719fac9b0afa1e67",
+      "class_counts": {
+        "ACCOUNT": 467,
+        "CONTACT": 428,
+        "INVOICES": 425,
+        "ORDER": 419,
+        "REFUNDS": 191,
+        "PAYMENT": 141,
+        "FEEDBACK": 98,
+        "DELIVERY": 31,
+        "CANCELLATION_FEE": 24,
+        "SHIPPING": 10,
+        "NEWSLETTER": 6
+      }
+    },
+    "val": {
+      "rows": 2368,
+      "sha256": "ad758eee015b88df134e087891839d4455c912faa80ae0302ba7db919cecc36d",
+      "class_counts": {
+        "PAYMENT": 585,
+        "ACCOUNT": 374,
+        "INVOICES": 331,
+        "CONTACT": 315,
+        "FEEDBACK": 245,
+        "ORDER": 210,
+        "REFUNDS": 176,
+        "DELIVERY": 58,
+        "SHIPPING": 32,
+        "CANCELLATION_FEE": 24,
+        "NEWSLETTER": 18
+      }
+    },
+    "test": {
+      "rows": 3122,
+      "sha256": "542f5ce1c84f4de7eff94a273723297a809409ddcaf194750517a0978c7af45d",
+      "class_counts": {
+        "ACCOUNT": 920,
+        "PAYMENT": 844,
+        "CONTACT": 487,
+        "INVOICES": 405,
+        "ORDER": 176,
+        "REFUNDS": 141,
+        "FEEDBACK": 50,
+        "DELIVERY": 34,
+        "NEWSLETTER": 31,
+        "SHIPPING": 26,
+        "CANCELLATION_FEE": 8
+      }
+    }
+  }
+}

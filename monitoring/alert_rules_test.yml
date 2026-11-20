@@ -1,0 +1,108 @@
+# Модульные тесты правил: promtool test rules alert_rules_test.yml
+rule_files:
+  - alert_rules.yml
+
+evaluation_interval: 1m
+
+tests:
+  - name: сервис упал и не поднялся
+    interval: 1m
+    input_series:
+      - series: 'up{job="support-router", instance="api:8000"}'
+        values: '1 1 0 0 0 0 0 0'
+    alert_rule_test:
+      - eval_time: 3m
+        alertname: RouterDown
+        exp_alerts: []
+      - eval_time: 7m
+        alertname: RouterDown
+        exp_alerts:
+          - exp_labels: {severity: critical, job: support-router, instance: "api:8000"}
+            exp_annotations:
+              summary: "Сервис маршрутизации не отвечает"
+              description: "Prometheus больше 2 минут не может получить метрики api:8000."
+              runbook: "docs/runbook.md#routerdown"
+
+  - name: модель не загрузилась на одном из двух экземпляров
+    interval: 1m
+    input_series:
+      - series: 'router_model_loaded{job="support-router", instance="api:8000"}'
+        values: '1x10'
+      - series: 'router_model_loaded{job="support-router", instance="api-2:8000"}'
+        values: '0x10'
+    alert_rule_test:
+      - eval_time: 6m
+        alertname: RouterModelNotLoaded
+        exp_alerts:
+          - exp_labels: {severity: critical, job: support-router, instance: "api-2:8000"}
+            exp_annotations:
+              summary: "Сервис запущен, но модель не загружена"
+              description: "api-2:8000: проверка хешей или версии scikit-learn не прошла, /v1/route отвечает 503."
+              runbook: "docs/runbook.md#routermodelnotloaded"
+
+  - name: рабочий режим отправил обращение сам
+    interval: 1m
+    input_series:
+      - series: 'router_decisions_total{status="MANUAL_REVIEW", queue="Queue_Manual_Review", priority="P3"}'
+        values: '0+10x10'
+      - series: 'router_decisions_total{status="AUTO_RECOMMENDED", queue="Queue_Orders", priority="P3"}'
+        values: '0 0 0 0 0 1 1 1 1 1 1'
+    alert_rule_test:
+      - eval_time: 4m
+        alertname: RouterAutoSendWhileDisabled
+        exp_alerts: []
+      - eval_time: 6m
+        alertname: RouterAutoSendWhileDisabled
+        exp_alerts:
+          - exp_labels: {severity: critical}
+            exp_annotations:
+              summary: "Рабочий режим начал отправлять обращения сам"
+              description: "Автоотправка выключена политикой модели, такого быть не должно: загружена не та модель или политика."
+              runbook: "docs/runbook.md#routerautosendwhiledisabled"
+
+  - name: ошибки 5xx
+    interval: 1m
+    input_series:
+      - series: 'router_http_requests_total{endpoint="/v1/route", method="POST", status_code="200"}'
+        values: '0+100x30'
+      - series: 'router_http_requests_total{endpoint="/v1/route", method="POST", status_code="500"}'
+        values: '0+10x30'
+    alert_rule_test:
+      - eval_time: 20m
+        alertname: RouterHighErrorRate
+        exp_alerts:
+          - exp_labels: {severity: critical}
+            exp_annotations:
+              summary: "Больше 2% запросов заканчиваются ошибкой 5xx"
+              description: "Доля ответов 5xx за 5 минут: 9.091%."
+              runbook: "docs/runbook.md#routerhigherrorrate"
+
+  - name: всплеск P1 и спокойный час
+    interval: 1m
+    input_series:
+      - series: 'router_decisions_total{status="MANUAL_REVIEW", queue="Queue_Manual_Review", priority="P3"}'
+        values: '0+2x70'
+      - series: 'router_decisions_total{status="MANUAL_REVIEW", queue="Queue_Manual_Review", priority="P1"}'
+        values: '0+1x70'
+    alert_rule_test:
+      - eval_time: 65m
+        alertname: RouterRiskSpike
+        exp_alerts:
+          - exp_labels: {severity: warning}
+            exp_annotations:
+              summary: "Больше 5% обращений за час с приоритетом P1"
+              description: "На test таких было 0.16%. Нужны специалисты на угрозы и мошенничество, проверьте ложные срабатывания."
+              runbook: "docs/runbook.md#routerriskspike"
+
+  - name: спокойный поток без P1
+    interval: 1m
+    input_series:
+      - series: 'router_decisions_total{status="MANUAL_REVIEW", queue="Queue_Manual_Review", priority="P3"}'
+        values: '0+5x70'
+    alert_rule_test:
+      - eval_time: 65m
+        alertname: RouterRiskSpike
+        exp_alerts: []
+      - eval_time: 65m
+        alertname: RouterAutoSendWhileDisabled
+        exp_alerts: []

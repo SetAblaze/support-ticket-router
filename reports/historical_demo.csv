@@ -1,0 +1,16 @@
+text,expected,suggested_category,decision_category,queue,confidence,status,shadow_status,shadow_reasons
+I replaced my phone and cannot remember the security answer,ACCOUNT,ACCOUNT,OTHER,Queue_Manual_Review,0.8891420508971007,MANUAL_REVIEW,MANUAL_REVIEW,['LOW_TRAINING_SIMILARITY']
+Our finance team needs the paperwork proving we paid,INVOICES,DELIVERY,OTHER,Queue_Manual_Review,0.782340710940759,MANUAL_REVIEW,MANUAL_REVIEW,"['LOW_CONFIDENCE', 'LOW_TRAINING_SIMILARITY']"
+My purchase still has not shown up and I want an update,ORDER,ORDER,OTHER,Queue_Manual_Review,0.9348016312610673,MANUAL_REVIEW,AUTO_RECOMMENDED,['CATEGORY_AND_POLICY_ACCEPTED']
+The cancelled concert money has not come back yet,REFUNDS,REFUNDS,OTHER,Queue_Manual_Review,0.9883373552836133,MANUAL_REVIEW,AUTO_RECOMMENDED,['CATEGORY_AND_POLICY_ACCEPTED']
+I moved across town; future parcels need to go to the new place,SHIPPING,ORDER,OTHER,Queue_Manual_Review,0.2891280631795289,MANUAL_REVIEW,MANUAL_REVIEW,['LOW_CONFIDENCE']
+Please stop the promotional messages that keep arriving,NEWSLETTER,DELIVERY,OTHER,Queue_Manual_Review,0.6283081741811206,MANUAL_REVIEW,MANUAL_REVIEW,"['INSUFFICIENT_CONTEXT', 'LOW_CONFIDENCE', 'LOW_TRAINING_SIMILARITY']"
+My bank card is refused each time I try to finish,PAYMENT,REFUNDS,OTHER,Queue_Manual_Review,0.45684687028223153,MANUAL_REVIEW,MANUAL_REVIEW,"['LOW_CONFIDENCE', 'LOW_TRAINING_SIMILARITY']"
+I would like the details needed to telephone a human,CONTACT,CONTACT,OTHER,Queue_Manual_Review,0.9187975621448293,MANUAL_REVIEW,MANUAL_REVIEW,['LOW_TRAINING_SIMILARITY']
+Which ways are available for delivering the ticket?,DELIVERY,DELIVERY,OTHER,Queue_Manual_Review,0.9051206304148492,MANUAL_REVIEW,AUTO_RECOMMENDED,['CATEGORY_AND_POLICY_ACCEPTED']
+Why am I being asked to pay a charge for cancelling?,CANCELLATION_FEE,PAYMENT,OTHER,Queue_Manual_Review,0.9729687990312295,MANUAL_REVIEW,AUTO_RECOMMENDED,['CATEGORY_AND_POLICY_ACCEPTED']
+Can you predict whether the weekend will be sunny?,OTHER,DELIVERY,OTHER,Queue_Manual_Review,0.23200186523555164,MANUAL_REVIEW,MANUAL_REVIEW,"['LOW_CONFIDENCE', 'LOW_TRAINING_SIMILARITY']"
+The app vanishes the instant I tap its icon,OTHER,DELIVERY,OTHER,Queue_Manual_Review,0.5535504963077256,MANUAL_REVIEW,MANUAL_REVIEW,"['LOW_CONFIDENCE', 'LOW_TRAINING_SIMILARITY']"
+zorp widget banana nebula grumble,OTHER,ACCOUNT,OTHER,Queue_Manual_Review,0.37209345586411735,MANUAL_REVIEW,MANUAL_REVIEW,"['LOW_CONFIDENCE', 'LOW_TRAINING_SIMILARITY']"
+Можно объяснить работу магазина на русском?,OTHER,,OTHER,Queue_Manual_Review,,MANUAL_REVIEW,MANUAL_REVIEW,"['POSSIBLY_UNSUPPORTED_LANGUAGE', 'INSUFFICIENT_SUPPORTED_TEXT']"
+"Reset my password, return my money, and cancel my order",OTHER,ACCOUNT,OTHER,Queue_Manual_Review,0.8734480683797129,MANUAL_REVIEW,MANUAL_REVIEW,['POSSIBLE_MULTIPLE_REQUESTS']

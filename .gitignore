@@ -1,0 +1,18 @@
+__pycache__/
+*.pyc
+.venv/
+.pytest_cache/
+.ruff_cache/
+.ipynb_checkpoints/
+# Датасет Bitext в репозиторий не кладём: CSV скачивается с Kaggle и кладётся в data/raw.
+# Части выборки пересоздают ноутбук и скрипт обучения, паспорт разбиения остаётся в репозитории.
+data/raw/
+data/processed/*.csv
+# Модель (16 МБ) хранится в репозитории, чтобы docker compose собирал образ сразу после клонирования.
+# Файлы энкодера MiniLM скачиваются сами при первом запуске, в репозитории только их паспорт.
+models/encoder/*
+!models/encoder/encoder_manifest.json
+# Большие и служебные файлы прогона; results.json и остальные отчёты остаются.
+reports/loio_all_models_predictions.csv
+reports/server_logs/
+*.zip

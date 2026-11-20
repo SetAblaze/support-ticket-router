@@ -1,0 +1,3 @@
+category,intent
+CANCELLATION_FEE,check_cancellation_fee
+NEWSLETTER,newsletter_subscription

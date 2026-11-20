@@ -1,0 +1,131 @@
+# Правила алертов сервиса маршрутизации. Что делать по каждому: docs/runbook.md.
+# Пороги для доли обращений взяты из проверок этапа 11 (test Bitext, 220 новых фраз,
+# 100 обращений не по адресу); после месяца реального потока их нужно пересчитать.
+groups:
+  - name: support-router-availability
+    rules:
+      - alert: RouterDown
+        expr: up{job="support-router"} == 0
+        for: 2m
+        labels:
+          severity: critical
+        annotations:
+          summary: "Сервис маршрутизации не отвечает"
+          description: "Prometheus больше 2 минут не может получить метрики {{ $labels.instance }}."
+          runbook: "docs/runbook.md#routerdown"
+
+      - alert: RouterModelNotLoaded
+        expr: router_model_loaded == 0  # по каждому экземпляру: max() спрятал бы упавший за здоровым
+        for: 5m
+        labels:
+          severity: critical
+        annotations:
+          summary: "Сервис запущен, но модель не загружена"
+          description: "{{ $labels.instance }}: проверка хешей или версии scikit-learn не прошла, /v1/route отвечает 503."
+          runbook: "docs/runbook.md#routermodelnotloaded"
+
+      - alert: RouterHighErrorRate
+        expr: |
+          sum(rate(router_http_requests_total{status_code=~"5.."}[5m]))
+            / clamp_min(sum(rate(router_http_requests_total[5m])), 1e-9) > 0.02
+        for: 10m
+        labels:
+          severity: critical
+        annotations:
+          summary: "Больше 2% запросов заканчиваются ошибкой 5xx"
+          description: "Доля ответов 5xx за 5 минут: {{ $value | humanizePercentage }}."
+          runbook: "docs/runbook.md#routerhigherrorrate"
+
+      - alert: RouterSlowResponses
+        expr: |
+          histogram_quantile(0.95,
+            sum by (le) (rate(router_http_request_duration_seconds_bucket{endpoint="/v1/route"}[5m]))) > 0.5
+        for: 10m
+        labels:
+          severity: warning
+        annotations:
+          summary: "95% ответов /v1/route медленнее 0.5 секунды"
+          description: "При проверке 95% ответов укладывались в 0.04 секунды; сейчас {{ $value | humanizeDuration }}."
+          runbook: "docs/runbook.md#routerslowresponses"
+
+      - alert: RouterNoTraffic
+        expr: sum(increase(router_http_requests_total{endpoint=~"/v1/route.*"}[30m])) == 0
+        for: 15m
+        labels:
+          severity: warning
+        annotations:
+          summary: "45 минут нет ни одного обращения"
+          description: "Сервис жив, но запросов на маршрутизацию нет: возможно, сломалась интеграция с CRM."
+          runbook: "docs/runbook.md#routernotraffic"
+
+  - name: support-router-decisions
+    rules:
+      - alert: RouterAutoSendWhileDisabled
+        expr: sum(increase(router_decisions_total{status="AUTO_RECOMMENDED"}[5m])) > 0
+        labels:
+          severity: critical
+        annotations:
+          summary: "Рабочий режим начал отправлять обращения сам"
+          description: "Автоотправка выключена политикой модели, такого быть не должно: загружена не та модель или политика."
+          runbook: "docs/runbook.md#routerautosendwhiledisabled"
+
+      - alert: RouterModelErrors
+        expr: sum(increase(router_model_errors_total[15m])) > 0
+        labels:
+          severity: warning
+        annotations:
+          summary: "Модель не смогла оценить обращения"
+          description: "За 15 минут {{ $value }} обращений получили статус MODEL_ERROR и ушли оператору без темы."
+          runbook: "docs/runbook.md#routermodelerrors"
+
+      - alert: RouterRiskSpike
+        expr: |
+          (sum(increase(router_decisions_total{priority="P1"}[1h]))
+             / clamp_min(sum(increase(router_decisions_total[1h])), 1)) > 0.05
+          and sum(increase(router_decisions_total[1h])) > 50
+        labels:
+          severity: warning
+        annotations:
+          summary: "Больше 5% обращений за час с приоритетом P1"
+          description: "На test таких было 0.16%. Нужны специалисты на угрозы и мошенничество, проверьте ложные срабатывания."
+          runbook: "docs/runbook.md#routerriskspike"
+
+      - alert: RouterInputDrift
+        expr: |
+          (sum(increase(router_reason_codes_total{reason="LOW_TRAINING_SIMILARITY"}[1h]))
+             / clamp_min(sum(increase(router_decisions_total[1h])), 1)) > 0.6
+          and sum(increase(router_decisions_total[1h])) > 50
+        for: 30m
+        labels:
+          severity: warning
+        annotations:
+          summary: "Больше 60% обращений не похожи на обучающие"
+          description: "На test доля 0.4%, на новых фразах этапа 11 57%, на обращениях не по адресу 70%. Похоже, поток изменился."
+          runbook: "docs/runbook.md#routerinputdrift"
+
+      - alert: RouterUnsupportedLanguageSurge
+        expr: |
+          (sum(increase(router_reason_codes_total{reason="POSSIBLY_UNSUPPORTED_LANGUAGE"}[1h]))
+             / clamp_min(sum(increase(router_decisions_total[1h])), 1)) > 0.1
+          and sum(increase(router_decisions_total[1h])) > 50
+        for: 30m
+        labels:
+          severity: info
+        annotations:
+          summary: "Больше 10% обращений не на английском"
+          description: "Модель понимает только английский: такие обращения уходят оператору без темы."
+          runbook: "docs/runbook.md#routerunsupportedlanguagesurge"
+
+      - alert: RouterShadowCoverageDrop
+        expr: |
+          (sum(increase(router_shadow_decisions_total{status="AUTO_RECOMMENDED"}[6h]))
+             / clamp_min(sum(increase(router_shadow_decisions_total[6h])), 1))
+          < 0.5 * (sum(increase(router_shadow_decisions_total{status="AUTO_RECOMMENDED"}[7d]))
+             / clamp_min(sum(increase(router_shadow_decisions_total[7d])), 1))
+          and sum(increase(router_shadow_decisions_total[6h])) > 100
+        labels:
+          severity: warning
+        annotations:
+          summary: "Теневая политика стала уверенной вдвое реже, чем за неделю"
+          description: "Доля обращений, которые теневой режим отправил бы сам, упала вдвое против среднего за 7 дней."
+          runbook: "docs/runbook.md#routershadowcoveragedrop"

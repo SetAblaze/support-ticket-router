@@ -1,0 +1,823 @@
+{
+  "probabilities": [
+    [
+      0.8891420508971007,
+      0.003501850519471187,
+      0.057239671888186634,
+      0.010612894139471587,
+      0.0054969295950464125,
+      0.009645158787371771,
+      0.0023857596445936873,
+      0.004743093452191179,
+      0.0034879996647394253,
+      0.012060823193825489,
+      0.0016837682180016569
+    ],
+    [
+      0.061090507922993906,
+      0.025963791001028597,
+      0.029011971589295634,
+      0.782340710940759,
+      0.014445603481871135,
+      0.0016554381453808735,
+      0.011483484457869206,
+      0.0008165398289605313,
+      0.0062400776297381055,
+      0.0654796616083227,
+      0.0014722133937803653
+    ],
+    [
+      0.057064092288724666,
+      0.0003385916026926945,
+      0.0008578645318275851,
+      0.0003934054770788068,
+      0.00036733905986381996,
+      0.0036284531026797608,
+      0.00038531667839847555,
+      0.9348016312610673,
+      0.00030932059024491444,
+      0.0005335517520634902,
+      0.0013204336553584107
+    ],
+    [
+      0.0028764267932379927,
+      0.001581254732481695,
+      0.0017455888253541324,
+      0.0018040027782720409,
+      0.0016447504458705696,
+      0.00040130385183076493,
+      0.0005937983670440038,
+      0.000296686999433245,
+      0.00011119389070280907,
+      0.9883373552836133,
+      0.0006076380321594074
+    ],
+    [
+      0.2521429581331047,
+      0.022723804919247494,
+      0.09163162136709378,
+      0.10108189155454379,
+      0.03698604347923899,
+      0.05379027914974273,
+      0.050722493196940444,
+      0.2891280631795289,
+      0.028669177070405876,
+      0.06378145829224598,
+      0.009342209657907366
+    ],
+    [
+      0.13054478495499214,
+      0.023890439044218757,
+      0.04536222829121068,
+      0.6283081741811206,
+      0.02348091497394079,
+      0.012573299796773735,
+      0.04047041062164574,
+      0.005415483194255051,
+      0.04579171982726938,
+      0.037910122194284704,
+      0.0062524229202885525
+    ],
+    [
+      0.049013618641284486,
+      0.004915818991955156,
+      0.018063795553531686,
+      0.006210732098325768,
+      0.010722899447844637,
+      0.01862619404565005,
+      0.003819539067705169,
+      0.005517267235715118,
+      0.4209900020411023,
+      0.45684687028223153,
+      0.0052732625946540265
+    ],
+    [
+      0.014223695008621444,
+      0.0034280304678282985,
+      0.9187975621448293,
+      0.02962531109289253,
+      0.008362322934094573,
+      0.006608241030569237,
+      0.0030274429971473243,
+      0.004951992194274923,
+      0.001778594919239204,
+      0.007924145430479248,
+      0.0012726617800240558
+    ],
+    [
+      0.004019109157750427,
+      0.0008549731246312926,
+      0.07221595835259659,
+      0.9051206304148492,
+      0.0035638706118297442,
+      0.0005790560531399643,
+      0.0007565134572413868,
+      0.004761273458268249,
+      0.0006873664131638996,
+      0.006605835971126428,
+      0.0008354129854027888
+    ],
+    [
+      0.0025910466149089207,
+      0.0020252955097699236,
+      0.00078203143841172,
+      0.0022645199929397504,
+      0.007578136397697787,
+      0.00323195496587649,
+      0.0007786872979456066,
+      0.002655396564077624,
+      0.9729687990312295,
+      0.004065131574885757,
+      0.0010590006122568505
+    ],
+    [
+      0.19283378383561506,
+      0.021349868881447805,
+      0.20013043559788285,
+      0.23200186523555164,
+      0.030852216689541048,
+      0.032778679672933665,
+      0.024046556030188668,
+      0.10796509649671102,
+      0.016504477588678852,
+      0.13619944555754487,
+      0.0053375744139044674
+    ],
+    [
+      0.06132244315373161,
+      0.035621493373521405,
+      0.13727272686167827,
+      0.5535504963077256,
+      0.032009890144526786,
+      0.01481176605885211,
+      0.016699265411447263,
+      0.02596512441022913,
+      0.00799447061676188,
+      0.11087963733905545,
+      0.003872686322470605
+    ],
+    [
+      0.37209345586411735,
+      0.015046572359720447,
+      0.08762031360067975,
+      0.023393417164417944,
+      0.0637911231065336,
+      0.13338791706318645,
+      0.01524269178882125,
+      0.08395730437256084,
+      0.07240989427985753,
+      0.12129884586866842,
+      0.011758464531436497
+    ],
+    [
+      0.4077545342928418,
+      0.016639422887295228,
+      0.11108821111203405,
+      0.026600881430882007,
+      0.05649873272602156,
+      0.1137889591689387,
+      0.01171882680450503,
+      0.08815146975394555,
+      0.07048254057322514,
+      0.08583459766573456,
+      0.011441823584576304
+    ],
+    [
+      0.8734480683797129,
+      0.0003787370755964838,
+      6.675437670378845e-05,
+      9.541157245078802e-05,
+      0.00010863282523269368,
+      2.9524917452342217e-05,
+      0.00029193661234512807,
+      0.11733705368560997,
+      0.00015804837965690201,
+      0.007729678117472474,
+      0.0003561540577665233
+    ],
+    [
+      0.0637364064758167,
+      0.008436301393190042,
+      0.23870430416171512,
+      0.009340042560368007,
+      0.02344988651530643,
+      0.20139974561555746,
+      0.007683622080509486,
+      0.34003652589493627,
+      0.02541075571121344,
+      0.07527094547443434,
+      0.006531464116952656
+    ],
+    [
+      0.4077545342928418,
+      0.016639422887295228,
+      0.11108821111203405,
+      0.026600881430882007,
+      0.05649873272602156,
+      0.1137889591689387,
+      0.01171882680450503,
+      0.08815146975394555,
+      0.07048254057322514,
+      0.08583459766573456,
+      0.011441823584576304
+    ],
+    [
+      0.4077545342928418,
+      0.016639422887295228,
+      0.11108821111203405,
+      0.026600881430882007,
+      0.05649873272602156,
+      0.1137889591689387,
+      0.01171882680450503,
+      0.08815146975394555,
+      0.07048254057322514,
+      0.08583459766573456,
+      0.011441823584576304
+    ]
+  ],
+  "routes": [
+    {
+      "schema_version": "3.0",
+      "category": "ACCOUNT",
+      "suggested_category": "ACCOUNT",
+      "decision_category": "OTHER",
+      "accepted_category": null,
+      "queue": "Queue_Manual_Review",
+      "topic_queue": "Queue_Accounts",
+      "confidence": 0.8891420508971007,
+      "similarity": 0.4251216000878343,
+      "top3": {
+        "ACCOUNT": 0.8891420508971007,
+        "CONTACT": 0.057239671888186634,
+        "REFUNDS": 0.012060823193825489
+      },
+      "status": "MANUAL_REVIEW",
+      "priority": "P3",
+      "risk_flags": [],
+      "reason_codes": [
+        "AUTO_POLICY_DISABLED",
+        "LOW_TRAINING_SIMILARITY"
+      ],
+      "model_id": "router-937116a8646a48e3",
+      "policy_version": "selective-v3-shadow",
+      "business_policy_approved": false,
+      "delivery_status": "NOT_SENT",
+      "created_at_utc": "2026-11-18T13:49:29.279844+00:00",
+      "context": {
+        "vip": "unknown",
+        "repeat": "unknown",
+        "sla_overdue": "unknown"
+      }
+    },
+    {
+      "schema_version": "3.0",
+      "category": "DELIVERY",
+      "suggested_category": "DELIVERY",
+      "decision_category": "OTHER",
+      "accepted_category": null,
+      "queue": "Queue_Manual_Review",
+      "topic_queue": "Queue_Delivery",
+      "confidence": 0.782340710940759,
+      "similarity": 0.25206583614225936,
+      "top3": {
+        "DELIVERY": 0.782340710940759,
+        "REFUNDS": 0.0654796616083227,
+        "ACCOUNT": 0.061090507922993906
+      },
+      "status": "MANUAL_REVIEW",
+      "priority": "P3",
+      "risk_flags": [],
+      "reason_codes": [
+        "AUTO_POLICY_DISABLED",
+        "LOW_CONFIDENCE",
+        "LOW_TRAINING_SIMILARITY"
+      ],
+      "model_id": "router-937116a8646a48e3",
+      "policy_version": "selective-v3-shadow",
+      "business_policy_approved": false,
+      "delivery_status": "NOT_SENT",
+      "created_at_utc": "2026-11-18T13:49:29.312354+00:00",
+      "context": {
+        "vip": "unknown",
+        "repeat": "unknown",
+        "sla_overdue": "unknown"
+      }
+    },
+    {
+      "schema_version": "3.0",
+      "category": "ORDER",
+      "suggested_category": "ORDER",
+      "decision_category": "OTHER",
+      "accepted_category": null,
+      "queue": "Queue_Manual_Review",
+      "topic_queue": "Queue_Orders",
+      "confidence": 0.9348016312610673,
+      "similarity": 0.5155463898263718,
+      "top3": {
+        "ORDER": 0.9348016312610673,
+        "ACCOUNT": 0.057064092288724666,
+        "INVOICES": 0.0036284531026797608
+      },
+      "status": "MANUAL_REVIEW",
+      "priority": "P3",
+      "risk_flags": [],
+      "reason_codes": [
+        "AUTO_POLICY_DISABLED"
+      ],
+      "model_id": "router-937116a8646a48e3",
+      "policy_version": "selective-v3-shadow",
+      "business_policy_approved": false,
+      "delivery_status": "NOT_SENT",
+      "created_at_utc": "2026-11-18T13:49:29.332771+00:00",
+      "context": {
+        "vip": "unknown",
+        "repeat": "unknown",
+        "sla_overdue": "unknown"
+      }
+    },
+    {
+      "schema_version": "3.0",
+      "category": "REFUNDS",
+      "suggested_category": "REFUNDS",
+      "decision_category": "OTHER",
+      "accepted_category": null,
+      "queue": "Queue_Manual_Review",
+      "topic_queue": "Queue_Refunds",
+      "confidence": 0.9883373552836133,
+      "similarity": 0.5867778415642607,
+      "top3": {
+        "REFUNDS": 0.9883373552836133,
+        "ACCOUNT": 0.0028764267932379927,
+        "DELIVERY": 0.0018040027782720409
+      },
+      "status": "MANUAL_REVIEW",
+      "priority": "P3",
+      "risk_flags": [],
+      "reason_codes": [
+        "AUTO_POLICY_DISABLED"
+      ],
+      "model_id": "router-937116a8646a48e3",
+      "policy_version": "selective-v3-shadow",
+      "business_policy_approved": false,
+      "delivery_status": "NOT_SENT",
+      "created_at_utc": "2026-11-18T13:49:29.352215+00:00",
+      "context": {
+        "vip": "unknown",
+        "repeat": "unknown",
+        "sla_overdue": "unknown"
+      }
+    },
+    {
+      "schema_version": "3.0",
+      "category": "ORDER",
+      "suggested_category": "ORDER",
+      "decision_category": "OTHER",
+      "accepted_category": null,
+      "queue": "Queue_Manual_Review",
+      "topic_queue": "Queue_Orders",
+      "confidence": 0.2891280631795289,
+      "similarity": 0.4989145389925094,
+      "top3": {
+        "ORDER": 0.2891280631795289,
+        "ACCOUNT": 0.2521429581331047,
+        "DELIVERY": 0.10108189155454379
+      },
+      "status": "MANUAL_REVIEW",
+      "priority": "P3",
+      "risk_flags": [],
+      "reason_codes": [
+        "AUTO_POLICY_DISABLED",
+        "LOW_CONFIDENCE"
+      ],
+      "model_id": "router-937116a8646a48e3",
+      "policy_version": "selective-v3-shadow",
+      "business_policy_approved": false,
+      "delivery_status": "NOT_SENT",
+      "created_at_utc": "2026-11-18T13:49:29.371693+00:00",
+      "context": {
+        "vip": "unknown",
+        "repeat": "unknown",
+        "sla_overdue": "unknown"
+      }
+    },
+    {
+      "schema_version": "3.0",
+      "category": "DELIVERY",
+      "suggested_category": "DELIVERY",
+      "decision_category": "OTHER",
+      "accepted_category": null,
+      "queue": "Queue_Manual_Review",
+      "topic_queue": "Queue_Delivery",
+      "confidence": 0.6283081741811206,
+      "similarity": 0.2313350275863809,
+      "top3": {
+        "DELIVERY": 0.6283081741811206,
+        "ACCOUNT": 0.13054478495499214,
+        "PAYMENT": 0.04579171982726938
+      },
+      "status": "MANUAL_REVIEW",
+      "priority": "P3",
+      "risk_flags": [],
+      "reason_codes": [
+        "INSUFFICIENT_CONTEXT",
+        "AUTO_POLICY_DISABLED",
+        "LOW_CONFIDENCE",
+        "LOW_TRAINING_SIMILARITY"
+      ],
+      "model_id": "router-937116a8646a48e3",
+      "policy_version": "selective-v3-shadow",
+      "business_policy_approved": false,
+      "delivery_status": "NOT_SENT",
+      "created_at_utc": "2026-11-18T13:49:29.391352+00:00",
+      "context": {
+        "vip": "unknown",
+        "repeat": "unknown",
+        "sla_overdue": "unknown"
+      }
+    },
+    {
+      "schema_version": "3.0",
+      "category": "REFUNDS",
+      "suggested_category": "REFUNDS",
+      "decision_category": "OTHER",
+      "accepted_category": null,
+      "queue": "Queue_Manual_Review",
+      "topic_queue": "Queue_Refunds",
+      "confidence": 0.45684687028223153,
+      "similarity": 0.3117044447247919,
+      "top3": {
+        "REFUNDS": 0.45684687028223153,
+        "PAYMENT": 0.4209900020411023,
+        "ACCOUNT": 0.049013618641284486
+      },
+      "status": "MANUAL_REVIEW",
+      "priority": "P3",
+      "risk_flags": [],
+      "reason_codes": [
+        "AUTO_POLICY_DISABLED",
+        "LOW_CONFIDENCE",
+        "LOW_TRAINING_SIMILARITY"
+      ],
+      "model_id": "router-937116a8646a48e3",
+      "policy_version": "selective-v3-shadow",
+      "business_policy_approved": false,
+      "delivery_status": "NOT_SENT",
+      "created_at_utc": "2026-11-18T13:49:29.412226+00:00",
+      "context": {
+        "vip": "unknown",
+        "repeat": "unknown",
+        "sla_overdue": "unknown"
+      }
+    },
+    {
+      "schema_version": "3.0",
+      "category": "CONTACT",
+      "suggested_category": "CONTACT",
+      "decision_category": "OTHER",
+      "accepted_category": null,
+      "queue": "Queue_Manual_Review",
+      "topic_queue": "Queue_Support",
+      "confidence": 0.9187975621448293,
+      "similarity": 0.36107227842267325,
+      "top3": {
+        "CONTACT": 0.9187975621448293,
+        "DELIVERY": 0.02962531109289253,
+        "ACCOUNT": 0.014223695008621444
+      },
+      "status": "MANUAL_REVIEW",
+      "priority": "P3",
+      "risk_flags": [],
+      "reason_codes": [
+        "AUTO_POLICY_DISABLED",
+        "LOW_TRAINING_SIMILARITY"
+      ],
+      "model_id": "router-937116a8646a48e3",
+      "policy_version": "selective-v3-shadow",
+      "business_policy_approved": false,
+      "delivery_status": "NOT_SENT",
+      "created_at_utc": "2026-11-18T13:49:29.433316+00:00",
+      "context": {
+        "vip": "unknown",
+        "repeat": "unknown",
+        "sla_overdue": "unknown"
+      }
+    },
+    {
+      "schema_version": "3.0",
+      "category": "DELIVERY",
+      "suggested_category": "DELIVERY",
+      "decision_category": "OTHER",
+      "accepted_category": null,
+      "queue": "Queue_Manual_Review",
+      "topic_queue": "Queue_Delivery",
+      "confidence": 0.9051206304148492,
+      "similarity": 0.5509157445450521,
+      "top3": {
+        "DELIVERY": 0.9051206304148492,
+        "CONTACT": 0.07221595835259659,
+        "REFUNDS": 0.006605835971126428
+      },
+      "status": "MANUAL_REVIEW",
+      "priority": "P3",
+      "risk_flags": [],
+      "reason_codes": [
+        "AUTO_POLICY_DISABLED"
+      ],
+      "model_id": "router-937116a8646a48e3",
+      "policy_version": "selective-v3-shadow",
+      "business_policy_approved": false,
+      "delivery_status": "NOT_SENT",
+      "created_at_utc": "2026-11-18T13:49:29.453946+00:00",
+      "context": {
+        "vip": "unknown",
+        "repeat": "unknown",
+        "sla_overdue": "unknown"
+      }
+    },
+    {
+      "schema_version": "3.0",
+      "category": "PAYMENT",
+      "suggested_category": "PAYMENT",
+      "decision_category": "OTHER",
+      "accepted_category": null,
+      "queue": "Queue_Manual_Review",
+      "topic_queue": "Queue_Payments",
+      "confidence": 0.9729687990312295,
+      "similarity": 0.4708756204855543,
+      "top3": {
+        "PAYMENT": 0.9729687990312295,
+        "FEEDBACK": 0.007578136397697787,
+        "REFUNDS": 0.004065131574885757
+      },
+      "status": "MANUAL_REVIEW",
+      "priority": "P3",
+      "risk_flags": [],
+      "reason_codes": [
+        "AUTO_POLICY_DISABLED"
+      ],
+      "model_id": "router-937116a8646a48e3",
+      "policy_version": "selective-v3-shadow",
+      "business_policy_approved": false,
+      "delivery_status": "NOT_SENT",
+      "created_at_utc": "2026-11-18T13:49:29.474757+00:00",
+      "context": {
+        "vip": "unknown",
+        "repeat": "unknown",
+        "sla_overdue": "unknown"
+      }
+    },
+    {
+      "schema_version": "3.0",
+      "category": "DELIVERY",
+      "suggested_category": "DELIVERY",
+      "decision_category": "OTHER",
+      "accepted_category": null,
+      "queue": "Queue_Manual_Review",
+      "topic_queue": "Queue_Delivery",
+      "confidence": 0.23200186523555164,
+      "similarity": 0.345509305988285,
+      "top3": {
+        "DELIVERY": 0.23200186523555164,
+        "CONTACT": 0.20013043559788285,
+        "ACCOUNT": 0.19283378383561506
+      },
+      "status": "MANUAL_REVIEW",
+      "priority": "P3",
+      "risk_flags": [],
+      "reason_codes": [
+        "AUTO_POLICY_DISABLED",
+        "LOW_CONFIDENCE",
+        "LOW_TRAINING_SIMILARITY"
+      ],
+      "model_id": "router-937116a8646a48e3",
+      "policy_version": "selective-v3-shadow",
+      "business_policy_approved": false,
+      "delivery_status": "NOT_SENT",
+      "created_at_utc": "2026-11-18T13:49:29.495545+00:00",
+      "context": {
+        "vip": "unknown",
+        "repeat": "unknown",
+        "sla_overdue": "unknown"
+      }
+    },
+    {
+      "schema_version": "3.0",
+      "category": "DELIVERY",
+      "suggested_category": "DELIVERY",
+      "decision_category": "OTHER",
+      "accepted_category": null,
+      "queue": "Queue_Manual_Review",
+      "topic_queue": "Queue_Delivery",
+      "confidence": 0.5535504963077256,
+      "similarity": 0.2636502622158739,
+      "top3": {
+        "DELIVERY": 0.5535504963077256,
+        "CONTACT": 0.13727272686167827,
+        "REFUNDS": 0.11087963733905545
+      },
+      "status": "MANUAL_REVIEW",
+      "priority": "P3",
+      "risk_flags": [],
+      "reason_codes": [
+        "AUTO_POLICY_DISABLED",
+        "LOW_CONFIDENCE",
+        "LOW_TRAINING_SIMILARITY"
+      ],
+      "model_id": "router-937116a8646a48e3",
+      "policy_version": "selective-v3-shadow",
+      "business_policy_approved": false,
+      "delivery_status": "NOT_SENT",
+      "created_at_utc": "2026-11-18T13:49:29.517299+00:00",
+      "context": {
+        "vip": "unknown",
+        "repeat": "unknown",
+        "sla_overdue": "unknown"
+      }
+    },
+    {
+      "schema_version": "3.0",
+      "category": "ACCOUNT",
+      "suggested_category": "ACCOUNT",
+      "decision_category": "OTHER",
+      "accepted_category": null,
+      "queue": "Queue_Manual_Review",
+      "topic_queue": "Queue_Accounts",
+      "confidence": 0.37209345586411735,
+      "similarity": 0.2645962682278723,
+      "top3": {
+        "ACCOUNT": 0.37209345586411735,
+        "INVOICES": 0.13338791706318645,
+        "REFUNDS": 0.12129884586866842
+      },
+      "status": "MANUAL_REVIEW",
+      "priority": "P3",
+      "risk_flags": [],
+      "reason_codes": [
+        "AUTO_POLICY_DISABLED",
+        "LOW_CONFIDENCE",
+        "LOW_TRAINING_SIMILARITY"
+      ],
+      "model_id": "router-937116a8646a48e3",
+      "policy_version": "selective-v3-shadow",
+      "business_policy_approved": false,
+      "delivery_status": "NOT_SENT",
+      "created_at_utc": "2026-11-18T13:49:29.538685+00:00",
+      "context": {
+        "vip": "unknown",
+        "repeat": "unknown",
+        "sla_overdue": "unknown"
+      }
+    },
+    {
+      "schema_version": "3.0",
+      "category": null,
+      "suggested_category": null,
+      "decision_category": "OTHER",
+      "accepted_category": null,
+      "queue": "Queue_Manual_Review",
+      "topic_queue": null,
+      "confidence": null,
+      "similarity": null,
+      "top3": {},
+      "status": "MANUAL_REVIEW",
+      "priority": "P3",
+      "risk_flags": [],
+      "reason_codes": [
+        "POSSIBLY_UNSUPPORTED_LANGUAGE",
+        "INSUFFICIENT_SUPPORTED_TEXT"
+      ],
+      "model_id": "router-937116a8646a48e3",
+      "policy_version": "selective-v3-shadow",
+      "business_policy_approved": false,
+      "delivery_status": "NOT_SENT",
+      "created_at_utc": "2026-11-18T13:49:29.558977+00:00",
+      "context": {
+        "vip": "unknown",
+        "repeat": "unknown",
+        "sla_overdue": "unknown"
+      }
+    },
+    {
+      "schema_version": "3.0",
+      "category": "ACCOUNT",
+      "suggested_category": "ACCOUNT",
+      "decision_category": "OTHER",
+      "accepted_category": null,
+      "queue": "Queue_Manual_Review",
+      "topic_queue": "Queue_Accounts",
+      "confidence": 0.8734480683797129,
+      "similarity": 0.6700509147742987,
+      "top3": {
+        "ACCOUNT": 0.8734480683797129,
+        "ORDER": 0.11733705368560997,
+        "REFUNDS": 0.007729678117472474
+      },
+      "status": "MANUAL_REVIEW",
+      "priority": "P3",
+      "risk_flags": [],
+      "reason_codes": [
+        "POSSIBLE_MULTIPLE_REQUESTS",
+        "AUTO_POLICY_DISABLED"
+      ],
+      "model_id": "router-937116a8646a48e3",
+      "policy_version": "selective-v3-shadow",
+      "business_policy_approved": false,
+      "delivery_status": "NOT_SENT",
+      "created_at_utc": "2026-11-18T13:49:29.559115+00:00",
+      "context": {
+        "vip": "unknown",
+        "repeat": "unknown",
+        "sla_overdue": "unknown"
+      }
+    },
+    {
+      "schema_version": "3.0",
+      "category": "ORDER",
+      "suggested_category": "ORDER",
+      "decision_category": "OTHER",
+      "accepted_category": null,
+      "queue": "Queue_Manual_Review",
+      "topic_queue": "Queue_Orders",
+      "confidence": 0.34003652589493627,
+      "similarity": 0.5036689415171306,
+      "top3": {
+        "ORDER": 0.34003652589493627,
+        "CONTACT": 0.23870430416171512,
+        "INVOICES": 0.20139974561555746
+      },
+      "status": "MANUAL_REVIEW",
+      "priority": "P1",
+      "risk_flags": [
+        "POSSIBLE_THREAT"
+      ],
+      "reason_codes": [
+        "POSSIBLE_THREAT_SPECIALIST_REVIEW",
+        "AUTO_POLICY_DISABLED",
+        "LOW_CONFIDENCE"
+      ],
+      "model_id": "router-937116a8646a48e3",
+      "policy_version": "selective-v3-shadow",
+      "business_policy_approved": false,
+      "delivery_status": "NOT_SENT",
+      "created_at_utc": "2026-11-18T13:49:29.580340+00:00",
+      "context": {
+        "vip": "unknown",
+        "repeat": "unknown",
+        "sla_overdue": "unknown"
+      }
+    },
+    {
+      "schema_version": "3.0",
+      "category": null,
+      "suggested_category": null,
+      "decision_category": null,
+      "accepted_category": null,
+      "queue": null,
+      "topic_queue": null,
+      "confidence": null,
+      "similarity": null,
+      "top3": {},
+      "status": "NEEDS_CLARIFICATION",
+      "priority": "P3",
+      "risk_flags": [],
+      "reason_codes": [
+        "EMPTY_OR_INVALID_INPUT"
+      ],
+      "model_id": "router-937116a8646a48e3",
+      "policy_version": "selective-v3-shadow",
+      "business_policy_approved": false,
+      "delivery_status": "NOT_SENT",
+      "created_at_utc": "2026-11-18T13:49:29.600833+00:00",
+      "context": {}
+    },
+    {
+      "schema_version": "3.0",
+      "category": null,
+      "suggested_category": null,
+      "decision_category": "OTHER",
+      "accepted_category": null,
+      "queue": "Queue_Manual_Review",
+      "topic_queue": null,
+      "confidence": null,
+      "similarity": null,
+      "top3": {},
+      "status": "MANUAL_REVIEW",
+      "priority": "P3",
+      "risk_flags": [],
+      "reason_codes": [
+        "POSSIBLY_UNSUPPORTED_LANGUAGE",
+        "INSUFFICIENT_SUPPORTED_TEXT"
+      ],
+      "model_id": "router-937116a8646a48e3",
+      "policy_version": "selective-v3-shadow",
+      "business_policy_approved": false,
+      "delivery_status": "NOT_SENT",
+      "created_at_utc": "2026-11-18T13:49:29.600885+00:00",
+      "context": {
+        "vip": "unknown",
+        "repeat": "unknown",
+        "sla_overdue": "unknown"
+      }
+    }
+  ]
+}

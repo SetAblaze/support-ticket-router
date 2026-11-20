@@ -1,0 +1,32 @@
+группа,что проверяем,текст,ждём,модель думает,уверенность,приоритет,рабочий режим,теневой режим,тема,правило,пройдено
+форма текста,капс и восклицания,I WANT A REFUND NOW!!!,REFUNDS,REFUNDS,0.995,P3,MANUAL_REVIEW,сам: Queue_Refunds,✓,,True
+форма текста,лишние пробелы и переносы,"  I   want
+ to cancel 	 my order  ",ORDER,ORDER,0.988,P3,MANUAL_REVIEW,сам: Queue_Orders,✓,,True
+форма текста,опечатки,i wnat to chnage my shiping adress,SHIPPING,ORDER,0.447,P3,MANUAL_REVIEW,MANUAL_REVIEW,✗,,True
+форма текста,опечатки и капс,CANT LOGIN TO MY ACOUNT!!!,ACCOUNT,ACCOUNT,0.981,P3,MANUAL_REVIEW,MANUAL_REVIEW,✓,,True
+форма текста,сокращения,pls cancel my order asap thx,ORDER,ORDER,0.985,P3,MANUAL_REVIEW,сам: Queue_Orders,✓,,True
+форма текста,смайлики,where is my order 😡😡,ORDER,ORDER,0.996,P3,MANUAL_REVIEW,сам: Queue_Orders,✓,,True
+форма текста,вежливо и длинно,"Hello, I hope you are doing well. I was wondering if you could poss...",INVOICES,INVOICES,0.649,P3,MANUAL_REVIEW,MANUAL_REVIEW,✓,,True
+форма текста,одно слово,refund,REFUNDS,REFUNDS,0.997,P3,MANUAL_REVIEW,сам: Queue_Refunds,✓,,True
+форма текста,короткая жалоба,I can't log in,ACCOUNT,INVOICES,0.476,P3,MANUAL_REVIEW,MANUAL_REVIEW,✗,,True
+форма текста,шаблон вместо номера,I have a problem with order {{Order Number}},ORDER,PAYMENT,0.752,P3,MANUAL_REVIEW,MANUAL_REVIEW,✗,,True
+форма текста,номер заказа цифрами,my order 48213 has not arrived yet,ORDER,ORDER,0.986,P3,MANUAL_REVIEW,сам: Queue_Orders,✓,,True
+форма текста,отрицание,"I do not want a refund, I want to change my order",ORDER,REFUNDS,0.653,P3,MANUAL_REVIEW,MANUAL_REVIEW,✗,,True
+форма текста,HTML-разметка,<b>cancel</b> my order please,ORDER,ORDER,0.99,P3,MANUAL_REVIEW,сам: Queue_Orders,✓,,True
+форма текста,длинная история,"Hello, I have been a customer of yours for many years and I have al...",REFUNDS,REFUNDS,0.979,P3,MANUAL_REVIEW,MANUAL_REVIEW,✓,,True
+форма текста,эмоции без просьбы,you are the worst company ever,FEEDBACK,FEEDBACK,0.361,P3,MANUAL_REVIEW,MANUAL_REVIEW,✓,,True
+не по адресу,приветствие без просьбы,hello,к оператору,ACCOUNT,0.322,P3,MANUAL_REVIEW,MANUAL_REVIEW,,,True
+не по адресу,вопрос не о магазине,What is the capital of France?,к оператору,CONTACT,0.833,P3,MANUAL_REVIEW,MANUAL_REVIEW,,,True
+не по адресу,русский язык,Где мой заказ?,к оператору,нет,,P3,MANUAL_REVIEW,MANUAL_REVIEW,,✓,True
+не по адресу,смесь языков,"Привет, I need a refund",к оператору,нет,,P3,MANUAL_REVIEW,MANUAL_REVIEW,,✓,True
+не по адресу,испанский язык,Quiero cancelar mi pedido,к оператору,нет,,P3,MANUAL_REVIEW,MANUAL_REVIEW,,✓,True
+не по адресу,только знаки,?!?!,к оператору,нет,,P3,MANUAL_REVIEW,MANUAL_REVIEW,,✓,True
+не по адресу,похоже на код,'; DROP TABLE tickets; --,к оператору,DELIVERY,0.939,P3,MANUAL_REVIEW,MANUAL_REVIEW,,,True
+не по адресу,только ссылка,https://example.com/help,к оператору,FEEDBACK,0.585,P3,MANUAL_REVIEW,MANUAL_REVIEW,,,True
+несколько тем,две темы,My payment failed and I need to change my shipping address,к оператору,SHIPPING,0.56,P3,MANUAL_REVIEW,MANUAL_REVIEW,,✗,False
+несколько тем,три темы,"Reset my password, return my money, and cancel my order",к оператору,ACCOUNT,0.873,P3,MANUAL_REVIEW,MANUAL_REVIEW,,✓,True
+риски,угроза через «I'm»,I'm going to kill you,к оператору,INVOICES,0.52,P1,MANUAL_REVIEW,MANUAL_REVIEW,,✓,True
+риски,иск через «gonna»,I'm gonna sue you,к оператору,CONTACT,0.464,P2,MANUAL_REVIEW,MANUAL_REVIEW,,✓,True
+риски,отрицание угрозы,"I'm not going to hurt anyone, I just want my refund",REFUNDS,REFUNDS,0.984,P3,MANUAL_REVIEW,MANUAL_REVIEW,✓,✓,True
+риски,взлом другим порядком слов,Someone hacked my account and ordered things I never asked for,к оператору,ACCOUNT,0.975,P1,MANUAL_REVIEW,MANUAL_REVIEW,,✓,True
+риски,мошенничество новыми словами,I see a fraudulent charge on my card,к оператору,PAYMENT,0.405,P3,MANUAL_REVIEW,MANUAL_REVIEW,,✗,False

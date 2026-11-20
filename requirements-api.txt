@@ -1,0 +1,12 @@
+# Сервис FastAPI (Docker). scikit-learn должен совпадать с версией, которой обучена модель.
+numpy==2.4.6
+pandas==2.2.3
+scipy==1.16.3
+scikit-learn==1.8.0
+joblib==1.6.0
+threadpoolctl==3.8.0
+fastapi==0.163.2
+starlette==0.52.1
+pydantic==2.12.4
+uvicorn==0.54.0
+prometheus-client==0.26.0

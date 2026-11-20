@@ -1,0 +1,101 @@
+id,text,topic
+1,"What's the weather going to be like in London this weekend?",off_topic
+2,"Can you recommend a good recipe for chicken soup?",off_topic
+3,"Who won the football World Cup in 2018?",off_topic
+4,"Help me write an essay about the French Revolution.",off_topic
+5,"What is the square root of 144?",off_topic
+6,"Tell me a joke about programmers.",off_topic
+7,"How do I teach my dog to sit?",off_topic
+8,"What's the best way to learn Spanish quickly?",off_topic
+9,"Can you explain how a car engine works?",off_topic
+10,"Which movie should I watch tonight?",off_topic
+11,"How many calories are in a banana?",off_topic
+12,"Write a poem about autumn.",off_topic
+13,"What time is it in Tokyo right now?",off_topic
+14,"Could you give me some tips for a job interview?",off_topic
+15,"How do I remove a coffee stain from a white shirt?",off_topic
+16,"What is the capital of Australia?",off_topic
+17,"I'm bored, let's play a game.",off_topic
+18,"Is it healthy to drink eight glasses of water a day?",off_topic
+19,"Do you believe in aliens?",off_topic
+20,"What should I name my new kitten?",off_topic
+21,"How do I fix a flat bicycle tyre?",off_topic
+22,"Recommend me a good book about history.",off_topic
+23,"What's the meaning of life?",off_topic
+24,"How tall is Mount Everest?",off_topic
+25,"Can you sing me a lullaby?",off_topic
+26,"Do you have this jacket in size medium?",out_of_scope
+27,"Are you hiring? I'd like to send my CV.",out_of_scope
+28,"Where is your nearest physical store?",out_of_scope
+29,"Is the blue backpack waterproof?",out_of_scope
+30,"I represent a supplier and would like to propose a partnership.",out_of_scope
+31,"Do you sell gift cards?",out_of_scope
+32,"What materials is this sofa made of?",out_of_scope
+33,"Does the laptop come with a warranty?",out_of_scope
+34,"I'm a journalist and would like a statement from your press office.",out_of_scope
+35,"Will this phone case fit the newest model?",out_of_scope
+36,"Do you offer discounts for students?",out_of_scope
+37,"When does the summer sale start?",out_of_scope
+38,"Can I bring my dog into your shop?",out_of_scope
+39,"Is there parking near your shop?",out_of_scope
+40,"Is this product vegan and cruelty-free?",out_of_scope
+41,"The app closes by itself as soon as I open it.",app_failure
+42,"Your website shows a blank white page on my laptop.",app_failure
+43,"The search bar on your site doesn't return anything.",app_failure
+44,"Images on the product pages are not loading.",app_failure
+45,"The mobile app is extremely slow since the last update.",app_failure
+46,"I get a 404 page when I click on the menu.",app_failure
+47,"The page layout is broken on my tablet, buttons overlap each other.",app_failure
+48,"Your app drains my phone battery.",app_failure
+49,"The website is down, I only see a server message.",app_failure
+50,"The filters in the catalogue don't work on mobile.",app_failure
+51,"The app won't install on my Android phone.",app_failure
+52,"The site's dark mode makes the text unreadable.",app_failure
+53,"Scrolling the catalogue freezes my browser.",app_failure
+54,"Your site certificate looks expired, my browser shows a security warning.",app_failure
+55,"The language switcher on your site does nothing.",app_failure
+56,"asdfgh jkl qwerty",gibberish
+57,"zxcvbnm poiuyt lkjhg",gibberish
+58,"blorp snizzle wibwob framtag",gibberish
+59,"1234567890",gibberish
+60,"???",gibberish
+61,"aaaaaaaaaaaaaaaaaaaa",gibberish
+62,"lorem ipsum dolor sit amet",gibberish
+63,"qqq www eee rrr",gibberish
+64,"xkcd plugh xyzzy foo bar",gibberish
+65,";;;;;; ...... !!!!!!",gibberish
+66,"hjkhjk hjkhjk hjkhjk",gibberish
+67,"test test test",gibberish
+68,"mmmmm hmmmm ummm",gibberish
+69,"😀😀😀🔥🔥",gibberish
+70,"gruble flonk wizzit zarp",gibberish
+71,"Здравствуйте, я хочу вернуть деньги за билет.",other_language
+72,"Где мой заказ? Он должен был прийти вчера.",other_language
+73,"¿Cómo puedo cambiar mi contraseña?",other_language
+74,"Quiero hablar con una persona, por favor.",other_language
+75,"Bonjour, je voudrais annuler ma commande.",other_language
+76,"Où puis-je télécharger ma facture ?",other_language
+77,"Ich möchte meine Lieferadresse ändern.",other_language
+78,"Wie lange dauert die Lieferung?",other_language
+79,"Vorrei sapere quando arriva il mio pacco.",other_language
+80,"Não consigo entrar na minha conta.",other_language
+81,"Siparişim nerede?",other_language
+82,"我想退款，演出取消了。",other_language
+83,"注文をキャンセルしたいです。",other_language
+84,"أريد التحدث مع موظف خدمة العملاء.",other_language
+85,"Chcę złożyć reklamację na obsługę.",other_language
+86,"I forgot my password and I also need a refund for my last order.",multiple_topics
+87,"Please change my shipping address and send me the invoice for March.",multiple_topics
+88,"My payment failed, and by the way how do I subscribe to the newsletter?",multiple_topics
+89,"I want to cancel my order and delete my account as well.",multiple_topics
+90,"Where is my package, and can you also tell me your refund policy?",multiple_topics
+91,"I need an invoice, a refund and a new password.",multiple_topics
+92,"Can you update my address and tell me what payment methods you accept?",multiple_topics
+93,"I'd like to leave a review and also ask about delivery options.",multiple_topics
+94,"I was charged twice and I also want to speak to a human about my account.",multiple_topics
+95,"How do I track my order, and what is the cancellation fee if I change my mind?",multiple_topics
+96,"Sign me up for the newsletter and close my old account.",multiple_topics
+97,"I want to complain about your service and get my money back.",multiple_topics
+98,"My invoice is wrong and my package is late.",multiple_topics
+99,"What are the delivery options and can I pay with PayPal?",multiple_topics
+100,"I need to change my order, update my shipping address and get a copy of my bill.",multiple_topics

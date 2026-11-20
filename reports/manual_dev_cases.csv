@@ -1,0 +1,34 @@
+text,category,role,source,used_for_training
+I forgot my password and cannot sign in to my profile,ACCOUNT,model_selection,author_written,False
+Please close my customer account permanently,ACCOUNT,model_selection,author_written,False
+How do I register as a new customer?,ACCOUNT,model_selection,author_written,False
+Will I be charged a penalty if I cancel my purchase?,CANCELLATION_FEE,model_selection,author_written,False
+Is there a fee for cancelling a booking?,CANCELLATION_FEE,model_selection,author_written,False
+How much does cancellation cost?,CANCELLATION_FEE,model_selection,author_written,False
+Please connect me to a customer service representative,CONTACT,model_selection,author_written,False
+How can I speak with someone who works in support?,CONTACT,model_selection,author_written,False
+What telephone number should I use to reach your help desk?,CONTACT,model_selection,author_written,False
+Do you offer express delivery?,DELIVERY,model_selection,author_written,False
+How many days does standard delivery usually take?,DELIVERY,model_selection,author_written,False
+Which courier delivery options are available before I order?,DELIVERY,model_selection,author_written,False
+I would like to leave a positive review of your service,FEEDBACK,model_selection,author_written,False
+Your staff were rude and I want to file a complaint,FEEDBACK,model_selection,author_written,False
+I am really disappointed with the quality of your service,FEEDBACK,model_selection,author_written,False
+Please email me an invoice for my purchase,INVOICES,model_selection,author_written,False
+I need a copy of the bill for my expense report,INVOICES,model_selection,author_written,False
+Where can I download my past invoices?,INVOICES,model_selection,author_written,False
+Stop sending me marketing emails,NEWSLETTER,model_selection,author_written,False
+Please remove me from your promotional mailing list,NEWSLETTER,model_selection,author_written,False
+I would like to subscribe to your newsletter,NEWSLETTER,model_selection,author_written,False
+My parcel has not arrived; where is my order now?,ORDER,model_selection,author_written,False
+Please cancel the order I placed this morning,ORDER,model_selection,author_written,False
+I want to add another item to my existing order,ORDER,model_selection,author_written,False
+My card keeps getting declined when I try to pay,PAYMENT,model_selection,author_written,False
+Can I use PayPal to pay for my purchase?,PAYMENT,model_selection,author_written,False
+Which payment methods do you accept?,PAYMENT,model_selection,author_written,False
+I sent the item back but have not received my refund,REFUNDS,model_selection,author_written,False
+Am I eligible to get my money back?,REFUNDS,model_selection,author_written,False
+Please tell me the status of my reimbursement,REFUNDS,model_selection,author_written,False
+Please send future packages to my new address,SHIPPING,model_selection,author_written,False
+I entered the wrong shipping address and need to correct it,SHIPPING,model_selection,author_written,False
+Where do I save a delivery address in my profile?,SHIPPING,model_selection,author_written,False

@@ -1,0 +1,715 @@
+{
+  "schema_version": "3.0",
+  "model_id": "router-937116a8646a48e3",
+  "model_name": "linsvc_wc_C1",
+  "model_type": "CalibratedClassifierCV",
+  "base_type": "LinearSVC",
+  "classes": [
+    "ACCOUNT",
+    "CANCELLATION_FEE",
+    "CONTACT",
+    "DELIVERY",
+    "FEEDBACK",
+    "INVOICES",
+    "NEWSLETTER",
+    "ORDER",
+    "PAYMENT",
+    "REFUNDS",
+    "SHIPPING"
+  ],
+  "other_is_rejection_not_trained_class": true,
+  "preprocess_version": "2.0-negation-placeholders",
+  "policy": {
+    "version": "selective-v3-shadow",
+    "auto_enabled": false,
+    "candidate_auto_enabled": true,
+    "confidence_threshold": 0.85,
+    "similarity_threshold": 0.45,
+    "parameter_status": "SHADOW_ONLY_NO_BUSINESS_APPROVAL",
+    "target_error_upper": 0.01,
+    "min_auto_validation": 30,
+    "assumed_false_auto_cost": 25.0,
+    "assumed_review_cost": 1.0,
+    "selection_data": "group-disjoint val plus 24 author-written OOD-dev; no test",
+    "status": "SHADOW_CANDIDATE_ONLY",
+    "blocking_requirements": [
+      "independent verified real ID>=300",
+      "independent verified real OOD>=200",
+      "labelled risk/P1 evaluation",
+      "business signoff"
+    ],
+    "warning": "Val Wilson post-selection is NOT a risk guarantee; synthetic OOD is not external validation"
+  },
+  "artifact_sha256": "5feda5f4e6da5d4d31b5defbf304a270b4b35944025e337e6929cfcd164409a0",
+  "module_sha256": "e8777fdf3f67d61db647aa461cc4702fabd2d68d245fbd993c9556f7d87332d6",
+  "module_sha256_covers": [
+    "config.py",
+    "text.py",
+    "models.py",
+    "rules.py",
+    "routing.py",
+    "semantic_encoder.py",
+    "category_examples.py"
+  ],
+  "auxiliary_module_sha256": {
+    "semantic_encoder.py": "98e8cf9141af29fbc38899e81c8fb973cd4126bf78d6564264f46a93e547a4f2",
+    "category_examples.py": "f0fe89771f404f75aac486d097df2b8ef69f5926c012f4b30399d8ff753acb79"
+  },
+  "encoder": null,
+  "versions": {
+    "numpy": "2.4.6",
+    "pandas": "2.2.3",
+    "scipy": "1.16.3",
+    "scikit-learn": "1.8.0",
+    "joblib": "1.6.0",
+    "matplotlib": "3.10.0",
+    "seaborn": "0.13.2",
+    "wordcloud": "1.9.6",
+    "gradio": "6.0.0",
+    "nbformat": "5.11.1",
+    "nbclient": "0.10.4",
+    "pytest": "8.4.2",
+    "onnxruntime": "1.23.2",
+    "tokenizers": "0.22.1"
+  },
+  "provenance": {
+    "split_manifest": {
+      "seed": 42,
+      "raw_sha256": "19a3031d649ce432202acd807630b1b52884507185f32832d58714f3fac7d82b",
+      "cleaning": {
+        "raw_rows": 21534,
+        "clean_rows": 19700,
+        "deduplicated_rows": 1834,
+        "short_rows_retained": 7,
+        "flags_policy": "union_of_unique_parsed_flags_for_identical_normalized_text",
+        "unrecognized_flag_codes": [],
+        "short_policy": "retained_in_main_splits_and_reported_as_a_slice"
+      },
+      "grouping": {
+        "method": "connected_components_char_wb_3_5_OR_word_1_2",
+        "threshold": 0.85,
+        "views": {
+          "word_1_2": {
+            "cosine_threshold": 0.9,
+            "undirected_edges": 6147,
+            "vocabulary": 7774
+          },
+          "char_wb_3_5": {
+            "cosine_threshold": 0.85,
+            "undirected_edges": 86116,
+            "vocabulary": 14221
+          }
+        },
+        "n_groups": 3646,
+        "largest_group": 1891,
+        "largest_fraction": 0.09598984771573604,
+        "edges_undirected_before_dedup": 92263,
+        "semantic_equivalence_verified": false,
+        "warning": "Heuristic groups can overmerge; inspect largest clusters and cross-label groups"
+      },
+      "overlap_checks": {
+        "train__calibration": {
+          "text": 0,
+          "row_id": 0,
+          "group": 0
+        },
+        "train__val": {
+          "text": 0,
+          "row_id": 0,
+          "group": 0
+        },
+        "train__test": {
+          "text": 0,
+          "row_id": 0,
+          "group": 0
+        },
+        "calibration__val": {
+          "text": 0,
+          "row_id": 0,
+          "group": 0
+        },
+        "calibration__test": {
+          "text": 0,
+          "row_id": 0,
+          "group": 0
+        },
+        "val__test": {
+          "text": 0,
+          "row_id": 0,
+          "group": 0
+        }
+      },
+      "similarity_checks": {
+        "calibration": {
+          "n": 2240,
+          "mean": 0.7739931260444353,
+          "p95": 0.8616469308924349,
+          "n_ge_085": 180,
+          "n_ge_090": 30,
+          "method": "train-only max(word_1_2, char_wb_3_5)",
+          "warning": "Residual lexical similarity remains possible; never prove semantic disjointness"
+        },
+        "val": {
+          "n": 2368,
+          "mean": 0.7776447967259432,
+          "p95": 0.8699650930170907,
+          "n_ge_085": 228,
+          "n_ge_090": 49,
+          "method": "train-only max(word_1_2, char_wb_3_5)",
+          "warning": "Residual lexical similarity remains possible; never prove semantic disjointness"
+        },
+        "test": {
+          "n": 3122,
+          "mean": 0.7799559681225868,
+          "p95": 0.8810670102942474,
+          "n_ge_085": 448,
+          "n_ge_090": 56,
+          "method": "train-only max(word_1_2, char_wb_3_5)",
+          "warning": "Residual lexical similarity remains possible; never prove semantic disjointness"
+        }
+      },
+      "roles": {
+        "train": "model selection and fitting",
+        "calibration": "sigmoid calibration only",
+        "val": "routing policy selection",
+        "test": "final in-corpus evaluation"
+      },
+      "splits": {
+        "train": {
+          "rows": 11970,
+          "sha256": "060223c186a21b18b62f62f6c59bb6d4da3e69f767aed09dc116f999dcca3b0b",
+          "class_counts": {
+            "PAYMENT": 2540,
+            "ACCOUNT": 2395,
+            "CONTACT": 1636,
+            "ORDER": 1301,
+            "REFUNDS": 1225,
+            "INVOICES": 1092,
+            "FEEDBACK": 873,
+            "DELIVERY": 337,
+            "CANCELLATION_FEE": 283,
+            "NEWSLETTER": 168,
+            "SHIPPING": 120
+          }
+        },
+        "calibration": {
+          "rows": 2240,
+          "sha256": "99823306265a0b3226ef33fa155f8ca85923156753cc2e18719fac9b0afa1e67",
+          "class_counts": {
+            "ACCOUNT": 467,
+            "CONTACT": 428,
+            "INVOICES": 425,
+            "ORDER": 419,
+            "REFUNDS": 191,
+            "PAYMENT": 141,
+            "FEEDBACK": 98,
+            "DELIVERY": 31,
+            "CANCELLATION_FEE": 24,
+            "SHIPPING": 10,
+            "NEWSLETTER": 6
+          }
+        },
+        "val": {
+          "rows": 2368,
+          "sha256": "ad758eee015b88df134e087891839d4455c912faa80ae0302ba7db919cecc36d",
+          "class_counts": {
+            "PAYMENT": 585,
+            "ACCOUNT": 374,
+            "INVOICES": 331,
+            "CONTACT": 315,
+            "FEEDBACK": 245,
+            "ORDER": 210,
+            "REFUNDS": 176,
+            "DELIVERY": 58,
+            "SHIPPING": 32,
+            "CANCELLATION_FEE": 24,
+            "NEWSLETTER": 18
+          }
+        },
+        "test": {
+          "rows": 3122,
+          "sha256": "542f5ce1c84f4de7eff94a273723297a809409ddcaf194750517a0978c7af45d",
+          "class_counts": {
+            "ACCOUNT": 920,
+            "PAYMENT": 844,
+            "CONTACT": 487,
+            "INVOICES": 405,
+            "ORDER": 176,
+            "REFUNDS": 141,
+            "FEEDBACK": 50,
+            "DELIVERY": 34,
+            "NEWSLETTER": 31,
+            "SHIPPING": 26,
+            "CANCELLATION_FEE": 8
+          }
+        }
+      }
+    },
+    "model_selection": {
+      "selected": "linsvc_wc_C1",
+      "reference": "linsvc_wc_C1",
+      "observed_leader": "linsvc_wc_C1",
+      "reason": "Reference has highest observable mean on eligible candidates",
+      "manual_dev_selection_weight": 0,
+      "validation_roles": "25 LOIO intents for development; val for shadow policy; test untouched",
+      "not_independent": "Selection and bootstrap both use same 25 intent folds"
+    },
+    "fit_rows": 11970,
+    "calibration_rows": 2240,
+    "policy_rows": 2368,
+    "synthetic_ood_dev_rows": 24,
+    "training_extension": [],
+    "manual_dev_n": 33,
+    "manual_holdout_n": 33,
+    "operational_auto_enabled": false,
+    "real_external_validation": false,
+    "feature_columns": [
+      "text"
+    ],
+    "excluded_feature_columns": [
+      "intent",
+      "flags",
+      "group",
+      "row_id",
+      "category"
+    ],
+    "encoder_revision": null
+  },
+  "test": {
+    "classification": {
+      "n": 3122,
+      "macro_f1": 0.996344904462853,
+      "accuracy": 0.9967969250480462,
+      "errors": 10,
+      "labels": [
+        "ACCOUNT",
+        "CANCELLATION_FEE",
+        "CONTACT",
+        "DELIVERY",
+        "FEEDBACK",
+        "INVOICES",
+        "NEWSLETTER",
+        "ORDER",
+        "PAYMENT",
+        "REFUNDS",
+        "SHIPPING"
+      ],
+      "report": {
+        "ACCOUNT": {
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1-score": 1.0,
+          "support": 920.0
+        },
+        "CANCELLATION_FEE": {
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1-score": 1.0,
+          "support": 8.0
+        },
+        "CONTACT": {
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1-score": 1.0,
+          "support": 487.0
+        },
+        "DELIVERY": {
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1-score": 1.0,
+          "support": 34.0
+        },
+        "FEEDBACK": {
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1-score": 1.0,
+          "support": 50.0
+        },
+        "INVOICES": {
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1-score": 1.0,
+          "support": 405.0
+        },
+        "NEWSLETTER": {
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1-score": 1.0,
+          "support": 31.0
+        },
+        "ORDER": {
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1-score": 1.0,
+          "support": 176.0
+        },
+        "PAYMENT": {
+          "precision": 1.0,
+          "recall": 0.9881516587677726,
+          "f1-score": 0.9940405244338498,
+          "support": 844.0
+        },
+        "REFUNDS": {
+          "precision": 0.9337748344370861,
+          "recall": 1.0,
+          "f1-score": 0.9657534246575342,
+          "support": 141.0
+        },
+        "SHIPPING": {
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1-score": 1.0,
+          "support": 26.0
+        },
+        "accuracy": 0.9967969250480462,
+        "macro avg": {
+          "precision": 0.9939795304033715,
+          "recall": 0.9989228780697975,
+          "f1-score": 0.996344904462853,
+          "support": 3122.0
+        },
+        "weighted avg": {
+          "precision": 0.9970090492170497,
+          "recall": 0.9967969250480462,
+          "f1-score": 0.9968422278984247,
+          "support": 3122.0
+        }
+      },
+      "confusion_matrix": [
+        [
+          920,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          8,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          487,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          34,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          50,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          405,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          31,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          176,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          834,
+          10,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          141,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          26
+        ]
+      ]
+    },
+    "shadow_routing": {
+      "n": 3122,
+      "automatic_n": 3068,
+      "manual_n": 54,
+      "coverage": 0.982703395259449,
+      "manual_rate": 0.01729660474055093,
+      "automatic_category_errors": 6,
+      "accuracy_automatic_category": 0.9980443285528031,
+      "automatic_queue_errors": 6,
+      "accuracy_automatic_queue": 0.9980443285528031,
+      "manual_is_not_a_classification_error": true,
+      "automatic_category_error_upper_wilson_95": 0.004260448582625746,
+      "automatic_queue_error_upper_wilson_95": 0.004260448582625746,
+      "id_other_decision_rate": 0.01729660474055093,
+      "per_category": {
+        "ACCOUNT": {
+          "n": 920,
+          "coverage": 0.9706521739130435,
+          "auto_n": 893,
+          "auto_category_accuracy": 1.0,
+          "auto_queue_accuracy": 1.0
+        },
+        "CANCELLATION_FEE": {
+          "n": 8,
+          "coverage": 1.0,
+          "auto_n": 8,
+          "auto_category_accuracy": 1.0,
+          "auto_queue_accuracy": 1.0
+        },
+        "CONTACT": {
+          "n": 487,
+          "coverage": 1.0,
+          "auto_n": 487,
+          "auto_category_accuracy": 1.0,
+          "auto_queue_accuracy": 1.0
+        },
+        "DELIVERY": {
+          "n": 34,
+          "coverage": 1.0,
+          "auto_n": 34,
+          "auto_category_accuracy": 1.0,
+          "auto_queue_accuracy": 1.0
+        },
+        "FEEDBACK": {
+          "n": 50,
+          "coverage": 1.0,
+          "auto_n": 50,
+          "auto_category_accuracy": 1.0,
+          "auto_queue_accuracy": 1.0
+        },
+        "INVOICES": {
+          "n": 405,
+          "coverage": 0.980246913580247,
+          "auto_n": 397,
+          "auto_category_accuracy": 1.0,
+          "auto_queue_accuracy": 1.0
+        },
+        "NEWSLETTER": {
+          "n": 31,
+          "coverage": 1.0,
+          "auto_n": 31,
+          "auto_category_accuracy": 1.0,
+          "auto_queue_accuracy": 1.0
+        },
+        "ORDER": {
+          "n": 176,
+          "coverage": 1.0,
+          "auto_n": 176,
+          "auto_category_accuracy": 1.0,
+          "auto_queue_accuracy": 1.0
+        },
+        "PAYMENT": {
+          "n": 844,
+          "coverage": 0.9822274881516587,
+          "auto_n": 829,
+          "auto_category_accuracy": 0.9927623642943305,
+          "auto_queue_accuracy": 0.9927623642943305
+        },
+        "REFUNDS": {
+          "n": 141,
+          "coverage": 0.9716312056737588,
+          "auto_n": 137,
+          "auto_category_accuracy": 1.0,
+          "auto_queue_accuracy": 1.0
+        },
+        "SHIPPING": {
+          "n": 26,
+          "coverage": 1.0,
+          "auto_n": 26,
+          "auto_category_accuracy": 1.0,
+          "auto_queue_accuracy": 1.0
+        }
+      }
+    },
+    "operational_routing": {
+      "n": 3122,
+      "automatic_n": 0,
+      "manual_n": 3122,
+      "coverage": 0.0,
+      "manual_rate": 1.0,
+      "automatic_category_errors": 0,
+      "accuracy_automatic_category": null,
+      "automatic_queue_errors": 0,
+      "accuracy_automatic_queue": null,
+      "manual_is_not_a_classification_error": true,
+      "automatic_category_error_upper_wilson_95": null,
+      "automatic_queue_error_upper_wilson_95": null,
+      "id_other_decision_rate": 1.0,
+      "per_category": {
+        "ACCOUNT": {
+          "n": 920,
+          "coverage": 0.0,
+          "auto_n": 0,
+          "auto_category_accuracy": null,
+          "auto_queue_accuracy": null
+        },
+        "CANCELLATION_FEE": {
+          "n": 8,
+          "coverage": 0.0,
+          "auto_n": 0,
+          "auto_category_accuracy": null,
+          "auto_queue_accuracy": null
+        },
+        "CONTACT": {
+          "n": 487,
+          "coverage": 0.0,
+          "auto_n": 0,
+          "auto_category_accuracy": null,
+          "auto_queue_accuracy": null
+        },
+        "DELIVERY": {
+          "n": 34,
+          "coverage": 0.0,
+          "auto_n": 0,
+          "auto_category_accuracy": null,
+          "auto_queue_accuracy": null
+        },
+        "FEEDBACK": {
+          "n": 50,
+          "coverage": 0.0,
+          "auto_n": 0,
+          "auto_category_accuracy": null,
+          "auto_queue_accuracy": null
+        },
+        "INVOICES": {
+          "n": 405,
+          "coverage": 0.0,
+          "auto_n": 0,
+          "auto_category_accuracy": null,
+          "auto_queue_accuracy": null
+        },
+        "NEWSLETTER": {
+          "n": 31,
+          "coverage": 0.0,
+          "auto_n": 0,
+          "auto_category_accuracy": null,
+          "auto_queue_accuracy": null
+        },
+        "ORDER": {
+          "n": 176,
+          "coverage": 0.0,
+          "auto_n": 0,
+          "auto_category_accuracy": null,
+          "auto_queue_accuracy": null
+        },
+        "PAYMENT": {
+          "n": 844,
+          "coverage": 0.0,
+          "auto_n": 0,
+          "auto_category_accuracy": null,
+          "auto_queue_accuracy": null
+        },
+        "REFUNDS": {
+          "n": 141,
+          "coverage": 0.0,
+          "auto_n": 0,
+          "auto_category_accuracy": null,
+          "auto_queue_accuracy": null
+        },
+        "SHIPPING": {
+          "n": 26,
+          "coverage": 0.0,
+          "auto_n": 0,
+          "auto_category_accuracy": null,
+          "auto_queue_accuracy": null
+        }
+      }
+    }
+  },
+  "external_validation_status": "NOT_AVAILABLE",
+  "security_notice": "Adjacent SHA256 is not authenticity; joblib is unsafe for untrusted artifacts"
+}

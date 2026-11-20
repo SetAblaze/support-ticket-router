@@ -1,0 +1,14 @@
+# В образ попадают только requirements-api.txt, src/ и два файла модели.
+.git
+.venv
+**/__pycache__
+**/*.pyc
+data
+notebooks
+reports
+tests
+docs
+monitoring
+models/encoder
+*.zip
+*.ipynb

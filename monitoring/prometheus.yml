@@ -1,0 +1,14 @@
+# Prometheus для docker-compose: собирает метрики сервиса каждые 15 секунд
+# и проверяет правила алертов из alert_rules.yml.
+global:
+  scrape_interval: 15s
+  evaluation_interval: 30s
+
+rule_files:
+  - alert_rules.yml  # путь считается от папки этого файла
+
+scrape_configs:
+  - job_name: support-router
+    metrics_path: /metrics
+    static_configs:
+      - targets: ["api:8000"]
