@@ -192,7 +192,40 @@
       "class_starvation_folds": 4,
       "loio_indistinguishable_from_semantic_lr": false,
       "selection_eligible": true,
-      "seconds": 34.513826553
+      "seconds": 24.733304789000158
+    },
+    {
+      "model": "semantic_lr_C1",
+      "mean_intent_recall": 0.7965445938902902,
+      "std_between_intents": 0.2709231222519289,
+      "standard_error_exploratory": 0.05418462445038578,
+      "n_intents": 25,
+      "class_starvation_folds": 4,
+      "loio_indistinguishable_from_semantic_lr": false,
+      "selection_eligible": true,
+      "seconds": 28.015580846000148
+    },
+    {
+      "model": "semantic_aug_lr_C1",
+      "mean_intent_recall": 0.7965445938902902,
+      "std_between_intents": 0.2709231222519289,
+      "standard_error_exploratory": 0.05418462445038578,
+      "n_intents": 25,
+      "class_starvation_folds": 4,
+      "loio_indistinguishable_from_semantic_lr": true,
+      "selection_eligible": false,
+      "seconds": 0.0024671610001405497
+    },
+    {
+      "model": "semantic_svc_C1",
+      "mean_intent_recall": 0.7610373880259931,
+      "std_between_intents": 0.3381542837405967,
+      "standard_error_exploratory": 0.06763085674811933,
+      "n_intents": 25,
+      "class_starvation_folds": 4,
+      "loio_indistinguishable_from_semantic_lr": false,
+      "selection_eligible": true,
+      "seconds": 38.96254925899984
     },
     {
       "model": "linsvc_w_C0.5",
@@ -203,7 +236,7 @@
       "class_starvation_folds": 4,
       "loio_indistinguishable_from_semantic_lr": false,
       "selection_eligible": true,
-      "seconds": 11.813786184999998
+      "seconds": 8.394695153000043
     },
     {
       "model": "linsvc_w_C1",
@@ -214,7 +247,7 @@
       "class_starvation_folds": 4,
       "loio_indistinguishable_from_semantic_lr": false,
       "selection_eligible": true,
-      "seconds": 10.786593670999991
+      "seconds": 8.63967525299995
     },
     {
       "model": "linsvc_w_C3",
@@ -225,7 +258,7 @@
       "class_starvation_folds": 4,
       "loio_indistinguishable_from_semantic_lr": false,
       "selection_eligible": true,
-      "seconds": 11.09067535699998
+      "seconds": 8.529273973000045
     },
     {
       "model": "lr_word (baseline)",
@@ -236,7 +269,7 @@
       "class_starvation_folds": 4,
       "loio_indistinguishable_from_semantic_lr": false,
       "selection_eligible": true,
-      "seconds": 13.002427084999994
+      "seconds": 9.27754658799995
     },
     {
       "model": "sgd_w_a1e-4",
@@ -247,7 +280,7 @@
       "class_starvation_folds": 4,
       "loio_indistinguishable_from_semantic_lr": false,
       "selection_eligible": true,
-      "seconds": 8.805958696000005
+      "seconds": 6.4800763629999665
     },
     {
       "model": "sgd_w_a5e-5",
@@ -258,7 +291,7 @@
       "class_starvation_folds": 4,
       "loio_indistinguishable_from_semantic_lr": false,
       "selection_eligible": true,
-      "seconds": 9.037774181000003
+      "seconds": 6.588758453000082
     },
     {
       "model": "sgd_w_a2e-5",
@@ -269,7 +302,7 @@
       "class_starvation_folds": 4,
       "loio_indistinguishable_from_semantic_lr": false,
       "selection_eligible": true,
-      "seconds": 9.31509446199999
+      "seconds": 6.737862919000008
     }
   ],
   "loio_paired_intent_bootstrap": [
@@ -377,6 +410,51 @@
       "candidate_wins": 1,
       "candidate_losses": 23,
       "interpretation": "Exploratory CI with same 25 intents used for selection; not independent validation"
+    },
+    {
+      "reference": "linsvc_wc_C1",
+      "candidate": "semantic_lr_C1",
+      "n_intents": 25,
+      "paired_mean_delta": -0.02165904401822318,
+      "paired_delta_ci95": [
+        -0.11931862464599705,
+        0.07455010972693085
+      ],
+      "intent_unit": "held_out_intent",
+      "iterations": 2000,
+      "candidate_wins": 7,
+      "candidate_losses": 16,
+      "interpretation": "Exploratory CI with same 25 intents used for selection; not independent validation"
+    },
+    {
+      "reference": "linsvc_wc_C1",
+      "candidate": "semantic_svc_C1",
+      "n_intents": 25,
+      "paired_mean_delta": -0.057166249882520156,
+      "paired_delta_ci95": [
+        -0.18309679838733686,
+        0.06036622726873407
+      ],
+      "intent_unit": "held_out_intent",
+      "iterations": 2000,
+      "candidate_wins": 7,
+      "candidate_losses": 14,
+      "interpretation": "Exploratory CI with same 25 intents used for selection; not independent validation"
+    },
+    {
+      "reference": "linsvc_wc_C1",
+      "candidate": "semantic_aug_lr_C1",
+      "n_intents": 25,
+      "paired_mean_delta": -0.02165904401822318,
+      "paired_delta_ci95": [
+        -0.11931862464599705,
+        0.07455010972693085
+      ],
+      "intent_unit": "held_out_intent",
+      "iterations": 2000,
+      "candidate_wins": 7,
+      "candidate_losses": 16,
+      "interpretation": "Exploratory CI with same 25 intents used for selection; not independent validation"
     }
   ],
   "loio_summary": [
@@ -386,6 +464,36 @@
       "remaining15_mean_recall": 0.8756383114548406,
       "all25_mean_recall": 0.8182036379085134,
       "aggregate_macro_f1_eligible_categories": 0.7231711060563527,
+      "n_intents": 25,
+      "class_starvation_folds": 4,
+      "selection_eligible": true
+    },
+    {
+      "model": "semantic_lr_C1",
+      "dev10_mean_recall": 0.8275963916951588,
+      "remaining15_mean_recall": 0.7758433953537109,
+      "all25_mean_recall": 0.7965445938902902,
+      "aggregate_macro_f1_eligible_categories": 0.6961537286437363,
+      "n_intents": 25,
+      "class_starvation_folds": 4,
+      "selection_eligible": true
+    },
+    {
+      "model": "semantic_aug_lr_C1",
+      "dev10_mean_recall": 0.8275963916951588,
+      "remaining15_mean_recall": 0.7758433953537109,
+      "all25_mean_recall": 0.7965445938902902,
+      "aggregate_macro_f1_eligible_categories": 0.6961537286437363,
+      "n_intents": 25,
+      "class_starvation_folds": 4,
+      "selection_eligible": false
+    },
+    {
+      "model": "semantic_svc_C1",
+      "dev10_mean_recall": 0.8496618977293847,
+      "remaining15_mean_recall": 0.7019543815570656,
+      "all25_mean_recall": 0.7610373880259931,
+      "aggregate_macro_f1_eligible_categories": 0.6794327917363315,
       "n_intents": 25,
       "class_starvation_folds": 4,
       "selection_eligible": true
@@ -1671,10 +1779,10 @@
     "trusted_local_only": true
   },
   "regression_tests": {
-    "tests": 222,
+    "tests": 221,
     "failures": 0,
     "errors": 0,
-    "skipped": 7
+    "skipped": 0
   },
   "manual_dev_diagnostic": {
     "n": 33,
@@ -2473,9 +2581,9 @@
     "external_ticket_delivery": false
   },
   "stage11": {
-    "code_version": "3.1.1",
+    "code_version": "3.1.2",
     "fix": {
-      "what": "risk rule variants: contractions, word order, past tense, synonym in existing slots",
+      "what": "Risk rule variants, first-person fraud reports and narrower make-you-pay matching",
       "project_texts_checked": 21689,
       "project_texts_changed": 0,
       "frozen_texts_changed": 0,
@@ -2487,55 +2595,45 @@
         "My card got hacked",
         "I never placed this order",
         "This transaction isn't mine",
-        "There is a charge I don't recognise on my card"
-      ],
-      "open_examples": [
+        "There is a charge I don't recognise on my card",
         "I see a fraudulent charge on my card",
         "I have been scammed by your seller",
+        "I'm gonna kill ya",
         "i m going to kill you"
-      ]
+      ],
+      "open_examples": []
     },
     "tests": {
-      "tests": 222,
-      "passed": 215,
-      "skipped": 3,
-      "xfailed_known_gaps": 4,
+      "tests": 221,
+      "passed": 221,
+      "skipped": 0,
+      "xfailed_known_gaps": 0,
       "failures": 0,
       "errors": 0,
       "per_file": [
         {
           "файл": "test_api.py",
-          "известный пропуск": 0,
-          "пропущен": 0,
-          "прошёл": 48,
-          "всего": 48
+          "прошёл": 50,
+          "всего": 50
         },
         {
           "файл": "test_app.py",
-          "известный пропуск": 0,
-          "пропущен": 0,
           "прошёл": 16,
           "всего": 16
         },
         {
           "файл": "test_monitoring.py",
-          "известный пропуск": 0,
-          "пропущен": 1,
-          "прошёл": 5,
+          "прошёл": 6,
           "всего": 6
         },
         {
           "файл": "test_nonstandard_inputs.py",
-          "известный пропуск": 4,
-          "пропущен": 0,
-          "прошёл": 60,
-          "всего": 64
+          "прошёл": 61,
+          "всего": 61
         },
         {
           "файл": "test_support_core.py",
-          "известный пропуск": 0,
-          "пропущен": 2,
-          "прошёл": 86,
+          "прошёл": 88,
           "всего": 88
         }
       ]
@@ -2544,12 +2642,12 @@
       "hard_test.csv": {
         "sha256": "f018ae35067d53b3bfbea7d402389b399cf2ba4956a377e675376aad6743e547",
         "written": "2026-11-13",
-        "evaluated_once": true
+        "role": "post-selection diagnostic"
       },
       "ood_eval.csv": {
         "sha256": "5e3c4a8327511816c0b3f9a52702796ab3a214efd31533a8267463576eebbd39",
         "written": "2026-11-13",
-        "evaluated_once": true
+        "role": "post-selection diagnostic"
       }
     },
     "frozen_overlap_with_project": [
@@ -2789,17 +2887,13 @@
     },
     "nonstandard_manual": {
       "n": 30,
-      "passed": 28,
+      "passed": 29,
       "topic_expected_n": 16,
       "topic_correct": 12,
       "failed": [
         {
           "что проверяем": "две темы",
           "текст": "My payment failed and I need to change my shipping address"
-        },
-        {
-          "что проверяем": "мошенничество новыми словами",
-          "текст": "I see a fraudulent charge on my card"
         }
       ]
     },
@@ -2811,10 +2905,10 @@
         "что сделали": "Версия 3.1.1, модуль rules: в существующие шаблоны добавлены сокращения, другой порядок слов, прошедшее время и синоним на том же месте. На фразах проекта флаги не изменились, выводы этапов 1-9 тоже. Добавлены регрессионные тесты."
       },
       {
-        "что нашли": "Мошенничество и угрозы новыми словами не распознаются: «fraudulent charge», «I have been scammed», «i m going to kill you»",
+        "что нашли": "Ложный P1 на «I will make you a list» и пропуски прямых сообщений о мошенничестве и угрозах.",
         "где": "ручная проверка",
-        "статус": "не исправлено, нужна разметка",
-        "что сделали": "Это новые виды фраз, а не варианты старых. Новое правило ловит и обычные жалобы («I received items I never ordered» бывает и ошибкой склада), а измерить ложные тревоги без экспертной разметки нельзя. Пропуски записаны в тестах как известные."
+        "статус": "исправлено",
+        "что сделали": "Сузили ветку make you pay, добавили варианты прямых сообщений и парные отрицательные примеры. Синтетический набор data/eval/risk_regression.csv проверяет регрессии по каждому флагу."
       },
       {
         "что нашли": "Без слов-подсказок модель угадывает тему в 17 из 110 фраз, базовая столько же",
@@ -2890,6 +2984,7 @@
       "src/support_router/text.py",
       "src/support_router/train.py",
       "src/support_router/utils.py",
+      "scripts/benchmark_review.py",
       "tests/test_api.py",
       "tests/test_app.py",
       "tests/test_monitoring.py",
@@ -2897,13 +2992,17 @@
       "tests/test_support_core.py",
       "docs/api.md",
       "docs/architecture.md",
+      "docs/presentation.pptx",
+      "docs/report.docx",
+      "docs/report.pdf",
       "docs/runbook.md",
       "monitoring/alert_rules.yml",
       "monitoring/alert_rules_test.yml",
       "monitoring/prometheus.yml",
-      "notebooks/v4_offline.ipynb",
+      "notebooks/Этапы_1-12_Colab.ipynb",
       "data/eval/hard_test.csv",
       "data/eval/ood_eval.csv",
+      "data/eval/risk_regression.csv",
       "reports/app_batch_input.csv",
       "reports/app_batch_output.csv",
       "reports/export_check.json",
@@ -2924,6 +3023,7 @@
       "reports/policy_validation_grid.csv",
       "reports/results.json",
       "reports/results.md",
+      "reports/review_benchmark.json",
       "reports/similar_train_calibration.csv",
       "reports/similar_train_test.csv",
       "reports/similar_train_val.csv",
@@ -2936,7 +3036,7 @@
       "reports/figures/stage11_topic_accuracy.png"
     ],
     "clean_folder_app_check": true,
-    "clean_folder_tests": "215 passed, 3 skipped, 4 xfailed in 12.34s",
+    "clean_folder_tests": "219 passed, 2 skipped in 10.12s",
     "results_report": "reports/results.md"
   }
 }

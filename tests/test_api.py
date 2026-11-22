@@ -202,3 +202,48 @@ def test_request_id_is_returned(client):
     r = client.get("/health", headers={"x-request-id": "abc-123"})
     assert r.headers["x-request-id"] == "abc-123"
     assert len(client.get("/health").headers["x-request-id"]) == 32
+
+
+@needs_model
+def test_policy_pair_scores_each_request_once(client, monkeypatch):
+    model = client.app.state.router["model"]
+    calls = []
+    predict = model.predict_proba
+    similarity = model.similarity
+
+    def record_predict(texts):
+        calls.append(("predict", len(texts)))
+        return predict(texts)
+
+    def record_similarity(texts):
+        calls.append(("similarity", len(texts)))
+        return similarity(texts)
+
+    monkeypatch.setattr(model, "predict_proba", record_predict)
+    monkeypatch.setattr(model, "similarity", record_similarity)
+    assert post(client, "Send me an invoice").status_code == 200
+    assert calls == [("predict", 1), ("similarity", 1)]
+    calls.clear()
+    response = client.post("/v1/route/batch", json={"tickets": [{"text": "Send me an invoice"},
+                                                                {"text": "Where is my order?"}]})
+    assert response.status_code == 200
+    assert calls == [("predict", 2), ("similarity", 2)]
+
+
+@needs_model
+def test_batch_scoring_failure_isolated_by_ticket(client, monkeypatch):
+    model = client.app.state.router["model"]
+    predict = model.predict_proba
+
+    def selective_failure(texts):
+        if "broken scoring" in texts:
+            raise ValueError("scoring error")
+        return predict(texts)
+
+    monkeypatch.setattr(model, "predict_proba", selective_failure)
+    texts = ["broken scoring", "Where is my order?", ""]
+    response = client.post("/v1/route/batch", json={"tickets": [{"text": t} for t in texts]})
+    bad, valid, empty = response.json()["results"]
+    assert bad["status"] == bad["shadow"]["status"] == "MODEL_ERROR"
+    assert valid["category"] == "ORDER"
+    assert empty["status"] == empty["shadow"]["status"] == "NEEDS_CLARIFICATION"

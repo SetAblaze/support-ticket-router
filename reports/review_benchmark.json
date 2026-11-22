@@ -1,0 +1,80 @@
+{
+  "scope": "Author-written diagnostic cases; risk examples include regression fixtures.",
+  "models": {
+    "linsvc_wc_C1": {
+      "confidence_threshold": 0.85,
+      "similarity_threshold": 0.45,
+      "by_difficulty": {
+        "natural": {
+          "n": 110,
+          "top1_correct": 98,
+          "top3_correct": 107,
+          "shadow_auto": 63,
+          "shadow_wrong_queue": 0
+        },
+        "no_keywords": {
+          "n": 110,
+          "top1_correct": 17,
+          "top3_correct": 41,
+          "shadow_auto": 3,
+          "shadow_wrong_queue": 1
+        }
+      },
+      "ood_n": 100,
+      "ood_false_auto": 5
+    },
+    "semantic_lr_C1": {
+      "confidence_threshold": 0.7,
+      "similarity_threshold": 0.45,
+      "by_difficulty": {
+        "natural": {
+          "n": 110,
+          "top1_correct": 106,
+          "top3_correct": 110,
+          "shadow_auto": 71,
+          "shadow_wrong_queue": 1
+        },
+        "no_keywords": {
+          "n": 110,
+          "top1_correct": 72,
+          "top3_correct": 102,
+          "shadow_auto": 10,
+          "shadow_wrong_queue": 4
+        }
+      },
+      "ood_n": 100,
+      "ood_false_auto": 11
+    }
+  },
+  "risk_n": 18,
+  "risk_by_flag": {
+    "ABUSE_LANGUAGE": {
+      "tp": 2,
+      "fp": 0,
+      "fn": 0,
+      "precision": 1.0,
+      "recall": 1.0
+    },
+    "POSSIBLE_FRAUD": {
+      "tp": 3,
+      "fp": 0,
+      "fn": 0,
+      "precision": 1.0,
+      "recall": 1.0
+    },
+    "POSSIBLE_LEGAL_CLAIM": {
+      "tp": 2,
+      "fp": 0,
+      "fn": 0,
+      "precision": 1.0,
+      "recall": 1.0
+    },
+    "POSSIBLE_THREAT": {
+      "tp": 3,
+      "fp": 0,
+      "fn": 0,
+      "precision": 1.0,
+      "recall": 1.0
+    }
+  }
+}

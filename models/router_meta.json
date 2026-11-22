@@ -41,7 +41,7 @@
     "warning": "Val Wilson post-selection is NOT a risk guarantee; synthetic OOD is not external validation"
   },
   "artifact_sha256": "5feda5f4e6da5d4d31b5defbf304a270b4b35944025e337e6929cfcd164409a0",
-  "module_sha256": "e8777fdf3f67d61db647aa461cc4702fabd2d68d245fbd993c9556f7d87332d6",
+  "module_sha256": "dea50a21d96224521b1b083c51f2de84617a0ae8ede0c4ec8f072a0051d614b2",
   "module_sha256_covers": [
     "config.py",
     "text.py",

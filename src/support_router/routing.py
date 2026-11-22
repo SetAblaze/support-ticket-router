@@ -15,22 +15,20 @@ from .rules import _context_effects, detect_signals
 from .text import preprocess
 
 
-def route_ticket(text, model, context=None, now=None, scored=None):
-    """Single decision function for batch, demos and UI. It DOES NOT enqueue externally."""
+def _assess_ticket(text, model, context, now, scored):
+    """Compute input signals and model scores before applying a routing policy."""
     now = now or datetime.now(timezone.utc)
-    policy = getattr(model, "policy", {}) or {}
     result = {"schema_version": SCHEMA_VERSION, "category": None, "suggested_category": None,
               "decision_category": None, "accepted_category": None,
               "queue": MANUAL_QUEUE, "topic_queue": None, "confidence": None,
               "similarity": None, "top3": {}, "status": "MANUAL_REVIEW",
               "priority": "P3", "risk_flags": [], "reason_codes": [],
               "model_id": getattr(model, "model_id", "unidentified"),
-              "policy_version": policy.get("version", "missing"),
               "business_policy_approved": False, "delivery_status": "NOT_SENT",
               "created_at_utc": now.isoformat(), "context": {}}
     if not isinstance(text, str) or not preprocess(text):
         result.update(status="NEEDS_CLARIFICATION", reason_codes=["EMPTY_OR_INVALID_INPUT"], queue=None)
-        return result
+        return result, []
     signals = detect_signals(text)
     if getattr(model,'model_name','').startswith('semantic_'):
         from .semantic_encoder import was_truncated
@@ -52,7 +50,7 @@ def route_ticket(text, model, context=None, now=None, scored=None):
     if any(reason in signals['input_reasons'] for reason in
            ['POSSIBLY_UNSUPPORTED_LANGUAGE','INSUFFICIENT_SUPPORTED_TEXT']):
         result['decision_category'] = 'OTHER'
-        return result
+        return result, context_reasons
     try:
         if scored is None:
             p = checked_proba(model, [text])[0]
@@ -75,6 +73,22 @@ def route_ticket(text, model, context=None, now=None, scored=None):
             result["reason_codes"].append("MODEL_OTHER")
         elif cat not in CATEGORY_TO_QUEUE:
             result["reason_codes"].append("UNKNOWN_CATEGORY")
+    except Exception as exc:
+        result["reason_codes"].append("MODEL_CAPABILITY_OR_SCORING_ERROR")
+        result["error_type"] = type(exc).__name__
+        result["status"] = "MODEL_ERROR"
+    return result, context_reasons
+
+
+def _apply_policy(assessment, policy):
+    facts, context_reasons = assessment
+    result = {**facts, "reason_codes": list(facts["reason_codes"]),
+              "policy_version": policy.get("version", "missing")}
+    if result["confidence"] is None or result["status"] == "MODEL_ERROR":
+        return result
+    cat = result["suggested_category"]
+    conf, sim = result["confidence"], result["similarity"]
+    try:
         if not policy.get("auto_enabled", False):
             result["reason_codes"].append("AUTO_POLICY_DISABLED")
         if conf < float(policy.get("confidence_threshold", 1.)):
@@ -88,17 +102,45 @@ def route_ticket(text, model, context=None, now=None, scored=None):
             result.update(queue=CATEGORY_TO_QUEUE[cat], status="AUTO_RECOMMENDED",
                           decision_category=cat,accepted_category=cat)
             result["reason_codes"].append("CATEGORY_AND_POLICY_ACCEPTED")
-    except Exception as exc:
+    except (ValueError, TypeError) as exc:
         result["reason_codes"].append("MODEL_CAPABILITY_OR_SCORING_ERROR")
-        result["error_type"] = type(exc).__name__
-        result["status"] = "MODEL_ERROR"
+        result.update(status="MODEL_ERROR", error_type=type(exc).__name__)
     result["reason_codes"] = list(dict.fromkeys(result["reason_codes"]))
     return result
 
+
+def route_ticket(text, model, context=None, now=None, scored=None):
+    """Return a recommendation without sending the ticket to an external queue."""
+    assessment = _assess_ticket(text, model, context, now, scored)
+    return _apply_policy(assessment, getattr(model, "policy", {}) or {})
+
+
+def _batch_scores(model, texts):
+    probabilities = checked_proba(model, texts)
+    similarities = model.similarity(texts)
+    return list(zip(probabilities, similarities, strict=True))
+
+
 def batch_route(model, texts):
     texts = list(texts)
-    p, sims = checked_proba(model, texts), model.similarity(texts)
-    return [route_ticket(t, model, scored=(row, sim)) for t, row, sim in zip(texts, p, sims)]
+    return [route_ticket(text, model, scored=score)
+            for text, score in zip(texts, _batch_scores(model, texts), strict=True)]
+
+
+def route_policy_pair(text, model, shadow, scored=None):
+    assessment = _assess_ticket(text, model, None, None, scored)
+    return _apply_policy(assessment, model.policy), _apply_policy(assessment, shadow.policy)
+
+
+def batch_policy_pairs(texts, model, shadow):
+    try:
+        scores = _batch_scores(model, texts)
+    except Exception:
+        # Isolate a bad input or a model that cannot score a batch.
+        scores = [None] * len(texts)
+    return [route_policy_pair(text, model, shadow, scored=score)
+            for text, score in zip(texts, scores, strict=True)]
+
 
 def select_policy(bundle, val, ood_dev, target_error_upper=.01, min_auto=30,
                   false_auto_cost=25., review_cost=1.):

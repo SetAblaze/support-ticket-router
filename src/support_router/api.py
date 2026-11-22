@@ -32,7 +32,7 @@ from .artifacts import decision_code_sha256, load_bundle
 from .config import VERSION
 from .monitoring import RouterMetrics
 from .paths import models_dir
-from .routing import batch_route, route_ticket, shadow_bundle
+from .routing import batch_policy_pairs, route_policy_pair, shadow_bundle
 
 MAX_TEXT_CHARS = int(os.environ.get("ROUTER_MAX_TEXT_CHARS", "5000"))
 MAX_BATCH = int(os.environ.get("ROUTER_MAX_BATCH", "100"))
@@ -215,8 +215,7 @@ def create_app(models_directory=None, registry=None) -> FastAPI:
     @app.post("/v1/route", response_model=DecisionOut)
     def route(ticket: TicketIn, request: Request):
         model, shadow = require_model()
-        result = route_ticket(ticket.text, model)
-        shadow_result = route_ticket(ticket.text, shadow)
+        result, shadow_result = route_policy_pair(ticket.text, model, shadow)
         record_decision(request, ticket, result, shadow_result)
         return _decision(result, shadow_result, ticket.ticket_id)
 
@@ -224,13 +223,9 @@ def create_app(models_directory=None, registry=None) -> FastAPI:
     def route_batch(batch: BatchIn, request: Request):
         model, shadow = require_model()
         texts = [t.text for t in batch.tickets]
-        try:
-            results, shadow_results = batch_route(model, texts), batch_route(shadow, texts)
-        except Exception:  # оценка пачкой упала: решаем по одному, ошибка станет статусом MODEL_ERROR
-            results = [route_ticket(t, model) for t in texts]
-            shadow_results = [route_ticket(t, shadow) for t in texts]
+        pairs = batch_policy_pairs(texts, model, shadow)
         out = []
-        for ticket, result, shadow_result in zip(batch.tickets, results, shadow_results):
+        for ticket, (result, shadow_result) in zip(batch.tickets, pairs, strict=True):
             record_decision(request, ticket, result, shadow_result)
             out.append(_decision(result, shadow_result, ticket.ticket_id))
         return {"results": out}
