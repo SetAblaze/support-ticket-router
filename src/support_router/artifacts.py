@@ -14,7 +14,7 @@ from .utils import runtime_versions, sha256_file, write_json
 # сохранённая модель считается несовместимой: решение могло бы тихо поменяться.
 # api.py, monitoring.py, train.py, data.py и evaluation.py сюда не входят:
 # их правка не меняет того, как обученная модель решает.
-DECISION_MODULES = ("config.py", "text.py", "models.py", "rules.py", "routing.py",
+DECISION_MODULES = ("config.py", "text.py", "models.py", "rules.py", "routing.py", "multiple_requests.py",
                     "semantic_encoder.py", "category_examples.py")
 
 

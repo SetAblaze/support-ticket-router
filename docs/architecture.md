@@ -49,7 +49,8 @@ CRM сама решает, куда положить обращение: сер�
 | `models` | 11 конфигураций, обучение, откалиброванный `RouterBundle` | `config`, `text` |
 | `evaluation` | метрики, LOIO, бутстреп, метрики маршрутизации | `config`, `models` |
 | `rules` | правила рисков и причин ручной проверки | `text` |
-| `routing` | `route_ticket`, пакетная обработка, выбор политики, теневой режим | `config`, `text`, `models`, `rules`, `evaluation` |
+| `multiple_requests` | выделяет отдельные просьбы в англоязычных обращениях при включённом режиме | `config`, `text` |
+| `routing` | `route_ticket`, пакетная обработка, выбор политики, теневой режим | `config`, `text`, `models`, `rules`, `multiple_requests`, `evaluation` |
 | `artifacts` | сохранение модели с паспортом и проверяемая загрузка | `config`, `utils` |
 | `explain` | вклад слов в линейную часть модели | ничего |
 | `paths` | папки проекта, модели и энкодера: `SUPPORT_ROUTER_HOME`, `SUPPORT_ROUTER_MODELS_DIR`, `SUPPORT_ENCODER_DIR` | ничего |

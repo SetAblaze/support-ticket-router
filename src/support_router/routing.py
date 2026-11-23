@@ -11,17 +11,18 @@ import pandas as pd
 from .config import CATEGORY_TO_QUEUE, MANUAL_QUEUE, SCHEMA_VERSION
 from .evaluation import wilson_upper
 from .models import checked_proba
+from .multiple_requests import request_parts
 from .rules import _context_effects, detect_signals
 from .text import preprocess
 
 
-def _assess_ticket(text, model, context, now, scored):
+def _assess_ticket(text, model, context, now, scored, detect_multiple):
     """Compute input signals and model scores before applying a routing policy."""
     now = now or datetime.now(timezone.utc)
     result = {"schema_version": SCHEMA_VERSION, "category": None, "suggested_category": None,
               "decision_category": None, "accepted_category": None,
               "queue": MANUAL_QUEUE, "topic_queue": None, "confidence": None,
-              "similarity": None, "top3": {}, "status": "MANUAL_REVIEW",
+              "similarity": None, "top3": {}, "request_parts": [], "status": "MANUAL_REVIEW",
               "priority": "P3", "risk_flags": [], "reason_codes": [],
               "model_id": getattr(model, "model_id", "unidentified"),
               "business_policy_approved": False, "delivery_status": "NOT_SENT",
@@ -51,6 +52,10 @@ def _assess_ticket(text, model, context, now, scored):
            ['POSSIBLY_UNSUPPORTED_LANGUAGE','INSUFFICIENT_SUPPORTED_TEXT']):
         result['decision_category'] = 'OTHER'
         return result, context_reasons
+    if detect_multiple:
+        result["request_parts"] = request_parts(text)
+        if result["request_parts"] and "POSSIBLE_MULTIPLE_REQUESTS" not in result["reason_codes"]:
+            result["reason_codes"].append("POSSIBLE_MULTIPLE_REQUESTS")
     try:
         if scored is None:
             p = checked_proba(model, [text])[0]
@@ -109,9 +114,9 @@ def _apply_policy(assessment, policy):
     return result
 
 
-def route_ticket(text, model, context=None, now=None, scored=None):
+def route_ticket(text, model, context=None, now=None, scored=None, *, detect_multiple=False):
     """Return a recommendation without sending the ticket to an external queue."""
-    assessment = _assess_ticket(text, model, context, now, scored)
+    assessment = _assess_ticket(text, model, context, now, scored, detect_multiple)
     return _apply_policy(assessment, getattr(model, "policy", {}) or {})
 
 
@@ -121,24 +126,24 @@ def _batch_scores(model, texts):
     return list(zip(probabilities, similarities, strict=True))
 
 
-def batch_route(model, texts):
+def batch_route(model, texts, *, detect_multiple=False):
     texts = list(texts)
-    return [route_ticket(text, model, scored=score)
+    return [route_ticket(text, model, scored=score, detect_multiple=detect_multiple)
             for text, score in zip(texts, _batch_scores(model, texts), strict=True)]
 
 
-def route_policy_pair(text, model, shadow, scored=None):
-    assessment = _assess_ticket(text, model, None, None, scored)
+def route_policy_pair(text, model, shadow, scored=None, *, detect_multiple=False):
+    assessment = _assess_ticket(text, model, None, None, scored, detect_multiple)
     return _apply_policy(assessment, model.policy), _apply_policy(assessment, shadow.policy)
 
 
-def batch_policy_pairs(texts, model, shadow):
+def batch_policy_pairs(texts, model, shadow, *, detect_multiple=False):
     try:
         scores = _batch_scores(model, texts)
     except Exception:
         # Isolate a bad input or a model that cannot score a batch.
         scores = [None] * len(texts)
-    return [route_policy_pair(text, model, shadow, scored=score)
+    return [route_policy_pair(text, model, shadow, scored=score, detect_multiple=detect_multiple)
             for text, score in zip(texts, scores, strict=True)]
 
 
@@ -212,9 +217,9 @@ def redact_text(text):
     t = re.sub(r"(?<!\w)\+?\d[\d ()-]{6,}\d(?!\w)", "[NUMBER]", t)
     return t[:500]
 
-def web_request(text, history, model):
+def web_request(text, history, model, *, detect_multiple=False):
     """No global history. Returns a fresh per-session list."""
-    result = route_ticket(text, model)
+    result = route_ticket(text, model, detect_multiple=detect_multiple)
     new_history = copy.deepcopy(history or [])
     if result["status"] != "NEEDS_CLARIFICATION":
         new_history.append({"Время UTC": result["created_at_utc"], "Текст (маскир.)": redact_text(text),

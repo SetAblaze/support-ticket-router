@@ -18,6 +18,7 @@ from support_router import (
     shadow_bundle,
     write_json,
 )
+from support_router.multiple_requests import request_parts
 
 
 def evaluate_model(bundle, hard, ood):
@@ -62,6 +63,23 @@ def evaluate_risks(cases):
     return report
 
 
+def evaluate_multiple_requests(bundle, hard, ood, test):
+    multi = ood.loc[ood.topic == "multiple_topics", "text"]
+    controls = {"hard_single_topic": hard.text, "other_ood": ood.loc[ood.topic != "multiple_topics", "text"],
+                "bitext_single_topic": test.text}
+    shadow = shadow_bundle(bundle)
+    default = batch_route(shadow, multi)
+    enabled = batch_route(shadow, multi, detect_multiple=True)
+    return {
+        "multi_topic_n": len(multi),
+        "multi_topic_with_parts": sum(bool(r["request_parts"]) for r in enabled),
+        "shadow_auto_default": sum(r["status"] == "AUTO_RECOMMENDED" for r in default),
+        "shadow_auto_with_detection": sum(r["status"] == "AUTO_RECOMMENDED" for r in enabled),
+        "controls": {name: {"n": len(texts), "with_parts": sum(bool(request_parts(t)) for t in texts)}
+                     for name, texts in controls.items()},
+    }
+
+
 def main():
     root = project_root()
     parser = argparse.ArgumentParser(description=__doc__)
@@ -69,7 +87,7 @@ def main():
     parser.add_argument("--out", type=Path, default=root / "reports/review_benchmark.json")
     args = parser.parse_args()
     splits = {name: pd.read_csv(args.processed / f"{name}.csv", keep_default_na=False)
-              for name in ("train", "calibration", "val")}
+              for name in ("train", "calibration", "val", "test")}
     deployed, meta = load_bundle(root / "models", trust_local_artifact=True)
     for name in splits:
         if sha256_file(args.processed / f"{name}.csv") != meta["provenance"]["split_manifest"]["splits"][name]["sha256"]:
@@ -82,6 +100,7 @@ def main():
     risks = pd.read_csv(datasets / "risk_regression.csv", keep_default_na=False)
     write_json(args.out, {
         "scope": "Author-written diagnostic cases; risk examples include regression fixtures.",
+        "multiple_requests": evaluate_multiple_requests(deployed, hard, ood, splits["test"]),
         "models": {b.model_name: evaluate_model(b, hard, ood) for b in (deployed, candidate)},
         "risk_n": len(risks), "risk_by_flag": evaluate_risks(risks),
     })

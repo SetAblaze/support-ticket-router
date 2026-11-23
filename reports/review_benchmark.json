@@ -1,5 +1,25 @@
 {
   "scope": "Author-written diagnostic cases; risk examples include regression fixtures.",
+  "multiple_requests": {
+    "multi_topic_n": 15,
+    "multi_topic_with_parts": 15,
+    "shadow_auto_default": 3,
+    "shadow_auto_with_detection": 0,
+    "controls": {
+      "hard_single_topic": {
+        "n": 220,
+        "with_parts": 0
+      },
+      "other_ood": {
+        "n": 85,
+        "with_parts": 0
+      },
+      "bitext_single_topic": {
+        "n": 3122,
+        "with_parts": 0
+      }
+    }
+  },
   "models": {
     "linsvc_wc_C1": {
       "confidence_threshold": 0.85,

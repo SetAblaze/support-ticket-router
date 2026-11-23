@@ -69,7 +69,14 @@ class ShadowOut(BaseModel):
     policy_version: str
 
 
+class RequestPart(BaseModel):
+    intent: str
+    category: str
+    queue: str
+
+
 class DecisionOut(BaseModel):
+    request_parts: list[RequestPart]
     ticket_id: str | None
     status: Literal["NEEDS_CLARIFICATION", "MANUAL_REVIEW", "AUTO_RECOMMENDED", "MODEL_ERROR"]
     category: str | None
@@ -213,17 +220,17 @@ def create_app(models_directory=None, registry=None) -> FastAPI:
                          "shadow_errors": shadow.get("automatic_queue_errors")}}
 
     @app.post("/v1/route", response_model=DecisionOut)
-    def route(ticket: TicketIn, request: Request):
+    def route(ticket: TicketIn, request: Request, detect_multiple: bool = False):
         model, shadow = require_model()
-        result, shadow_result = route_policy_pair(ticket.text, model, shadow)
+        result, shadow_result = route_policy_pair(ticket.text, model, shadow, detect_multiple=detect_multiple)
         record_decision(request, ticket, result, shadow_result)
         return _decision(result, shadow_result, ticket.ticket_id)
 
     @app.post("/v1/route/batch", response_model=BatchOut)
-    def route_batch(batch: BatchIn, request: Request):
+    def route_batch(batch: BatchIn, request: Request, detect_multiple: bool = False):
         model, shadow = require_model()
         texts = [t.text for t in batch.tickets]
-        pairs = batch_policy_pairs(texts, model, shadow)
+        pairs = batch_policy_pairs(texts, model, shadow, detect_multiple=detect_multiple)
         out = []
         for ticket, (result, shadow_result) in zip(batch.tickets, pairs, strict=True):
             record_decision(request, ticket, result, shadow_result)

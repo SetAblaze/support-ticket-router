@@ -20,6 +20,7 @@
 from __future__ import annotations
 
 import argparse
+import json
 import sys
 from pathlib import Path
 
@@ -64,13 +65,17 @@ def deployed_message(result):
     """Тот же текст, что в интерфейсе этапа 9."""
     if result["status"] == "NEEDS_CLARIFICATION":
         return "Нужен текст обращения."
+    if result["status"] == "MODEL_ERROR":
+        return "Ошибка модели. Обращение остаётся оператору."
+    if result.get("request_parts"):
+        parts = [f"{part['intent'].replace('_', ' ')} ({part['category']} → {part['queue']})"
+                 for part in result["request_parts"]]
+        return "Оператору нужно проверить каждый запрос. " + " · ".join(parts)
     if result["category"] is None:
         return "Категория не определена для этого ввода. Нужна ручная проверка."
     if result["status"] == "MANUAL_REVIEW":
         return ("Показана предполагаемая тема. Автоматическое направление не подтверждено: "
                 "оператору нужно проверить решение.")
-    if result["status"] == "MODEL_ERROR":
-        return "Ошибка модели. Обращение остаётся оператору."
     return "Сформирована рекомендация категории и очереди. Обращение не отправлено."
 
 
@@ -102,10 +107,11 @@ def explanation_rows(model, text):
     return rows
 
 
-def route_with_shadow(text, model, shadow):
+def route_with_shadow(text, model, shadow, detect_multiple=False):
     """Ответ для внешних систем: рабочее решение плюс теневое для сравнения."""
-    result = sc.route_ticket(text, model)
-    shadow_result = sc.route_ticket(text, shadow)
+    from support_router.routing import route_policy_pair
+
+    result, shadow_result = route_policy_pair(text, model, shadow, detect_multiple=detect_multiple)
     result["shadow"] = {"status": shadow_result["status"], "queue": shadow_result["queue"],
                         "policy_version": shadow_result["policy_version"]}
     return result
@@ -132,9 +138,9 @@ def model_card(meta):
 
 def make_handler(model, shadow):
     """Обработчик кнопки «Анализировать»: рабочее решение, теневое и объяснение."""
-    def process(user_text, history):
-        result, updated = sc.web_request(user_text, history, model)
-        shadow_result = sc.route_ticket(user_text, shadow)
+    def process(user_text, history, detect_multiple=False):
+        result, updated = sc.web_request(user_text, history, model, detect_multiple=detect_multiple)
+        shadow_result = sc.route_ticket(user_text, shadow, detect_multiple=detect_multiple)
         return (result["category"] or "Не определена", result["queue"] or "", result["status"],
                 result["priority"], "; ".join(result["reason_codes"]), result["top3"],
                 pd.DataFrame(updated[::-1], columns=HISTORY_COLUMNS), updated,
@@ -161,6 +167,7 @@ def build_ui(model, shadow, meta):
         with gr.Row():
             with gr.Column():
                 user_text = gr.Textbox(lines=4, label="Обращение клиента")
+                multiple = gr.Checkbox(label="Распознавать несколько запросов в одном обращении", value=False)
                 gr.Examples(examples=[[t] for t in EXAMPLES], inputs=user_text)
                 submit = gr.Button("Анализировать", variant="primary")
                 message = gr.Markdown()
@@ -178,26 +185,26 @@ def build_ui(model, shadow, meta):
                                      label="История этой сессии (до 100 записей)")
         outputs = [category, queue, status, priority, reasons, top3, history_table,
                    session_history, message, shadow_note, explanation]
-        submit.click(process, inputs=[user_text, session_history], outputs=outputs, api_name="analyze")
-        user_text.submit(process, inputs=[user_text, session_history], outputs=outputs,
+        submit.click(process, inputs=[user_text, session_history, multiple], outputs=outputs, api_name="analyze")
+        user_text.submit(process, inputs=[user_text, session_history, multiple], outputs=outputs,
                          api_visibility="private")
 
-        def route_json(text: str) -> dict:
+        def route_json(text: str, detect_multiple: bool = False) -> dict:
             """Полный ответ route_ticket в JSON плюс теневое решение для сравнения."""
-            return route_with_shadow(text, model, shadow)
+            return route_with_shadow(text, model, shadow, detect_multiple=detect_multiple)
 
         gr.api(route_json, api_name="route_json")
     return demo
 
 
-def batch_file(src, dst, model, shadow):
+def batch_file(src, dst, model, shadow, *, detect_multiple=False):
     frame = pd.read_csv(src, dtype=str, keep_default_na=False)
     column = next((c for c in ("text", "utterance") if c in frame.columns), None)
     if column is None:
         raise SystemExit("В CSV нужна колонка text или utterance")
     texts = frame[column].tolist()
-    deployed = sc.batch_route(model, texts) if texts else []
-    shadowed = sc.batch_route(shadow, texts) if texts else []
+    deployed = sc.batch_route(model, texts, detect_multiple=detect_multiple) if texts else []
+    shadowed = sc.batch_route(shadow, texts, detect_multiple=detect_multiple) if texts else []
     rows = []
     for i, (text, r, s) in enumerate(zip(texts, deployed, shadowed)):
         row = {"row": i, "text_masked": sc.redact_text(text),
@@ -207,10 +214,14 @@ def batch_file(src, dst, model, shadow):
                "risk_flags": ";".join(r["risk_flags"]), "reason_codes": ";".join(r["reason_codes"]),
                "shadow_status": s["status"], "shadow_queue": s["queue"],
                "model_id": r["model_id"], "policy_version": r["policy_version"]}
+        if detect_multiple:
+            row["request_parts"] = json.dumps(r["request_parts"], ensure_ascii=False)
         if "id" in frame.columns:
             row = {"id": frame.at[i, "id"], **row}
         rows.append(row)
     columns = (["id"] if "id" in frame.columns else []) + BATCH_COLUMNS
+    if detect_multiple:
+        columns = columns + ["request_parts"]
     out = pd.DataFrame(rows, columns=columns)
     out.to_csv(dst, index=False)
     return out
@@ -239,6 +250,7 @@ def main(argv=None):
             stream.reconfigure(encoding="utf-8", errors="replace")
     parser = argparse.ArgumentParser(description="Маршрутизация обращений в поддержку (демонстрационная версия)")
     parser.add_argument("--models", default=str(MODELS_DIR), help="папка с router.joblib и router_meta.json")
+    parser.add_argument("--detect-multiple", action="store_true", help="выделить отдельные запросы в пакетном режиме")
     parser.add_argument("--batch", help="CSV с колонкой text или utterance")
     parser.add_argument("--out", help="куда записать результат пакетной разметки")
     parser.add_argument("--check", action="store_true", help="проверить модель на контрольных фразах")
@@ -249,7 +261,7 @@ def main(argv=None):
     model, shadow, meta = load_router(args.models)
     if args.batch:
         out = args.out or str(Path(args.batch).with_name(Path(args.batch).stem + "_routed.csv"))
-        result = batch_file(args.batch, out, model, shadow)
+        result = batch_file(args.batch, out, model, shadow, detect_multiple=args.detect_multiple)
         print(f"Размечено {len(result)} строк: {out}")
         print(result.status.value_counts().to_string())
         return
