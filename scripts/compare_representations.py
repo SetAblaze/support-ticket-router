@@ -21,7 +21,7 @@ from pathlib import Path
 
 import numpy as np
 import pandas as pd
-from sklearn.model_selection import StratifiedKFold, cross_val_score
+from sklearn.model_selection import GroupKFold, StratifiedGroupKFold, StratifiedKFold, cross_val_score
 
 import support_router as sc
 from support_router import independent_cases
@@ -41,39 +41,102 @@ def _top1(predicted, labels):
             "macro_f1": metrics["macro_f1"], "errors": metrics["errors"]}
 
 
-def _sample_100(train, seed):
-    """At least two rows per category, then proportional allocation to exactly 100."""
+def _allocate(total, weights, capacity, minimum):
+    """Deterministic largest-deficit allocation with a minimum per category."""
+    allocation = {category: min(minimum, capacity[category]) for category in weights}
+    if sum(allocation.values()) > total:
+        raise ValueError("Minimum per class exceeds the sample budget")
+    total_weight = sum(weights.values())
+    while sum(allocation.values()) < total:
+        candidates = [category for category in sorted(weights)
+                      if allocation[category] < capacity[category]]
+        if not candidates:
+            raise ValueError("Not enough rows for the requested sample budget")
+        category = max(candidates, key=lambda c: (
+            weights[c] / total_weight * total - allocation[c], -allocation[c], c))
+        allocation[category] += 1
+    return allocation
+
+
+def _sample_100(train, seed, mode="balanced"):
+    """Return exactly 100 rows and the allocation protocol.
+
+    ``balanced`` gives every category a nearly equal quota.  ``proportional``
+    follows the train distribution, with an explicit minimum of two rows per
+    category.  If that minimum distorts strict proportionality, the returned
+    metadata says so.
+    """
+    if mode not in ("balanced", "proportional"):
+        raise ValueError(f"Unknown few-shot mode: {mode}")
     rng = np.random.default_rng(seed)
     groups = {category: group for category, group in train.groupby("category")}
-    counts = {category: 2 for category in groups}
-    remaining = 100 - sum(counts.values())
-    weights = {category: len(group) / len(train) for category, group in groups.items()}
-    for _ in range(remaining):
-        category = max(groups, key=lambda c: (weights[c] * (counts[c] + 1) - counts[c], -counts[c]))
-        counts[category] += 1
+    counts = {category: len(group) for category, group in groups.items()}
+    weights = ({category: 1.0 for category in counts} if mode == "balanced"
+               else {category: float(counts[category]) for category in counts})
+    allocation = _allocate(100, weights, counts, minimum=2)
     indices = []
     for category, group in groups.items():
-        indices.extend(rng.choice(group.index.to_numpy(), size=min(counts[category], len(group)),
+        indices.extend(rng.choice(group.index.to_numpy(), size=allocation[category],
                                   replace=False))
-    return train.loc[sorted(indices)].reset_index(drop=True)
+    sample = train.loc[sorted(indices)].reset_index(drop=True)
+    if len(sample) != 100 or sample.text.duplicated().any():
+        raise AssertionError("Few-shot sample must contain exactly 100 unique rows")
+    ideal = {category: 100 * weights[category] / sum(weights.values()) for category in weights}
+    deviation = {category: allocation[category] - ideal[category] for category in weights}
+    return sample, {
+        "mode": mode, "n": len(sample), "allocation": allocation,
+        "class_distribution": sample.category.value_counts().to_dict(),
+        "n_groups": int(sample.group.nunique()), "min_per_class": 2,
+        "max_abs_deviation_from_ideal": max(abs(value) for value in deviation.values()),
+        "proportionality_note": ("minimum two rows per category can distort strict "
+                                 "proportionality" if mode == "proportional" else
+                                 "balanced quota, not the train prevalence"),
+    }
 
 
-def _fit_with_cv(name, texts, labels, seed):
+def _cv_for(texts, labels, groups, seed):
     min_count = pd.Series(labels).value_counts().min()
-    folds = int(max(2, min(5, min_count)))
-    cv = StratifiedKFold(n_splits=folds, shuffle=True, random_state=seed)
+    folds = int(max(2, min(5, min_count, len(set(groups)))))
+    last_error = None
+    while folds >= 2:
+        try:
+            cv = StratifiedGroupKFold(n_splits=folds, shuffle=True, random_state=seed)
+            list(cv.split(texts, labels, groups))
+            return cv, folds, "StratifiedGroupKFold", None
+        except ValueError as exc:
+            last_error = exc
+        try:
+            cv = GroupKFold(n_splits=folds)
+            list(cv.split(texts, labels, groups))
+            return cv, folds, "GroupKFold", f"StratifiedGroupKFold unavailable: {last_error}"
+        except ValueError as exc:
+            last_error = exc
+            folds -= 1
+    # Last-resort stratified fallback is explicitly marked as leakage-prone.
+    if min_count >= 2:
+        cv = StratifiedKFold(n_splits=2, shuffle=True, random_state=seed)
+        return cv, 2, "StratifiedKFold", f"group-aware CV unavailable: {last_error}"
+    raise ValueError("Cannot build any cross-validation split")
+
+
+def _fit_with_cv(name, texts, labels, groups, seed):
+    cv, folds, method, fallback = _cv_for(texts, labels, groups, seed)
     best = None
     for c in C_GRID:
         model = sc.make_model(name)
         model.set_params(clf__C=c)
-        score = cross_val_score(model, texts, labels, cv=cv, scoring="accuracy").mean()
+        score = cross_val_score(model, texts, labels, cv=cv, groups=groups,
+                                scoring="accuracy").mean()
         if best is None or score > best[0]:
             best = score, c
     _, chosen_c = best
     model = sc.make_model(name)
     model.set_params(clf__C=chosen_c)
     model.fit(texts, labels)
-    return model, chosen_c, float(best[0])
+    return model, chosen_c, float(best[0]), {
+        "method": method, "folds": folds, "fallback_reason": fallback,
+        "leakage_risk": method == "StratifiedKFold",
+    }
 
 
 def _evaluate_model(model, natural, no_keywords):
@@ -88,6 +151,11 @@ def _aggregate(rows):
         out[slice_name] = {"mean_top1": float(values.mean()), "std_top1": float(values.std(ddof=0)),
                            "min_top1": float(values.min()), "max_top1": float(values.max()),
                            "seeds": len(values)}
+    cv_values = np.asarray([row["cv_accuracy"] for row in rows])
+    out["cv_accuracy"] = {"mean": float(cv_values.mean()), "std": float(cv_values.std(ddof=0)),
+                          "seeds": len(cv_values)}
+    out["chosen_C"] = sorted({row["chosen_C"] for row in rows})
+    out["cv_methods"] = sorted({row["cv"]["method"] for row in rows})
     return out
 
 
@@ -132,15 +200,19 @@ def main():
                       **_evaluate_model(model, natural, no_keywords)}
 
     few_shot = {}
-    for name in ("lr_word (baseline)", "linsvc_wc_C1", "semantic_lr_C1"):
-        rows = []
-        for seed in SEEDS:
-            sample = _sample_100(train, seed)
-            model, chosen_c, cv_accuracy = _fit_with_cv(name, sample.text.tolist(),
-                                                        sample.category.tolist(), seed)
-            rows.append({"seed": seed, "chosen_C": chosen_c, "cv_accuracy_on_100": cv_accuracy,
-                         **_evaluate_model(model, natural, no_keywords)})
-        few_shot[name] = {"runs": rows, "aggregate": _aggregate(rows)}
+    for mode in ("balanced", "proportional"):
+        few_shot[mode] = {}
+        for name in ("lr_word (baseline)", "linsvc_wc_C1", "semantic_lr_C1"):
+            rows = []
+            for seed in SEEDS:
+                sample, sample_meta = _sample_100(train, seed, mode)
+                model, chosen_c, cv_accuracy, cv_meta = _fit_with_cv(
+                    name, sample.text.tolist(), sample.category.tolist(),
+                    sample.group.tolist(), seed)
+                rows.append({"seed": seed, "chosen_C": chosen_c, "cv_accuracy": cv_accuracy,
+                             "sample": sample_meta, "cv": cv_meta,
+                             **_evaluate_model(model, natural, no_keywords)})
+            few_shot[mode][name] = {"runs": rows, "aggregate": _aggregate(rows)}
 
     report = {
         "benchmark": {"version": independent_cases.VERSION, "sha256": independent_cases.sha256(),
@@ -148,19 +220,35 @@ def main():
         "provenance": {"generated_at_utc": datetime.now(timezone.utc).isoformat(),
                        "train_sha256": sha256_file(train_path),
                        "train_rows": len(train)},
-        "regimes": {"full_train": "all training rows", "few_shot_100": "100 rows, C chosen inside them"},
+        "regimes": {
+            "full_train": "all training rows",
+            "few_shot_balanced": "exactly 100 rows, nearly equal category quota, C chosen inside them",
+            "few_shot_proportional": ("exactly 100 rows, train-proportional quota with a documented "
+                                      "minimum of two rows per category, C chosen inside them"),
+        },
         "full_train": full,
-        "few_shot_100": few_shot,
+        "few_shot": few_shot,
+        "few_shot_100": few_shot["balanced"],
+        "few_shot_100_note": ("alias for backward compatibility; the balanced and proportional "
+                              "regimes are separate experiments"),
+        "cv_protocol": {
+            "unit": "lexical group",
+            "primary": "StratifiedGroupKFold when the sample supports it",
+            "fallback": "GroupKFold, then a leakage-marked StratifiedKFold last resort",
+            "selection_inside_sample_only": True,
+        },
         "llm_zero_few_shot": _llm_block(args.llm_predictions, natural, no_keywords),
-        "scope": "Author-written frozen benchmark. Natural and no-keyword modes are not pooled.",
+        "scope": ("Author-written frozen benchmark. Natural and no-keyword modes are not pooled. "
+                  "The benchmark has already been inspected, so it is not a blind final test."),
     }
     write_json(args.out, report)
     print(json.dumps({"report": str(args.out),
                       "full_train": {k: {s: round(v[s]["top1_accuracy"], 3) for s in ("natural", "no_keywords")}
                                      for k, v in full.items()},
-                      "few_shot_100": {k: {s: round(v["aggregate"][s]["mean_top1"], 3)
-                                           for s in ("natural", "no_keywords")}
-                                       for k, v in few_shot.items()},
+                      "few_shot": {mode: {k: {s: round(v["aggregate"][s]["mean_top1"], 3)
+                                              for s in ("natural", "no_keywords")}
+                                          for k, v in models.items()}
+                                  for mode, models in few_shot.items()},
                       "llm": report["llm_zero_few_shot"]["status"]},
                      ensure_ascii=False, indent=2))
 

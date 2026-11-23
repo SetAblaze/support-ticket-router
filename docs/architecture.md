@@ -13,7 +13,7 @@ flowchart LR
     PKG["Пакет support_router<br/>src/support_router"]
     ART[("models/<br/>router.joblib<br/>router_meta.json")]
     subgraph serving["Работа с обращениями"]
-        API["FastAPI<br/>/v1/route, /v1/route/batch"]
+        API["FastAPI<br/>/v1/route, /v1/route/batch<br/>/v1/feedback"]
         UI["Gradio app.py<br/>демонстрация"]
     end
     CRM["CRM поддержки"]
@@ -54,6 +54,8 @@ CRM сама решает, куда положить обращение: сер�
 | `business` | приоритет, цены ошибок, матрица потерь `L(y,a)` и ожидаемые потери `R(a|x)` | `config`, `text` |
 | `cascade` | вторая ступень MiniLM и её пороги на отклонённых обращениях | `business`, `config`, `semantic_encoder` |
 | `feedback` | подтверждение или исправление оператором, метрики и очередь на переобучение | `config`, `text`, `routing` |
+| `identity` | `experiment_id` и проверка, что отчёт относится к текущей модели, данным и политике | `config`, `utils`, `independent_cases` |
+| `reporting` | единый `current_release.json` и генерация `results.md` из JSON-отчётов | `identity`, `independent_cases` |
 | `artifacts` | сохранение модели с паспортом и проверяемая загрузка | `config`, `utils` |
 | `explain` | вклад слов в линейную часть модели | ничего |
 | `paths` | папки проекта, модели и энкодера: `SUPPORT_ROUTER_HOME`, `SUPPORT_ROUTER_MODELS_DIR`, `SUPPORT_ENCODER_DIR` | ничего |
@@ -114,6 +116,12 @@ flowchart LR
     INDEP --> SAVE["save_bundle<br/>паспорт и хеши"]
     SAVE --> IMG["Docker-образ<br/>код + модель"]
 ```
+
+`identity` связывает каждый отчёт с `model_id`, хешем артефакта, хешем
+decision-кода, версией политики, хешем данных, хешем split-манифеста и
+протоколом независимого набора. `reporting` собирает текущие числа из JSON в
+один `reports/current_release.json`; `results.md` генерируется, а не пишется
+вручную.
 
 `save_bundle` записывает в паспорт модели хеш файла, версию scikit-learn и общий хеш модулей решения (`config`, `text`, `models`, `rules`, `routing`, `business`, `cascade` и вспомогательных). `load_bundle` при старте сервиса сверяет всё это и отказывается загружать модель, если что-то не совпало: так модель не начнёт тихо решать иначе, чем проверенная. Правка `api.py`, `monitoring.py`, `train.py`, `data.py` или `evaluation.py` переобучения не требует.
 

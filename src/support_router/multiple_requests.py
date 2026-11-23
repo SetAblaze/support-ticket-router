@@ -48,6 +48,24 @@ _RULES = [
 ]
 _PATTERNS = [(intent, re.compile(r"\b(?:" + pattern + r")\b")) for intent, _, pattern in _RULES]
 _CATEGORIES = {intent: category for intent, category, _ in _RULES}
+INTENT_SCHEMA_VERSION = "multi-intent-v1"
+INTENT_SCHEMA = {
+    intent: {"category": category, "queue": CATEGORY_TO_QUEUE[category],
+             "pattern": pattern}
+    for intent, category, pattern in _RULES
+}
+
+
+def validate_request_parts(parts):
+    """Validate the public multi-request schema before it reaches the API."""
+    for part in parts:
+        intent = part.get("intent")
+        if intent not in INTENT_SCHEMA:
+            raise ValueError(f"Unknown intent: {intent}")
+        expected = INTENT_SCHEMA[intent]
+        if part.get("category") != expected["category"] or part.get("queue") != expected["queue"]:
+            raise ValueError(f"Inconsistent category/queue for intent: {intent}")
+    return parts
 
 
 def request_parts(text):
@@ -79,5 +97,6 @@ def request_parts(text):
             in_list = False
     if len(intents) < 2:
         return []
-    return [{"intent": intent, "category": _CATEGORIES[intent], "queue": CATEGORY_TO_QUEUE[_CATEGORIES[intent]]}
-            for intent in intents]
+    parts = [{"intent": intent, "category": _CATEGORIES[intent],
+              "queue": CATEGORY_TO_QUEUE[_CATEGORIES[intent]]} for intent in intents]
+    return validate_request_parts(parts)

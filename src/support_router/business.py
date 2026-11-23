@@ -51,12 +51,28 @@ def triage(text, flags, context_reasons, context_priority):
     return f"P{level}", list(dict.fromkeys(reasons))
 
 
+def _finite_cost(value, name, *, allow_zero=True):
+    if isinstance(value, bool) or not isinstance(value, (int, float)):
+        raise ValueError(f"{name} must be a finite number")
+    value = float(value)
+    if not math.isfinite(value) or value < 0 or (value == 0 and not allow_zero):
+        raise ValueError(f"{name} must be finite and {'non-negative' if allow_zero else 'positive'}")
+    return value
+
+
 def confidence_floor(policy, category):
-    base = policy.get("confidence_threshold", 1.)
+    base = _finite_cost(policy.get("confidence_threshold", 1.), "confidence_threshold")
+    if base > 1:
+        raise ValueError("confidence_threshold must be at most one")
     costs = policy.get("misroute_cost")
     if not costs:
         return float(base)
-    return max(float(base), 1 - policy["review_cost"] / costs.get(category, policy["default_misroute_cost"]))
+    review_cost = _finite_cost(policy.get("review_cost", 1.), "review_cost", allow_zero=False)
+    default_cost = _finite_cost(policy.get("default_misroute_cost", DEFAULT_MISROUTE_COST),
+                                "default_misroute_cost", allow_zero=False)
+    category_cost = _finite_cost(costs.get(category, default_cost), f"misroute_cost[{category}]",
+                                 allow_zero=False)
+    return max(float(base), 1 - review_cost / category_cost)
 
 
 def loss_matrix(classes, costs=None, review_cost=1., default_misroute_cost=DEFAULT_MISROUTE_COST):
@@ -67,7 +83,23 @@ def loss_matrix(classes, costs=None, review_cost=1., default_misroute_cost=DEFAU
     one review, independently of the true category.
     """
     classes = list(classes)
+    if not classes or len(classes) != len(set(classes)):
+        raise ValueError("classes must be non-empty and unique")
+    if REVIEW_ACTION in classes:
+        raise ValueError("REVIEW is an action, not a trained class")
+    if "OTHER" in classes:
+        raise ValueError("OTHER is a rejection label, not a trained business class")
     costs = dict(costs or MISROUTE_COST)
+    unknown = set(costs) - set(classes)
+    if unknown:
+        raise ValueError(f"Unknown cost categories: {sorted(unknown)}")
+    if REVIEW_ACTION in costs:
+        raise ValueError("REVIEW is an action, not a cost category")
+    review_cost = _finite_cost(review_cost, "review_cost", allow_zero=False)
+    default_misroute_cost = _finite_cost(default_misroute_cost, "default_misroute_cost",
+                                         allow_zero=False)
+    for category, value in costs.items():
+        costs[category] = _finite_cost(value, f"misroute_cost[{category}]", allow_zero=False)
     actions = classes + [REVIEW_ACTION]
     matrix = np.zeros((len(classes), len(actions)), dtype=float)
     for i, truth in enumerate(classes):
@@ -87,19 +119,32 @@ def expected_losses(probabilities, classes, costs=None, review_cost=1.,
     if probabilities.ndim == 1:
         probabilities = probabilities[None, :]
     classes = list(classes)
-    if probabilities.shape[1] != len(classes):
+    if probabilities.ndim != 2 or probabilities.shape[1] != len(classes):
         raise ValueError("Probability columns do not match classes")
     if not np.isfinite(probabilities).all() or (probabilities < 0).any():
         raise ValueError("Invalid class probabilities")
+    if not np.allclose(probabilities.sum(axis=1), 1., atol=1e-6):
+        raise ValueError("Class probabilities must sum to one")
     _, actions, matrix = loss_matrix(classes, costs, review_cost, default_misroute_cost)
     return actions, probabilities @ matrix
 
 
 def cost_sensitive_action(probabilities, classes, costs=None, review_cost=1.,
                           default_misroute_cost=DEFAULT_MISROUTE_COST):
-    """Choose the action with the lowest expected loss for each row."""
+    """Choose the action with the lowest expected loss for each row.
+
+    Ties between a category and ``REVIEW`` deliberately prefer ``REVIEW``:
+    the cheaper-looking automation must be strictly better to be selected.
+    """
     actions, losses = expected_losses(probabilities, classes, costs, review_cost, default_misroute_cost)
-    chosen = [actions[i] for i in np.argmin(losses, axis=1)]
+    review_index = len(classes)
+    chosen = []
+    for row in losses:
+        best_class_loss = float(np.min(row[:review_index]))
+        if row[review_index] <= best_class_loss + 1e-12:
+            chosen.append(REVIEW_ACTION)
+        else:
+            chosen.append(actions[int(np.argmin(row[:review_index]))])
     return chosen, losses, actions
 
 

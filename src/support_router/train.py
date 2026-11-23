@@ -25,7 +25,15 @@ from .artifacts import save_bundle
 from .business import misroute_costs
 from .cascade import fit_business_cascade
 from .config import SEED
-from .data import assert_split_integrity, clean_frame, cross_split_similarity, lexical_groups, make_splits
+from .data import (
+    assert_split_integrity,
+    clean_frame,
+    cross_split_similarity,
+    group_diagnostics,
+    leakage_diagnostics,
+    lexical_groups,
+    make_splits,
+)
 from .evaluation import classification_metrics, routing_metrics
 from .models import CONFIG_NAMES, fit_calibrated_bundle
 from .paths import models_dir, project_root
@@ -53,7 +61,8 @@ def build_splits(raw_path, processed_dir):
     similarity_checks = {name: cross_split_similarity(splits["train"], splits[name])[0]
                          for name in ("calibration", "val", "test")}
     manifest = {"seed": SEED, "raw_sha256": sha256_file(raw_path), "cleaning": cleaning,
-                "grouping": grouping, "overlap_checks": overlap,
+                "grouping": grouping, "group_diagnostics": group_diagnostics(frame),
+                "overlap_checks": overlap, "leakage_diagnostics": leakage_diagnostics(splits),
                 "similarity_checks": similarity_checks, "roles": SPLIT_ROLES,
                 "splits": {k: {"rows": len(v), "sha256": sha256_file(processed_dir / f"{k}.csv"),
                                "class_counts": v.category.value_counts().to_dict()}

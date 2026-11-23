@@ -32,6 +32,229 @@
     "semantic_equivalence_verified": false,
     "warning": "Heuristic groups can overmerge; inspect largest clusters and cross-label groups"
   },
+  "group_diagnostics": {
+    "n_groups": 3646,
+    "size_min": 1,
+    "size_median": 1.0,
+    "size_p95": 14.0,
+    "size_max": 1891,
+    "largest_fraction": 0.09598984771573604,
+    "groups_with_multiple_categories": 1,
+    "groups_with_multiple_intents": 14,
+    "cross_category_group_ids": [
+      "2612"
+    ],
+    "cross_intent_group_ids": [
+      "36",
+      "57",
+      "61",
+      "67",
+      "1617",
+      "1625",
+      "1648",
+      "1671",
+      "1679",
+      "1707",
+      "1833",
+      "2612",
+      "3375",
+      "3376"
+    ],
+    "largest_groups": [
+      {
+        "group": "2756",
+        "size": 1891,
+        "categories": [
+          "PAYMENT"
+        ],
+        "intents": [
+          "payment_issue"
+        ],
+        "mean_pairwise_char_similarity": 0.260351677545339,
+        "min_pairwise_char_similarity": 0.007864331634868268,
+        "example_texts": [
+          "i have a problem paying for my order, can i inform of it?",
+          "i have an issue when trying to pay with card, how can i notify it?",
+          "how to inform of a payment problem",
+          "how do i notify a payment problem?",
+          "i have a problem making a payment with card, how do i report it?"
+        ]
+      },
+      {
+        "group": "0",
+        "size": 740,
+        "categories": [
+          "ACCOUNT"
+        ],
+        "intents": [
+          "create_account"
+        ],
+        "mean_pairwise_char_similarity": 0.32387505565944796,
+        "min_pairwise_char_similarity": 0.0427497415465589,
+        "example_texts": [
+          "i do not have an online account, what do i have to do to register?",
+          "i have no online account, open one, please",
+          "i want an online account, create one",
+          "i do not have a user account, how do i create one?",
+          "i have no user account, what do i have to do to create one?"
+        ]
+      },
+      {
+        "group": "2753",
+        "size": 700,
+        "categories": [
+          "PAYMENT"
+        ],
+        "intents": [
+          "payment_issue"
+        ],
+        "mean_pairwise_char_similarity": 0.47048769437660626,
+        "min_pairwise_char_similarity": 0.15617437923855912,
+        "example_texts": [
+          "i got an error message when i attempted to pay, but my card was charged anyway, how can i notif it?",
+          "i got an error when i tried to pay, but i was charged anyway, can you notify it?",
+          "i got an error when i tried to pay, but my card was charged anyway, i need help notifying it",
+          "i got an error when i tried to pay, but i was charged anyway, can i report it?",
+          "i got an error message when i attempted to pay, but my card was charged anyway, help me report it"
+        ]
+      },
+      {
+        "group": "879",
+        "size": 568,
+        "categories": [
+          "CONTACT"
+        ],
+        "intents": [
+          "contact_customer_service"
+        ],
+        "mean_pairwise_char_similarity": 0.30287866030858884,
+        "min_pairwise_char_similarity": 0.0,
+        "example_texts": [
+          "i need information and i wanna contact customer support",
+          "i want to contact customer support",
+          "i need information about the email address of the customer support",
+          "i need information, what do i have to do to call customer service?",
+          "can you tell me the email to contact customer support, please?"
+        ]
+      },
+      {
+        "group": "1390",
+        "size": 461,
+        "categories": [
+          "FEEDBACK"
+        ],
+        "intents": [
+          "complaint"
+        ],
+        "mean_pairwise_char_similarity": 0.2989696105046323,
+        "min_pairwise_char_similarity": 0.04496180472566183,
+        "example_texts": [
+          "ask an agent how i can make a consumer complaint for a service",
+          "i want to submit a complaint, what do i have to do?",
+          "i do not like the service, what do i have to do to make a consumer complaint?",
+          "where to lodge a complaint for a service",
+          "i'm not happy with the service, what can i do to lodge a consumer complaint?"
+        ]
+      },
+      {
+        "group": "1",
+        "size": 368,
+        "categories": [
+          "ACCOUNT"
+        ],
+        "intents": [
+          "create_account"
+        ],
+        "mean_pairwise_char_similarity": 0.4159379441233827,
+        "min_pairwise_char_similarity": 0.06565832171669506,
+        "example_texts": [
+          "can you tell me if i can regisger two accounts with a single email address?",
+          "tell me if i can register two online accounts with the same email",
+          "i want to know if i could create two profiles with the same email address",
+          "can i create two online accounts with a single email?",
+          "i want to know if i can register several user accounts with the same email address"
+        ]
+      },
+      {
+        "group": "2754",
+        "size": 329,
+        "categories": [
+          "PAYMENT"
+        ],
+        "intents": [
+          "payment_issue"
+        ],
+        "mean_pairwise_char_similarity": 0.44287040135432604,
+        "min_pairwise_char_similarity": 0.08312232626390541,
+        "example_texts": [
+          "i get an error when i try to make a payment for my order, what can i do?",
+          "i get an error message when i attempt to make a payment with card, can you help me?",
+          "i get an error when i attempt to pay for my order",
+          "i get an error when i attempt to make a payment, what should i do?",
+          "i get an error when i attempt to pay for my order, what can i do?"
+        ]
+      },
+      {
+        "group": "882",
+        "size": 304,
+        "categories": [
+          "CONTACT"
+        ],
+        "intents": [
+          "contact_customer_service"
+        ],
+        "mean_pairwise_char_similarity": 0.3759016545024996,
+        "min_pairwise_char_similarity": 0.012306508856098571,
+        "example_texts": [
+          "can you tell me the nbumber of client service?",
+          "can you show me the free number of customer service, please?",
+          "i want to know if there is a free phone number to contact customer service",
+          "can you tell me if there is a free number to contact customer support?",
+          "what's the email address to contact customer support?"
+        ]
+      },
+      {
+        "group": "1316",
+        "size": 277,
+        "categories": [
+          "DELIVERY"
+        ],
+        "intents": [
+          "delivery_options"
+        ],
+        "mean_pairwise_char_similarity": 0.32189981521350874,
+        "min_pairwise_char_similarity": 0.0629498414579268,
+        "example_texts": [
+          "ask an agent how i can see the options for ticket delivery",
+          "how do i view the delivery options?",
+          "can you tell me about the ticket delivery options?",
+          "i want to view the delivery options",
+          "can you show me the ticket delivery options?"
+        ]
+      },
+      {
+        "group": "2398",
+        "size": 194,
+        "categories": [
+          "ORDER"
+        ],
+        "intents": [
+          "track_order"
+        ],
+        "mean_pairwise_char_similarity": 0.35906510739569114,
+        "min_pairwise_char_similarity": 0.06497091097978386,
+        "example_texts": [
+          "i want to know if i can check my shipments",
+          "tell me how to track my shipments",
+          "i wanna track my shipment, tell me how i can d it",
+          "help me track my shipments",
+          "please, ask an agent where i can track my shipment"
+        ]
+      }
+    ],
+    "method": "connected_components over word and char TF-IDF views",
+    "warning": "Group overlap is not semantic independence; inspect the largest components and cross-label groups before claiming a clean split"
+  },
   "overlap_checks": {
     "train__calibration": {
       "text": 0,
@@ -63,6 +286,42 @@
       "row_id": 0,
       "group": 0
     }
+  },
+  "leakage_diagnostics": {
+    "pairs": {
+      "train__calibration": {
+        "text": 0,
+        "row_id": 0,
+        "group": 0
+      },
+      "train__val": {
+        "text": 0,
+        "row_id": 0,
+        "group": 0
+      },
+      "train__test": {
+        "text": 0,
+        "row_id": 0,
+        "group": 0
+      },
+      "calibration__val": {
+        "text": 0,
+        "row_id": 0,
+        "group": 0
+      },
+      "calibration__test": {
+        "text": 0,
+        "row_id": 0,
+        "group": 0
+      },
+      "val__test": {
+        "text": 0,
+        "row_id": 0,
+        "group": 0
+      }
+    },
+    "all_zero": true,
+    "note": "text is already normalized by preprocess; zero overlap is necessary, not sufficient"
   },
   "similarity_checks": {
     "calibration": {

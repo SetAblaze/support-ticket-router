@@ -1,8 +1,8 @@
 {
-  "generated_at_utc": "2026-11-23T20:17:20.686749+00:00",
-  "model_id": "router-c551bd5d209a4d1a",
+  "generated_at_utc": "2026-11-23T22:07:13.665786+00:00",
+  "model_id": "router-17e31a0d6ea04c7b",
   "policy_version": "retail-cascade-v1",
-  "artifact_sha256": "8e701b91e64310bf93b8de4ddbad7b2bd6cea8a684afe1035096f9d592bda540",
+  "artifact_sha256": "25c4997cbf5075d76292d397c3b1bf529183092e5ed0577e8c9ea140f90e5eb1",
   "benchmark_sha256": "97d8404692fc8c8210ea86c8d2fbc7cb68cffbdec60c15e14a3cf070767eac9c",
   "stream": "Frozen independent benchmark; operator behaviour is simulated",
   "runs": {
@@ -124,7 +124,14 @@
               "INVOICES": 4
             }
           },
-          "caveat": "Operator confirmations are not an external audit: a rubber-stamped wrong proposal would look correct"
+          "conflict_n": 0,
+          "conflict_queue": [],
+          "outcome_counts": {
+            "VERIFIED": 34,
+            "CORRECTED": 21,
+            "PENDING": 0
+          },
+          "caveat": "Operator confirmations are not an external audit: a rubber-stamped wrong proposal would look correct. Conflicting decisions are excluded until resolved."
         },
         "retraining_candidates": 21
       },
@@ -246,7 +253,14 @@
               "INVOICES": 3
             }
           },
-          "caveat": "Operator confirmations are not an external audit: a rubber-stamped wrong proposal would look correct"
+          "conflict_n": 0,
+          "conflict_queue": [],
+          "outcome_counts": {
+            "VERIFIED": 34,
+            "CORRECTED": 21,
+            "PENDING": 0
+          },
+          "caveat": "Operator confirmations are not an external audit: a rubber-stamped wrong proposal would look correct. Conflicting decisions are excluded until resolved."
         },
         "retraining_candidates": 21
       },
@@ -368,7 +382,14 @@
               "INVOICES": 3
             }
           },
-          "caveat": "Operator confirmations are not an external audit: a rubber-stamped wrong proposal would look correct"
+          "conflict_n": 0,
+          "conflict_queue": [],
+          "outcome_counts": {
+            "VERIFIED": 33,
+            "CORRECTED": 22,
+            "PENDING": 0
+          },
+          "caveat": "Operator confirmations are not an external audit: a rubber-stamped wrong proposal would look correct. Conflicting decisions are excluded until resolved."
         },
         "retraining_candidates": 22
       }
@@ -501,7 +522,14 @@
               "NEWSLETTER": 1
             }
           },
-          "caveat": "Operator confirmations are not an external audit: a rubber-stamped wrong proposal would look correct"
+          "conflict_n": 0,
+          "conflict_queue": [],
+          "outcome_counts": {
+            "VERIFIED": 25,
+            "CORRECTED": 30,
+            "PENDING": 0
+          },
+          "caveat": "Operator confirmations are not an external audit: a rubber-stamped wrong proposal would look correct. Conflicting decisions are excluded until resolved."
         },
         "retraining_candidates": 30
       },
@@ -632,7 +660,14 @@
               "NEWSLETTER": 1
             }
           },
-          "caveat": "Operator confirmations are not an external audit: a rubber-stamped wrong proposal would look correct"
+          "conflict_n": 0,
+          "conflict_queue": [],
+          "outcome_counts": {
+            "VERIFIED": 25,
+            "CORRECTED": 30,
+            "PENDING": 0
+          },
+          "caveat": "Operator confirmations are not an external audit: a rubber-stamped wrong proposal would look correct. Conflicting decisions are excluded until resolved."
         },
         "retraining_candidates": 30
       },
@@ -763,7 +798,14 @@
               "SHIPPING": 1
             }
           },
-          "caveat": "Operator confirmations are not an external audit: a rubber-stamped wrong proposal would look correct"
+          "conflict_n": 0,
+          "conflict_queue": [],
+          "outcome_counts": {
+            "VERIFIED": 25,
+            "CORRECTED": 30,
+            "PENDING": 0
+          },
+          "caveat": "Operator confirmations are not an external audit: a rubber-stamped wrong proposal would look correct. Conflicting decisions are excluded until resolved."
         },
         "retraining_candidates": 30
       }

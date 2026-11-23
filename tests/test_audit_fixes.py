@@ -148,8 +148,9 @@ def test_independent_risk_and_multi_sets_run_without_crashing():
 def test_feedback_loop_metrics_and_retraining_queue():
     result = {"suggested_category": "PAYMENT", "confidence": .9, "similarity": .8,
               "model_id": "m", "policy_version": "p", "_feedback_text": "my card failed"}
+    other = {**result, "_feedback_text": "my card failed again"}
     verified = make_feedback_event(result, confirmed=True, reviewer_id="op")
-    corrected = make_feedback_event(result, "REFUNDS", confirmed=False, reviewer_id="op")
+    corrected = make_feedback_event(other, "REFUNDS", confirmed=False, reviewer_id="op")
     assert verified["outcome"] == "VERIFIED"
     assert corrected["outcome"] == "CORRECTED"
     metrics = feedback_metrics([verified, corrected], min_support=1)

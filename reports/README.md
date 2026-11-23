@@ -4,7 +4,7 @@
 
 ## Текущий релиз
 
-Модель `router-c551bd5d209a4d1a`, политика `retail-cascade-v1`, версия кода `3.2.0`.
+Модель `router-17e31a0d6ea04c7b`, политика `retail-cascade-v1`, версия кода `3.2.0`.
 
 | Файл | Что содержит |
 |---|---|
@@ -34,11 +34,13 @@
 ## Как пересобрать текущие отчёты
 
 ```bash
-python scripts/run_independent_benchmark.py
+python scripts/run_independent_benchmark.py --no-update-results
 python scripts/compare_representations.py
 python scripts/evaluate_cascade.py
 python scripts/simulate_feedback.py
-python scripts/release_manifest.py
+python -m support_router.reporting
+python scripts/release_manifest.py --build
+python scripts/release_manifest.py --verify
 ```
 
-Ноутбук, этап 13 (ячейки 59–64), читает эти отчёты и проверяет SHA-256 замороженного набора.
+Ноутбук, этап 13 (ячейки 58a–65), читает эти отчёты, проверяет SHA-256 замороженного набора и identity отчётов.

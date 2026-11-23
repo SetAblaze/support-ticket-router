@@ -9,33 +9,57 @@ from .text import preprocess
 
 def _risk_signals(text):
     t = preprocess(text)
-    # 3.1.1 (этап 11): preprocess разворачивает только n't, поэтому «I'm going to kill you»
-    # не совпадало с шаблоном «i am going to …». Нормализуем только для правил рисков.
+    # preprocess expands n't but not the other contractions used in threats.
     t = re.sub(r"\bi(?:'| )?m\b", "i am", t)
+    t = re.sub(r"\bi'll\b", "i will", t)
+    t = re.sub(r"\bi've\b", "i have", t)
     t = re.sub(r"\bgonna\b", "going to", t)
     # Quotes in an educational/example context do not directly establish intent.
     quoted = re.sub(r'"[^"\n]*"|“[^”\n]*”', " ", t)
-    reported = bool(re.search(r"\b(threatened me|threatening me|sent me (?:a )?threat|someone threatened|"
-                              r"(?:threatened|threatening) to (?:kill|hurt|attack|shoot|harm))\b", t))
-    direct = bool(re.search(
-        r"\bi(?: will|'ll| am going to| intend to)\s+"
-        r"(?:(?:kill|hurt|attack|shoot)\s+(?:you|ya|your|the courier|the driver|staff|someone)|make you pay)\b",
+    reported = bool(re.search(
+        r"\b(?:someone|somebody|he|she|they|a (?:man|woman|person|customer)|the (?:driver|courier|seller|merchant|staff|agent))\s+"
+        r"(?:threatened|is threatening|has threatened)\s+"
+        r"(?:(?:to\s+)?(?:kill|hurt|attack|shoot|harm)\s+)?(?:me|us|my (?:family|partner|child))\b",
         quoted))
-    fraud = bool(re.search(r"\b(unauthori[sz]ed (?:payment|charge|transaction)|(?:account|card) (?:was |has been |got )?(?:hacked|stolen|compromised)|did not authori[sz]e|do not recogni[sz]e (?:this|the|a) (?:charge|payment)|"
-                           r"(?:someone|somebody|hackers?) (?:hacked|broke into) my (?:account|card)|(?:charge|payment|transaction) i do not recogni[sz]e)\b", t))
-    legal = bool(re.search(r"\b(i(?: will|'ll| intend to| am going to) (?:sue|take (?:you|this) to court)|formal (?:legal )?(?:claim|notice)|legal (?:notice|proceedings)|my lawyer (?:has|will|is))\b", quoted))
+    direct = bool(re.search(
+        r"\bi (?:will|am going to|intend to|plan to)\s+(?!not\b|never\b)"
+        r"(?:(?:come|go) to [a-z0-9' ]{1,60}? and\s+)?"
+        r"(?:(?:kill|hurt|attack|shoot|harm|assault|beat)\s+"
+        r"(?:you|ya|your|him|her|them|someone|somebody|staff|"
+        r"the (?:driver|courier|seller|merchant|agent)|my (?:family|partner|child))"
+        r"|make you pay)\b", quoted))
+    question_like = bool(re.search(r"^\s*(?:how|what|where|can|could|should|is|are|do|does|did)\b", t))
+    fraud = bool(re.search(
+        r"\b(?:unauthori[sz]ed|unrecogni[sz]ed)\s+(?:payment|charge|transaction|purchase)\b|"
+        r"\b(?:account|card)\s+(?:was |has been |got )?(?:hacked|stolen|compromised)\b|"
+        r"\b(?:someone|somebody|hackers?)\s+(?:used|is using|hacked|broke into)\s+my\s+(?:card|account)\b|"
+        r"\b(?:did not|do not|never)\s+(?:authori[sz]e|recogni[sz]e)\s+"
+        r"(?:this|that|the|a)\s+(?:charge|payment|transaction|purchase)\b|"
+        r"\bi (?:did not|do not|never) authori[sz]e\b|"
+        r"\b(?:charge|payment|transaction)\s+i\s+(?:do not|did not)\s+recogni[sz]e\b|"
+        r"\b(?:this|that)\s+(?:purchase|charge|payment|transaction)\s+(?:is not|was not)\s+mine\b|"
+        r"\b(?:seller|merchant|shop|store)\b.{0,60}\b(?:took|kept|stole)\b.{0,40}"
+        r"\b(?:money|payment|funds)\b.{0,40}\b(?:never|did not)\b.{0,20}"
+        r"\b(?:send|sent|deliver|delivered|ship|shipped)\b", t))
+    fraud = fraud or bool(re.search(
+        r"\bi (?:see|noticed|found|have) (?:a |an )?fraudulent (?:charge|transaction)\b|"
+        r"\bi (?:have|'ve) been scammed\b|"
+        r"\bi (?:did not|never) (?:make|made|place|placed|approve|approved) (?:this|that|the) "
+        r"(?:purchase|order|payment|transaction)\b", quoted))
+    if question_like and not re.search(r"\b(?:my|i see|i noticed|i found|i have)\b", t):
+        fraud = False
+    legal = bool(re.search(
+        r"\bi (?:will|intend to|am going to)\s+(?:sue|take (?:you|this) to court)\b|"
+        r"\bmy (?:lawyer|solicitor)\b|"
+        r"\b(?:formal|legal)\s+(?:notice|claim|proceedings)\s+(?:to|against|for)\s+me\b|"
+        r"\blegal proceedings against\b", quoted))
     abuse = bool(re.search(r"\b(?:idiots?|morons?|stupid|fuck(?:ing)?|shit|assholes?)\b", quoted))
+    if abuse and re.search(r"\b(?:article|film|movie|book|quote|example|word)\b", t) \
+            and not re.search(r"\byou\b", quoted):
+        abuse = False
     flags = []
     if direct or reported:
         flags.append("POSSIBLE_THREAT")
-    fraud = fraud or bool(re.search(r"\b(?:i (?:did not|didn't|never) (?:make|made|place|placed|approve|approved) "
-                                  r"(?:this|that|the) (?:purchase|order|payment|transaction)|"
-                                  r"someone (?:used|is using) my (?:card|account)|"
-                                  r"this (?:purchase|charge|payment|transaction) (?:is not|was not) mine)\b", t))
-    # Require a first-person report. Advice, quotations and denials are common in support tickets.
-    fraud = fraud or bool(re.search(
-        r"\bi (?:see|noticed|found|have) (?:a |an )?fraudulent (?:charge|transaction)\b|"
-        r"\bi(?: have|'ve) been scammed\b", quoted))
     if fraud:
         flags.append("POSSIBLE_FRAUD")
     if legal:

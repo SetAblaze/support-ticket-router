@@ -203,3 +203,68 @@ def cross_split_similarity(train, other, batch_size=64):
                'warning':'Residual lexical similarity remains possible; never prove semantic disjointness'}
     return summary, pd.DataFrame(sorted(examples, key=lambda r:-r['cosine_max_views'])[:40],
                                 columns=['cosine_max_views','train_text','heldout_text'])
+
+
+def group_diagnostics(frame, top_n=10, max_pairwise=40):
+    """Describe lexical groups without changing the split.
+
+    Large connected components can merge different intents through a chain of
+    similar phrasings.  This report makes that risk visible; it is descriptive,
+    not a new grouping threshold.
+    """
+    groups = list(frame.groupby("group"))
+    sizes = frame.group.value_counts()
+    cross_category = [str(g) for g, part in groups if part.category.nunique() > 1]
+    cross_intent = [str(g) for g, part in groups if part.intent.nunique() > 1]
+    largest = []
+    for group, part in sorted(groups, key=lambda item: -len(item[1]))[:top_n]:
+        texts = part.text.tolist()
+        sample = texts[:max_pairwise]
+        mean_similarity = minimum_similarity = None
+        if len(sample) >= 2:
+            vectorizer = TfidfVectorizer(preprocessor=preprocess, lowercase=False,
+                                         analyzer="char_wb", ngram_range=(3, 5),
+                                         min_df=1, sublinear_tf=True)
+            matrix = normalize(vectorizer.fit_transform(sample))
+            similarity = (matrix @ matrix.T).toarray()
+            values = similarity[np.triu_indices(len(sample), 1)]
+            if len(values):
+                mean_similarity = float(values.mean())
+                minimum_similarity = float(values.min())
+        largest.append({
+            "group": str(group), "size": len(part),
+            "categories": sorted(part.category.unique().tolist()),
+            "intents": sorted(part.intent.unique().tolist()),
+            "mean_pairwise_char_similarity": mean_similarity,
+            "min_pairwise_char_similarity": minimum_similarity,
+            "example_texts": texts[:5],
+        })
+    return {
+        "n_groups": int(len(groups)),
+        "size_min": int(sizes.min()), "size_median": float(sizes.median()),
+        "size_p95": float(sizes.quantile(.95)), "size_max": int(sizes.max()),
+        "largest_fraction": float(sizes.max() / len(frame)),
+        "groups_with_multiple_categories": len(cross_category),
+        "groups_with_multiple_intents": len(cross_intent),
+        "cross_category_group_ids": cross_category[:20],
+        "cross_intent_group_ids": cross_intent[:20],
+        "largest_groups": largest,
+        "method": "connected_components over word and char TF-IDF views",
+        "warning": ("Group overlap is not semantic independence; inspect the largest "
+                    "components and cross-label groups before claiming a clean split"),
+    }
+
+
+def leakage_diagnostics(splits):
+    """Exact overlap counts for every pair of splits (all should be zero)."""
+    keys = list(splits)
+    report = {}
+    for i, left in enumerate(keys):
+        for right in keys[i + 1:]:
+            report[f"{left}__{right}"] = {
+                column: len(set(splits[left][column]) & set(splits[right][column]))
+                for column in ("text", "row_id", "group")
+            }
+    return {"pairs": report,
+            "all_zero": all(value == 0 for pair in report.values() for value in pair.values()),
+            "note": "text is already normalized by preprocess; zero overlap is necessary, not sufficient"}

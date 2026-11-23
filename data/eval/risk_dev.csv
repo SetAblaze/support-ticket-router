@@ -1,0 +1,28 @@
+text,expected_flags
+I will come to your office and hurt someone.,POSSIBLE_THREAT
+I will attack him if the parcel is late.,POSSIBLE_THREAT
+I intend to harm the driver when he arrives.,POSSIBLE_THREAT
+The courier threatened to hurt me after I complained.,POSSIBLE_THREAT
+A man threatened to attack my family.,POSSIBLE_THREAT
+I am going to make you pay for this.,POSSIBLE_THREAT
+I will not hurt anyone; I only want my parcel.,
+I will never attack a member of staff.,
+The article said a customer threatened to attack the driver.,
+A film character said he would hurt someone.,
+Somebody used my card to buy a phone.,POSSIBLE_FRAUD
+An online seller kept my money and never delivered the goods.,POSSIBLE_FRAUD
+I did not authorise this transaction.,POSSIBLE_FRAUD
+I see a fraudulent charge on my statement.,POSSIBLE_FRAUD
+Someone hacked my account and changed the password.,POSSIBLE_FRAUD
+My card was stolen and used in another city.,POSSIBLE_FRAUD
+Where should I report a transaction I did not authorise?,
+I have never been cheated by your shop.,
+The article describes a fraudulent charge at another shop.,
+I will sue you if the money is not returned.,POSSIBLE_LEGAL_CLAIM
+My lawyer will send a formal notice tomorrow.,POSSIBLE_LEGAL_CLAIM
+I am going to take this to court.,POSSIBLE_LEGAL_CLAIM
+The article mentions a legal claim against a retailer.,
+What does the word sue mean?,
+You useless morons have lost my parcel again.,ABUSE_LANGUAGE
+This stupid service wastes my time.,ABUSE_LANGUAGE
+The word idiot appeared in the newspaper article.,

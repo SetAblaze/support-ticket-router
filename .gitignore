@@ -24,3 +24,6 @@ reports/server_logs/
 *.zip
 
 *.egg-info/
+
+# Operator feedback is local runtime state, not a tracked artifact.
+var/feedback/

@@ -33,12 +33,16 @@ from .data import (  # noqa: F401
     make_splits,
 )
 from .evaluation import (  # noqa: F401
+    calibration_by_source,
     calibration_diagnostics,
+    cascade_detailed_metrics,
     cascade_metrics,
     cascade_ood_metrics,
     classification_metrics,
+    end_to_end_policy_curve,
     intent_protocol,
     loio_evaluate,
+    multi_request_metrics,
     ood_acceptance_curve,
     paired_error_test,
     paired_group_bootstrap,
@@ -63,6 +67,15 @@ from .feedback import (  # noqa: F401
     make_feedback_event,
     retraining_candidates,
     simulate_stream,
+)
+from .identity import (  # noqa: F401
+    ExperimentIdentity,
+    ExperimentIdentityError,
+    identity_from_manifest,
+    identity_from_meta,
+    is_current,
+    report_identity,
+    validate_report_identity,
 )
 from .models import (  # noqa: F401
     CONFIG_NAMES,
@@ -119,11 +132,11 @@ __all__ = [
     'lexical_groups', 'balanced_group_holdout', 'make_splits', 'assert_split_integrity',
     'cross_split_similarity', 'make_model', 'CONFIG_NAMES', 'fit_model',
     'checked_proba', 'RouterBundle', 'fit_calibrated_bundle', 'intent_protocol',
-    'loio_evaluate', 'classification_metrics', 'wilson_upper', 'calibration_diagnostics',
+    'loio_evaluate', 'classification_metrics', 'wilson_upper', 'calibration_diagnostics', 'calibration_by_source',
     'per_category_calibration', 'similarity_binned_accuracy', 'cascade_metrics',
-    'cascade_ood_metrics', 'risk_coverage_curve', 'ood_acceptance_curve',
+    'cascade_detailed_metrics', 'cascade_ood_metrics', 'end_to_end_policy_curve', 'risk_coverage_curve', 'ood_acceptance_curve',
     'routing_metrics', 'paired_error_test', 'paired_group_bootstrap', 'wilson_lower',
-    'paired_intent_bootstrap', 'risk_recall', '_risk_signals', '_input_reasons',
+    'paired_intent_bootstrap', 'risk_recall', 'multi_request_metrics', '_risk_signals', '_input_reasons',
     'detect_signals', '_context_effects', 'route_ticket', 'batch_route',
     'select_policy', 'shadow_bundle', 'redact_text', 'web_request',
     'schedule_demo', 'DECISION_MODULES', 'decision_code_sha256', 'save_bundle',
@@ -131,5 +144,7 @@ __all__ = [
     'encoder_dir', 'category_examples', 'manual_cases', 'scenario_data',
     'semantic_encoder', 'independent_cases', 'VERIFIED', 'CORRECTED',
     'make_feedback_event', 'append_feedback', 'load_feedback', 'feedback_metrics',
-    'retraining_candidates', 'simulate_stream', '__version__',
+    'retraining_candidates', 'simulate_stream', 'ExperimentIdentity',
+    'ExperimentIdentityError', 'identity_from_meta', 'identity_from_manifest',
+    'report_identity', 'validate_report_identity', 'is_current', '__version__',
 ]

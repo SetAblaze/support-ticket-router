@@ -54,7 +54,15 @@ def loio_evaluate(frame, name, intents):
     return pd.DataFrame(rows), pd.DataFrame(predictions)
 
 def classification_metrics(y_true, pred, labels=None):
+    y_true, pred = list(y_true), list(pred)
+    if len(y_true) != len(pred):
+        raise ValueError("y_true and pred must have the same length")
     labels = list(labels if labels is not None else CATEGORIES)
+    if len(labels) != len(set(labels)):
+        raise ValueError("labels must be unique; pass CATEGORIES, not the repeated y_true list")
+    unknown = (set(y_true) | set(pred)) - set(labels)
+    if unknown:
+        raise ValueError(f"Predictions or truth contain classes outside the declared labels: {sorted(unknown)}")
     return {"n": len(y_true), "macro_f1": float(f1_score(y_true, pred, average="macro",
              labels=labels, zero_division=0)), "accuracy": float(accuracy_score(y_true, pred)),
             "errors": int(np.sum(np.asarray(y_true) != np.asarray(pred))), "labels": labels,
@@ -81,15 +89,19 @@ def calibration_diagnostics(model, frame, bins=10):
     for b in range(bins):
         mask = bucket == b
         if mask.any():
-            rows.append({"bin": b, "n": int(mask.sum()), "confidence": float(conf[mask].mean()),
-                         "accuracy": float(correct[mask].mean())})
+            confidence = float(conf[mask].mean())
+            accuracy = float(correct[mask].mean())
+            rows.append({"bin": b, "n": int(mask.sum()), "confidence": confidence,
+                         "accuracy": accuracy, "gap": accuracy - confidence})
     auc = float(roc_auc_score(correct, conf)) if len(np.unique(correct)) == 2 else None
     return {"n": len(frame), "confidence_auroc": auc,
             "auroc_status": "AVAILABLE" if auc is not None else "UNDEFINED_SINGLE_CORRECTNESS_CLASS",
             "log_loss": float(log_loss(frame.category, p, labels=classes)),
             "multiclass_brier_sum": float(np.mean(np.sum((p-onehot)**2, axis=1))),
             "ece_top_label": float(sum(r["n"]*abs(r["confidence"]-r["accuracy"]) for r in rows)/len(frame)),
-            "bins": rows}
+            "bins": rows, "reliability": rows,
+            "note": ("Low ECE on an easy synthetic split does not prove calibration under "
+                     "distribution shift; inspect bin counts and per-category support")}
 
 def routing_metrics(results, y_true=None):
     n=len(results)
@@ -183,19 +195,24 @@ def per_category_calibration(model, frame, min_support=30, bins=10):
         n = int(truth.sum())
         bucket = np.minimum((prob * bins).astype(int), bins - 1)
         ece = 0.
+        reliability = []
         for b in range(bins):
             mask = bucket == b
             if mask.any():
-                ece += mask.sum() * abs(prob[mask].mean() - truth[mask].mean())
+                confidence = float(prob[mask].mean())
+                accuracy = float(truth[mask].mean())
+                ece += mask.sum() * abs(confidence - accuracy)
+                reliability.append({"bin": b, "n": int(mask.sum()), "confidence": confidence,
+                                    "accuracy": accuracy, "gap": accuracy - confidence})
         ece = float(ece / len(frame))
         rows[c] = {
-            "support": n,
+            "support": n, "positive_n": n, "negative_n": int(len(frame) - n),
             "support_status": "INSUFFICIENT_SUPPORT" if n < min_support else "ADEQUATE",
             "prevalence": float(truth.mean()),
             "mean_predicted_probability": float(prob.mean()),
             "brier": float(np.mean((prob - truth) ** 2)),
             "log_loss": float(-np.mean(truth * np.log(prob) + (1 - truth) * np.log(1 - prob))),
-            "ece": ece,
+            "ece": ece, "reliability": reliability,
             "precision": float(np.mean(y[pred == c] == c)) if (pred == c).any() else None,
             "recall": float(np.mean(pred[truth == 1] == c)) if n else None,
         }
@@ -203,6 +220,18 @@ def per_category_calibration(model, frame, min_support=30, bins=10):
     return {"n": len(frame), "min_support": min_support, "per_category": rows,
             "insufficient_support": insuff,
             "note": "Rare classes cannot support a 100% precision/recall claim"}
+
+
+def calibration_by_source(model, frames):
+    """Calibration split by data source; rare categories remain explicitly marked."""
+    out = {}
+    for name, frame in frames.items():
+        per = per_category_calibration(model, frame)
+        out[name] = {"overall": calibration_diagnostics(model, frame),
+                     "per_category": per["per_category"],
+                     "insufficient_support": per["insufficient_support"],
+                     "min_support": per["min_support"]}
+    return out
 
 
 def similarity_binned_accuracy(bundle, frame, bins=(0., .5, .6, .7, .8, .85, .9, .95, 1.01)):
@@ -286,6 +315,59 @@ def ood_acceptance_curve(probabilities, classes, thresholds=(.5, .6, .7, .75, .8
         "note": "OOD has no correct queue; accepted means a false suggestion"}
 
 
+def end_to_end_policy_curve(bundle, frame, thresholds=(.5, .6, .7, .75, .8, .85, .9, .95),
+                            similarity_threshold=None, ood_frame=None):
+    """Evaluate the real routing policy, not only the classifier confidence.
+
+    Each point calls the same ``route_ticket`` logic as the API with
+    ``auto_enabled=True`` for the shadow experiment.  This includes confidence,
+    training similarity, risk/input blockers and the cost-sensitive expected
+    loss rule.  It is descriptive: do not choose a threshold on a final test.
+    """
+    import copy
+
+    from .routing import batch_route
+
+    y = frame.category.tolist()
+    sim = (float(similarity_threshold) if similarity_threshold is not None
+           else float(bundle.policy.get("similarity_threshold", .45)))
+    rows = []
+    for threshold in thresholds:
+        candidate = copy.copy(bundle)
+        policy = dict(bundle.policy)
+        policy.update(auto_enabled=True, confidence_threshold=float(threshold),
+                      similarity_threshold=sim, version=str(policy.get("version", "policy")) + "-EVAL")
+        candidate.policy = policy
+        routes = batch_route(candidate, frame.text.tolist())
+        metrics = routing_metrics(routes, y)
+        risk_positive = [bool(set(r.get("risk_flags", [])) &
+                              {"POSSIBLE_THREAT", "POSSIBLE_FRAUD", "POSSIBLE_LEGAL_CLAIM"})
+                         for r in routes]
+        expected = [min((r.get("expected_loss") or {"REVIEW": 1.}).values()) for r in routes]
+        row = {"threshold": float(threshold), "similarity_threshold": sim,
+               "automatic_n": metrics["automatic_n"], "manual_n": metrics["manual_n"],
+               "coverage": metrics["coverage"],
+               "automatic_category_errors": metrics["automatic_category_errors"],
+               "automatic_queue_errors": metrics["automatic_queue_errors"],
+               "accuracy_automatic_category": metrics["accuracy_automatic_category"],
+               "accuracy_automatic_queue": metrics["accuracy_automatic_queue"],
+               "category_error_upper_wilson_95": metrics["automatic_category_error_upper_wilson_95"],
+               "risk_positive_n": int(sum(risk_positive)),
+               "risk_blocked_n": int(sum(risk_positive) - sum(
+                   flag and r["status"] == "AUTO_RECOMMENDED"
+                   for flag, r in zip(risk_positive, routes, strict=True))),
+               "mean_min_expected_loss": float(np.mean(expected)) if expected else None}
+        if ood_frame is not None:
+            ood_routes = batch_route(candidate, ood_frame.text.tolist())
+            row["ood_false_auto_n"] = int(sum(r["status"] == "AUTO_RECOMMENDED" for r in ood_routes))
+            row["ood_false_auto_rate"] = row["ood_false_auto_n"] / len(ood_routes) if ood_routes else None
+        rows.append(row)
+    return {"n": len(frame), "curve": rows,
+            "mode": "SHADOW_POLICY_END_TO_END",
+            "note": ("Calls the same decision function as the API with auto_enabled=True for "
+                     "diagnostics. The operational mode keeps auto_enabled=False.")}
+
+
 def risk_recall(results,labels):
     if len(results)!=len(labels):raise ValueError('length mismatch')
     positives=np.asarray(labels,dtype=bool)
@@ -299,3 +381,94 @@ def risk_recall(results,labels):
             'recall':tp/int(positives.sum()) if positives.any() else None,
             'wilson_lower_recall_95':wilson_lower(tp,int(positives.sum())),
             'dataset_note':'Only meaningful with independently human-annotated risk labels'}
+
+
+def cascade_detailed_metrics(routes, y_true=None, latency_ms=None):
+    """Separate first-stage, second-stage and operator-hint quality."""
+    y = np.asarray(y_true, dtype=object) if y_true is not None else None
+    primary = np.asarray([r.get("primary_category") for r in routes], dtype=object)
+    final = np.asarray([r.get("category") for r in routes], dtype=object)
+    source = np.asarray([r.get("classification_source") for r in routes], dtype=object)
+    status = np.asarray([r.get("semantic_status") for r in routes], dtype=object)
+    suggestions = source == "minilm"
+    attempted = ~np.isin(status, ["NOT_REQUESTED"])
+    out = {
+        "n": len(routes),
+        "primary_correct": int((primary == y).sum()) if y is not None else None,
+        "primary_accuracy": float((primary == y).mean()) if y is not None and len(y) else None,
+        "final_correct": int((final == y).sum()) if y is not None else None,
+        "final_accuracy": float((final == y).mean()) if y is not None and len(y) else None,
+        "suggestions_n": int(suggestions.sum()),
+        "suggestion_rate": float(suggestions.mean()) if routes else None,
+        "suggestion_precision": (float((final[suggestions] == y[suggestions]).mean())
+                                 if y is not None and suggestions.any() else None),
+        "corrected": (int(((final == y) & (primary != y)).sum()) if y is not None else None),
+        "regressed": (int(((primary == y) & (final != y)).sum()) if y is not None else None),
+        "fallback_attempted_n": int(attempted.sum()),
+        "fallback_attempt_rate": float(attempted.mean()) if routes else None,
+        "abstained_n": int((status == "ABSTAINED").sum()),
+        "unavailable_n": int((status == "UNAVAILABLE").sum()),
+        "truncated_n": int((status == "INPUT_TOO_LONG").sum()),
+        "semantic_status_counts": {str(value): int((status == value).sum())
+                                   for value in sorted(set(status.tolist()))},
+        "latency": ("NOT_MEASURED" if latency_ms is None else {
+            "n": len(latency_ms), "mean_ms": float(np.mean(latency_ms)),
+            "p95_ms": float(np.quantile(latency_ms, .95))}),
+        "note": "Suggestions are operator hints; only AUTO_RECOMMENDED is a routing decision",
+    }
+    if y is not None:
+        out["per_category"] = {}
+        for category in sorted(set(y)):
+            mask = y == category
+            out["per_category"][category] = {
+                "n": int(mask.sum()),
+                "primary_accuracy": float((primary[mask] == y[mask]).mean()),
+                "final_accuracy": float((final[mask] == y[mask]).mean()),
+                "suggestions_n": int(suggestions[mask].sum()),
+            }
+    return out
+
+
+def multi_request_metrics(frame, controls=None, parts_fn=None):
+    """Measure multi-intent extraction with per-intent support and control false splits."""
+    if parts_fn is None:
+        from .multiple_requests import request_parts as parts_fn
+    exact, tp, expected_n, false_n = 0, 0, 0, 0
+    per_intent = {}
+    misses = []
+    for text, expected_text in zip(frame.text, frame.expected_intents, strict=True):
+        got = [part["intent"] for part in parts_fn(text)]
+        expected = str(expected_text).split()
+        exact += sorted(got) == sorted(expected)
+        tp += len(set(got) & set(expected))
+        expected_n += len(expected)
+        false_n += len(set(got) - set(expected))
+        for intent in set(expected) | set(got):
+            row = per_intent.setdefault(intent, {"expected_n": 0, "predicted_n": 0,
+                                                 "true_positive": 0})
+            row["expected_n"] += intent in expected
+            row["predicted_n"] += intent in got
+            row["true_positive"] += intent in expected and intent in got
+        if sorted(got) != sorted(expected):
+            misses.append({"text": text, "expected": expected, "detected": got})
+    for row in per_intent.values():
+        row["recall"] = row["true_positive"] / row["expected_n"] if row["expected_n"] else None
+        row["precision"] = (row["true_positive"] / row["predicted_n"]
+                            if row["predicted_n"] else None)
+        row["support_status"] = "INSUFFICIENT_SUPPORT" if row["expected_n"] < 3 else "ADEQUATE"
+    control_rows = {}
+    for name, texts in (controls or {}).items():
+        split = sum(bool(parts_fn(text)) for text in texts)
+        control_rows[name] = {"n": len(texts), "false_splits": split,
+                              "false_split_rate": split / len(texts) if texts else None,
+                              "false_split_upper_wilson_95": wilson_upper(split, len(texts))}
+    precision = tp / (tp + false_n) if tp + false_n else None
+    recall = tp / expected_n if expected_n else None
+    return {"n": len(frame), "exact_matches": exact,
+            "exact_match_rate": exact / len(frame) if len(frame) else None,
+            "intent_precision": precision, "intent_recall": recall,
+            "intent_f1": (2 * precision * recall / (precision + recall)
+                          if precision and recall else None),
+            "per_intent": per_intent, "misses": misses, "controls": control_rows,
+            "note": ("Author-written regression set; this is not a measure of real-world "
+                     "recall. Controls estimate false splits on single-topic text.")}

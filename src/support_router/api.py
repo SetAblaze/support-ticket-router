@@ -18,9 +18,11 @@ from __future__ import annotations
 import json
 import logging
 import os
+import secrets
 import time
 import uuid
 from contextlib import asynccontextmanager
+from pathlib import Path
 from typing import Literal
 
 from fastapi import FastAPI, HTTPException, Request
@@ -30,14 +32,15 @@ from pydantic import BaseModel, ConfigDict, Field
 
 from .artifacts import decision_code_sha256, load_bundle
 from .config import VERSION
+from .feedback import append_feedback, feedback_metrics, load_feedback, make_feedback_event
 from .monitoring import RouterMetrics
-from .paths import models_dir
+from .paths import models_dir, project_root
 from .routing import batch_policy_pairs, route_policy_pair, shadow_bundle
 
 MAX_TEXT_CHARS = int(os.environ.get("ROUTER_MAX_TEXT_CHARS", "5000"))
 MAX_BATCH = int(os.environ.get("ROUTER_MAX_BATCH", "100"))
 KNOWN_PATHS = {"/", "/health", "/ready", "/metrics", "/v1/model", "/v1/route", "/v1/route/batch",
-               "/docs", "/openapi.json"}
+               "/v1/feedback", "/v1/feedback/summary", "/docs", "/openapi.json"}
 
 log = logging.getLogger("support_router.api")
 if not log.handlers:  # журнал сервиса: одна JSON-строка на событие, без текста обращения
@@ -61,6 +64,25 @@ class TicketIn(BaseModel):
 class BatchIn(BaseModel):
     model_config = ConfigDict(extra="forbid")
     tickets: list[TicketIn] = Field(min_length=1, max_length=MAX_BATCH)
+
+
+class FeedbackIn(BaseModel):
+    """Explicit operator decision for one routing result.
+
+    ``confirmed`` is required on purpose: omitting it must not create a
+    VERIFIED label.  A correction must name a different category.
+    """
+    model_config = ConfigDict(extra="forbid")
+    ticket_id: str | None = Field(default=None, max_length=128, pattern=r"^[A-Za-z0-9_.:-]+$")
+    model_id: str = Field(min_length=1, max_length=128)
+    policy_version: str = Field(min_length=1, max_length=128)
+    proposed_category: str = Field(min_length=1, max_length=64)
+    operator_category: str | None = Field(default=None, max_length=64)
+    confirmed: bool
+    reviewer_id: str = Field(min_length=1, max_length=128)
+    note: str | None = Field(default=None, max_length=2000)
+    redacted_text: str | None = Field(default=None, max_length=1000)
+    event_id: str | None = Field(default=None, pattern=r"^[A-Za-z0-9_.:-]{8,64}$")
 
 
 class ShadowOut(BaseModel):
@@ -190,6 +212,20 @@ def create_app(models_directory=None, registry=None) -> FastAPI:
             raise HTTPException(status_code=503, detail={"status": "not_ready", "reason": state["error"]})
         return state["model"], state["shadow"]
 
+    def feedback_path():
+        return Path(os.environ.get("ROUTER_FEEDBACK_PATH",
+                                   project_root() / "var/feedback/events.jsonl"))
+
+    def require_feedback_auth(request: Request):
+        key = os.environ.get("ROUTER_FEEDBACK_API_KEY")
+        if not key:
+            raise HTTPException(status_code=503,
+                                detail={"status": "feedback_not_configured",
+                                        "reason": "ROUTER_FEEDBACK_API_KEY is not set"})
+        supplied = request.headers.get("x-feedback-key", "")
+        if not secrets.compare_digest(supplied, key):
+            raise HTTPException(status_code=401, detail={"status": "unauthorized"})
+
     def record_decision(request, ticket, result, shadow_result):
         metrics.observe_decision(result, shadow_result, len(ticket.text))
         _json_log("decision", request_id=request.state.request_id, ticket_id=ticket.ticket_id,
@@ -250,6 +286,42 @@ def create_app(models_directory=None, registry=None) -> FastAPI:
             record_decision(request, ticket, result, shadow_result)
             out.append(_decision(result, shadow_result, ticket.ticket_id))
         return {"results": out}
+
+    @app.post("/v1/feedback")
+    def feedback(payload: FeedbackIn, request: Request):
+        require_feedback_auth(request)
+        require_model()
+        meta = state["meta"]
+        if (payload.model_id != meta["model_id"]
+                or payload.policy_version != meta["policy"].get("version")):
+            raise HTTPException(status_code=409, detail={
+                "status": "model_mismatch",
+                "reason": "feedback must reference the loaded model and policy"})
+        result = {"suggested_category": payload.proposed_category,
+                  "model_id": payload.model_id,
+                  "policy_version": payload.policy_version,
+                  "_feedback_text": payload.redacted_text}
+        try:
+            event = make_feedback_event(
+                result, payload.operator_category, confirmed=payload.confirmed,
+                reviewer_id=payload.reviewer_id, note=payload.note,
+                redacted_text=payload.redacted_text, event_id=payload.event_id)
+        except ValueError as exc:
+            raise HTTPException(status_code=422, detail={"status": "invalid_feedback",
+                                                         "reason": str(exc)}) from exc
+        event["ticket_id"] = payload.ticket_id
+        stored = append_feedback(feedback_path(), event)
+        if stored:
+            metrics.observe_feedback(event)
+        _json_log("feedback", request_id=request.state.request_id, event_id=event["event_id"],
+                  outcome=event["outcome"], stored=stored)
+        return {"status": "stored" if stored else "duplicate", "event_id": event["event_id"],
+                "outcome": event["outcome"], "final_category": event["final_category"]}
+
+    @app.get("/v1/feedback/summary")
+    def feedback_summary(request: Request):
+        require_feedback_auth(request)
+        return feedback_metrics(load_feedback(feedback_path()))
 
     @app.get("/metrics")
     def prometheus_metrics():

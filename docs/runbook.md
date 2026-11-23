@@ -37,15 +37,20 @@
 разметки после внедрения. Контур устроен так:
 
 1. Оператор видит предложенную тему и либо подтверждает её, либо выбирает другую.
-2. `support_router.feedback.make_feedback_event` создаёт запись без сырого
-   текста: хеш текста, предложенная и итоговая темы, уверенность, версия модели
-   и политики.
-3. Записи складываются в JSONL через `append_feedback`; метрика
+2. `support_router.feedback.make_feedback_event` требует явное `confirmed`:
+   отсутствие поля не создаёт подтверждённую метку. Запись хранит хеш текста,
+   предложенную и итоговую темы, уверенность, версию модели и политики.
+3. Записи складываются в JSONL через `append_feedback`; дубликат `event_id`
+   не добавляется, конфликтующие решения не попадают в обучение. Метрика
    `router_feedback_total` показывает поток подтверждений и исправлений.
 4. `feedback_metrics` считает измеренную точность по предложенной теме и
    помечает категории с малой поддержкой как `INSUFFICIENT_SUPPORT`.
-5. `retraining_candidates` возвращает только исправленные примеры — они несут
-   новую информацию для следующего обучения.
+5. `retraining_candidates` возвращает только неконфликтующие исправленные
+   примеры — они несут новую информацию для следующего обучения.
+6. HTTP-контур: `POST /v1/feedback` с заголовком `x-feedback-key`; ключ
+   задаётся `ROUTER_FEEDBACK_API_KEY`, файл — `ROUTER_FEEDBACK_PATH`.
+   `GET /v1/feedback/summary` отдаёт агрегаты. Без ключа endpoint выключен
+   (503), с неверным ключом — 401, при чужой модели/политике — 409.
 
 Демонстрация на замороженном наборе:
 `python scripts/simulate_feedback.py` → `reports/feedback_simulation.json`.
@@ -56,20 +61,27 @@
 
 ## Независимая оценка и версия выпуска
 
-- Независимый набор: `python scripts/run_independent_benchmark.py` →
-  `reports/independent_benchmark.json`. Набор заморожен протоколом
-  `docs/independent_benchmark_protocol.md`. Его нельзя использовать для
-  настройки порогов, правил или промптов: после первого прогона фразы не
-  меняются.
+- Независимый набор: `python scripts/run_independent_benchmark.py
+  --no-update-results` → `reports/independent_benchmark.json`. Набор заморожен
+  протоколом `docs/independent_benchmark_protocol.md`. Его нельзя использовать
+  для настройки порогов, правил или промптов: после первого прогона фразы не
+  меняются. После первого отчёта он имеет статус
+  `independent_post_selection_benchmark`, а не blind test.
 - Сравнение признаков и режима 100 примеров:
   `python scripts/compare_representations.py` →
   `reports/representation_comparison.json`.
-- Версия выпуска: `python scripts/release_manifest.py` →
-  `reports/release_manifest.json`. В манифесте Git commit, `model_id`, хеш
-  артефакта, хеш данных, версия политики, хеши наборов оценки и отчётов,
-  а также `experiment_id`. Сравнивать отчёты можно только при совпадении
-  `experiment_id`, хешей наборов и версии политики. Смена политики меняет
-  решения без изменения классификатора, поэтому это другой эксперимент.
+- Версия выпуска: `python scripts/release_manifest.py --build` →
+  `reports/release_manifest.json`; `--verify` проверяет хеши и падает при
+  расхождении или грязном рабочем дереве. В манифесте source/build/release
+  commit, `model_id`, хеш артефакта, хеш decision-кода, хеш данных, версия
+  политики, хеши наборов оценки и отчётов, а также `experiment_id`.
+  Сравнивать отчёты можно только при совпадении `experiment_id`, хешей
+  наборов и версии политики. Смена политики меняет решения без изменения
+  классификатора, поэтому это другой эксперимент.
+- `reports/current_release.json` — единственный источник чисел для
+  `reports/results.md`. Исторический `reports/results.json` не перезаписывается.
+- `python scripts/prepare_data.py --verify` проверяет, что разбиение
+  воспроизводится из исходного CSV.
 
 ## Алерты
 

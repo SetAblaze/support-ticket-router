@@ -247,3 +247,44 @@ def test_batch_scoring_failure_isolated_by_ticket(client, monkeypatch):
     assert bad["status"] == bad["shadow"]["status"] == "MODEL_ERROR"
     assert valid["category"] == "ORDER"
     assert empty["status"] == empty["shadow"]["status"] == "NEEDS_CLARIFICATION"
+
+
+# --- Operator feedback ---------------------------------------------------------------
+
+@needs_model
+def test_feedback_requires_explicit_decision_and_auth(tmp_path, monkeypatch):
+    monkeypatch.setenv("ROUTER_FEEDBACK_API_KEY", "test-key")
+    monkeypatch.setenv("ROUTER_FEEDBACK_PATH", str(tmp_path / "events.jsonl"))
+    app = api.create_app(MODELS, registry=CollectorRegistry())
+    with TestClient(app) as c:
+        payload = {"model_id": c.get("/ready").json()["model_id"],
+                   "policy_version": c.get("/v1/model").json()["policy"]["version"],
+                   "proposed_category": "PAYMENT", "confirmed": True, "reviewer_id": "op-1"}
+        assert c.post("/v1/feedback", json=payload).status_code == 401
+        missing = dict(payload); missing.pop("confirmed")
+        assert c.post("/v1/feedback", json=missing,
+                      headers={"x-feedback-key": "test-key"}).status_code == 422
+        wrong = {**payload, "confirmed": False, "operator_category": "PAYMENT"}
+        assert c.post("/v1/feedback", json=wrong,
+                      headers={"x-feedback-key": "test-key"}).status_code == 422
+
+
+@needs_model
+def test_feedback_is_idempotent_and_model_bound(tmp_path, monkeypatch):
+    monkeypatch.setenv("ROUTER_FEEDBACK_API_KEY", "test-key")
+    monkeypatch.setenv("ROUTER_FEEDBACK_PATH", str(tmp_path / "events.jsonl"))
+    app = api.create_app(MODELS, registry=CollectorRegistry())
+    with TestClient(app) as c:
+        model = c.get("/v1/model").json()
+        payload = {"model_id": model["model_id"], "policy_version": model["policy"]["version"],
+                   "proposed_category": "PAYMENT", "confirmed": True, "reviewer_id": "op-1",
+                   "event_id": "evt-00000001", "redacted_text": "my card failed"}
+        first = c.post("/v1/feedback", json=payload, headers={"x-feedback-key": "test-key"})
+        second = c.post("/v1/feedback", json=payload, headers={"x-feedback-key": "test-key"})
+        assert first.status_code == 200 and first.json()["status"] == "stored"
+        assert second.status_code == 200 and second.json()["status"] == "duplicate"
+        mismatch = {**payload, "event_id": "evt-00000002", "model_id": "router-other"}
+        assert c.post("/v1/feedback", json=mismatch,
+                      headers={"x-feedback-key": "test-key"}).status_code == 409
+        summary = c.get("/v1/feedback/summary", headers={"x-feedback-key": "test-key"})
+        assert summary.status_code == 200 and summary.json()["n"] == 1

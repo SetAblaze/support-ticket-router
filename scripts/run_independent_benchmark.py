@@ -21,10 +21,13 @@ from sklearn.preprocessing import normalize
 import support_router as sc
 from support_router import independent_cases
 from support_router.evaluation import (
+    calibration_by_source,
     calibration_diagnostics,
+    cascade_detailed_metrics,
     cascade_metrics,
     cascade_ood_metrics,
     classification_metrics,
+    end_to_end_policy_curve,
     ood_acceptance_curve,
     per_category_calibration,
     risk_coverage_curve,
@@ -33,7 +36,7 @@ from support_router.evaluation import (
     wilson_lower,
     wilson_upper,
 )
-from support_router.multiple_requests import request_parts
+from support_router.multiple_requests import INTENT_SCHEMA_VERSION, request_parts
 from support_router.text import preprocess
 from support_router.utils import sha256_file, write_json
 
@@ -54,26 +57,29 @@ def _topk(probabilities, classes, k=3):
     return np.asarray(classes, dtype=object)[order]
 
 
-def _classification(probabilities, classes, labels):
-    labels = list(labels)
+def _classification(probabilities, classes, y_true):
+    y_true = np.asarray(list(y_true), dtype=object)
     top = _topk(probabilities, classes)
     top1 = top[:, 0]
-    correct = int((top1 == np.asarray(labels)).sum())
-    metrics = classification_metrics(labels, top1, labels=labels)
+    correct = int((top1 == y_true).sum())
+    metrics = classification_metrics(y_true.tolist(), top1.tolist(), labels=sc.CATEGORIES)
     per_category = {}
-    for category in labels:
-        mask = np.asarray(labels) == category
+    for category in sc.CATEGORIES:
+        mask = y_true == category
         n = int(mask.sum())
         hit = int((top1[mask] == category).sum())
         per_category[category] = {"n": n, "correct": hit,
                                   "top1_accuracy": hit / n if n else None,
                                   "top1_wilson_lower_95": wilson_lower(hit, n)}
-    return {"n": len(labels), "top1_correct": correct,
-            "top1_accuracy": correct / len(labels) if labels else None,
-            "top1_wilson_lower_95": wilson_lower(correct, len(labels)),
-            "top3_correct": int((top == np.asarray(labels)[:, None]).any(axis=1).sum()),
+    return {"n": len(y_true), "top1_correct": correct,
+            "top1_accuracy": correct / len(y_true) if len(y_true) else None,
+            "top1_wilson_lower_95": wilson_lower(correct, len(y_true)),
+            "top1_wilson_upper_95": wilson_upper(len(y_true) - correct, len(y_true)),
+            "top3_correct": int((top == y_true[:, None]).any(axis=1).sum()),
             "macro_f1": metrics["macro_f1"], "errors": metrics["errors"],
-            "per_category": per_category}
+            "per_category": per_category,
+            "statistical_note": ("Wilson intervals describe this author-written set only; "
+                                 "they are not a customer-population guarantee")}
 
 
 def _rules(frame):
@@ -104,30 +110,9 @@ def _rules(frame):
 
 
 def _multi(frame, controls):
-    exact, tp, expected_n, false_n = 0, 0, 0, 0
-    misses = []
-    for text, expected_text in zip(frame.text, frame.expected_intents, strict=True):
-        got = [part["intent"] for part in request_parts(text)]
-        expected = expected_text.split()
-        exact += sorted(got) == sorted(expected)
-        tp += len(set(got) & set(expected))
-        expected_n += len(expected)
-        false_n += len(set(got) - set(expected))
-        if sorted(got) != sorted(expected):
-            misses.append({"text": text, "expected": expected, "detected": got})
-    control_rows = {}
-    for name, texts in controls.items():
-        split = sum(bool(request_parts(text)) for text in texts)
-        control_rows[name] = {"n": len(texts), "false_splits": split,
-                              "false_split_rate": split / len(texts) if len(texts) else None,
-                              "false_split_upper_wilson_95": wilson_upper(split, len(texts))}
-    return {"n": len(frame), "exact_matches": exact,
-            "exact_match_rate": exact / len(frame) if len(frame) else None,
-            "intent_precision": tp / (tp + false_n) if tp + false_n else None,
-            "intent_recall": tp / expected_n if expected_n else None,
-            "misses": misses, "controls": control_rows,
-            "note": "Author-written regression set; not a measure of real-world recall"}
-
+    report = sc.multi_request_metrics(frame, controls, parts_fn=request_parts)
+    report["schema_version"] = INTENT_SCHEMA_VERSION
+    return report
 
 def _disjointness(new_texts, raw_texts, existing):
     exact_raw = sorted({text for text in new_texts if preprocess(text) in raw_texts})
@@ -143,6 +128,32 @@ def _disjointness(new_texts, raw_texts, existing):
             "exact_duplicates_with_development_sets": {
                 name: sorted({text for text in new_texts if text in texts}) for name, texts in existing.items()},
             "note": "Lexical checks do not prove semantic novelty"}
+
+
+def _semantic_disjointness(new_texts, train_texts, sample_size=2000, seed=0):
+    """Optional encoder-space check against a fixed train sample.
+
+    It is not a proof of semantic independence; it catches near-paraphrases that
+    lexical TF-IDF can miss.  A missing local encoder is reported, not hidden.
+    """
+    try:
+        rng = np.random.default_rng(seed)
+        pool = sorted(set(train_texts))
+        sample = list(rng.choice(pool, size=min(sample_size, len(pool)), replace=False))
+        query = sc.semantic_encoder.encode(sc.preprocess_batch(new_texts))
+        reference = sc.semantic_encoder.encode(sc.preprocess_batch(sample))
+        if query is None or reference is None:
+            return {"status": "NOT_RUN", "reason": "local encoder unavailable"}
+        query = normalize(query)
+        reference = normalize(reference)
+        similarity = np.asarray(query @ reference.T).max(axis=1)
+        return {"status": "AVAILABLE", "train_sample_n": len(sample), "seed": seed,
+                "max_cosine": float(similarity.max()),
+                "n_ge_085": int((similarity >= .85).sum()),
+                "n_ge_080": int((similarity >= .80).sum()),
+                "note": "encoder-space maximum over a fixed train sample; not proof of independence"}
+    except Exception as exc:
+        return {"status": "NOT_RUN", "reason": f"{type(exc).__name__}: {exc}"}
 
 
 def _criteria(report):
@@ -204,6 +215,14 @@ def main():
 
     natural_routes = sc.batch_route(shadow, natural.text.tolist())
     no_keyword_routes = sc.batch_route(shadow, no_keywords.text.tolist())
+    policy_evaluation = {
+        "natural": end_to_end_policy_curve(shadow, natural, ood_frame=ood_frame),
+        "no_keywords": end_to_end_policy_curve(shadow, no_keywords, ood_frame=ood_frame),
+        "operational_natural": routing_metrics(sc.batch_route(bundle, natural.text.tolist()),
+                                               natural.category.tolist()),
+        "operational_no_keywords": routing_metrics(sc.batch_route(bundle, no_keywords.text.tolist()),
+                                                   no_keywords.category.tolist()),
+    }
 
     calibration = pd.read_csv(args.processed / "calibration.csv", keep_default_na=False)
     test = pd.read_csv(args.processed / "test.csv", keep_default_na=False)
@@ -227,17 +246,26 @@ def main():
 
     report = {
         "protocol": {"version": independent_cases.VERSION, "sha256": independent_cases.sha256(),
-                     "frozen_sha256": FROZEN_SHA256, "document": "docs/independent_benchmark_protocol.md"},
+                     "frozen_sha256": FROZEN_SHA256,
+                     "role": "independent_post_selection_benchmark",
+                     "status": "FROZEN; no longer blind after the first report",
+                     "document": "docs/independent_benchmark_protocol.md"},
         "provenance": {"generated_at_utc": datetime.now(timezone.utc).isoformat(),
                        "git_commit": _git_commit(root), "model_id": bundle.model_id,
                        "model_name": bundle.model_name, "policy_version": bundle.policy.get("version"),
                        "policy_auto_enabled": bundle.policy.get("auto_enabled"),
+                       "code_version": sc.VERSION,
+                       "decision_code_sha256": meta["module_sha256"],
+                       "experiment_id": sc.identity_from_meta(meta, root).experiment_id,
+                       "split_manifest_sha256": sha256_file(args.processed / "split_manifest.json"),
                        "artifact_sha256": meta["artifact_sha256"],
                        "raw_data_sha256": sha256_file(root / "data/raw/20000-Utterances-Training-dataset-for-chatbots-virtual-assistant-Bitext-sample.csv"),
                        "benchmark_files": {name: sha256_file(root / "data/eval" / f"{name}.csv")
                                            for name in ("independent_id", "independent_ood",
                                                         "independent_risk", "independent_multi")}},
-        "disjointness": _disjointness(all_new, raw_texts, existing),
+        "disjointness": {**_disjointness(all_new, raw_texts, existing),
+                          "semantic_similarity_to_train_sample": _semantic_disjointness(
+                              all_new, train.text.tolist())},
         "deployed": deployed,
         "baseline_tfidf_logreg": baseline_report,
         "ood": {"n": len(ood_frame), "shadow_false_auto_n": ood_false,
@@ -248,6 +276,11 @@ def main():
             "natural": cascade_metrics(natural_routes, natural.category.tolist()),
             "no_keywords": cascade_metrics(no_keyword_routes, no_keywords.category.tolist()),
             "ood": cascade_ood_metrics(ood_routes),
+            "detailed": {
+                "natural": cascade_detailed_metrics(natural_routes, natural.category.tolist()),
+                "no_keywords": cascade_detailed_metrics(no_keyword_routes, no_keywords.category.tolist()),
+                "ood": cascade_detailed_metrics(ood_routes),
+            },
         },
         "risk_coverage": {
             "natural": risk_coverage_curve(bundle.predict_proba(natural.text.tolist()),
@@ -255,10 +288,23 @@ def main():
             "no_keywords": risk_coverage_curve(bundle.predict_proba(no_keywords.text.tolist()),
                                                no_keywords.category.tolist(), bundle.classes_),
         },
-        "calibration": {"calibration_split": per_category_calibration(bundle, calibration),
-                        "overall_calibration_split": calibration_diagnostics(bundle, calibration),
-                        "independent_natural": per_category_calibration(bundle, natural)},
-        "risk": _rules(risk_frame),
+        "calibration": {
+            "calibration_split": per_category_calibration(bundle, calibration),
+            "overall_calibration_split": calibration_diagnostics(bundle, calibration),
+            "independent_natural": per_category_calibration(bundle, natural),
+            "independent_no_keywords": per_category_calibration(bundle, no_keywords),
+            "by_source": calibration_by_source(bundle, {
+                "calibration_split": calibration,
+                "independent_natural": natural,
+                "independent_no_keywords": no_keywords,
+            }),
+        },
+        "policy_evaluation": policy_evaluation,
+        "risk": {**_rules(risk_frame),
+                 "development": _rules(pd.read_csv(root / "data/eval/risk_dev.csv",
+                                                   keep_default_na=False)),
+                 "development_note": ("risk_dev.csv is a separate development set; "
+                                      "independent_risk.csv is the frozen final check")},
         "multi_request": _multi(multi_frame, controls),
         "scope": "Frozen author-written benchmark, scored once. Not a customer sample.",
     }

@@ -12,6 +12,8 @@
 | `GET /health` | процесс жив | всегда 200 |
 | `GET /ready` | модель загружена и прошла проверки | 200 или 503 с причиной |
 | `GET /metrics` | метрики Prometheus | 200 |
+| `POST /v1/feedback` | явное подтверждение или исправление оператора | 200, 401, 409, 422, 503 |
+| `GET /v1/feedback/summary` | агрегаты по сохранённым событиям | 200, 401, 503 |
 
 Каждый ответ несёт заголовок `x-request-id`: его можно передать в запросе, иначе сервис создаст свой. По нему запрос находится в журнале.
 
@@ -67,7 +69,7 @@
   "reason_codes": [
     "AUTO_POLICY_DISABLED"
   ],
-  "model_id": "router-c551bd5d209a4d1a",
+  "model_id": "router-17e31a0d6ea04c7b",
   "policy_version": "retail-cascade-v1",
   "delivery_status": "NOT_SENT",
   "created_at_utc": "2026-11-23T18:55:05.356932+00:00",
@@ -106,6 +108,34 @@
 `EXPECTED_LOSS_ROUTE_NOT_BETTER_THAN_REVIEW`, и обращение уходит оператору.
 Матрица потерь и пороги доступны в `GET /v1/model`.
 [Подробнее](business_policy.md)
+
+## Обратная связь оператора
+
+`POST /v1/feedback` требует заголовок `x-feedback-key`, совпадающий с
+`ROUTER_FEEDBACK_API_KEY`. Без настроенного ключа endpoint отвечает 503, с
+неверным ключом — 401. Поле `confirmed` обязательно: если его не передать,
+событие не создаётся. `operator_category` можно передать только при
+`confirmed=false`; он должен отличаться от предложенной категории. Событие
+привязывается к `model_id` и `policy_version` загруженной модели; при
+несовпадении возвращается 409.
+
+```json
+{
+  "ticket_id": "CRM-1042",
+  "proposed_category": "PAYMENT",
+  "operator_category": "REFUNDS",
+  "confirmed": false,
+  "reviewer_id": "operator-7",
+  "redacted_text": "my card payment was declined",
+  "event_id": "crm-1042-1"
+}
+```
+
+Текст должен быть уже обезличен. Лимиты задаются `ROUTER_MAX_TEXT_CHARS` и
+`ROUTER_MAX_BATCH`; путь хранения — `ROUTER_FEEDBACK_PATH` (по умолчанию
+`var/feedback/events.jsonl`, вне git). `GET /v1/feedback/summary` возвращает
+число событий, подтверждений, исправлений, конфликтов и метрики точности по
+подтверждённым событиям. [Правила feedback](runbook.md)
 
 ## Режим нескольких запросов
 

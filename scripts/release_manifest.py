@@ -1,16 +1,25 @@
-"""Build a release manifest that ties every result to one model and policy."""
+"""Build or verify a release manifest that ties every report to one experiment.
+
+``--build`` records the source/build/release commits and hashes every evaluation
+set and report.  ``--verify`` recomputes the identity and report hashes and fails
+on any mismatch.  The manifest never hashes itself.
+"""
 from __future__ import annotations
 
 import argparse
-import hashlib
 import json
 import subprocess
 from datetime import datetime, timezone
 from pathlib import Path
 
 import support_router as sc
-from support_router import independent_cases
+from support_router.identity import identity_from_meta
 from support_router.utils import sha256_file, write_json
+
+EVAL_SETS = ("hard_test", "ood_eval", "risk_regression", "risk_dev",
+             "independent_id", "independent_ood", "independent_risk", "independent_multi")
+REPORTS = ("results", "independent_benchmark", "representation_comparison",
+           "business_cascade", "review_benchmark", "feedback_simulation")
 
 
 def _git(root, *args):
@@ -25,62 +34,96 @@ def _hash_if_exists(path):
     return sha256_file(path) if Path(path).exists() else None
 
 
-def main():
+def _identity(meta, root):
+    identity = identity_from_meta(meta, root)
+    return identity.as_dict(), identity.experiment_id
+
+
+def _commits(root, previous=None):
+    head = _git(root, "rev-parse", "HEAD")
+    source = (previous or {}).get("source_commit") or head
+    return {"source_commit": source, "build_commit": head, "release_commit": head}
+
+
+def build(root, models, out):
+    meta = json.loads((models / "router_meta.json").read_text(encoding="utf-8"))
+    previous = json.loads(out.read_text(encoding="utf-8")) if out.exists() else None
+    identity, experiment_id = _identity(meta, root)
+    manifest = {
+        "schema": "release-manifest-v2",
+        "generated_at_utc": datetime.now(timezone.utc).isoformat(),
+        "experiment_id": experiment_id,
+        "experiment_identity": identity,
+        "commits": _commits(root, previous),
+        "git_branch": _git(root, "rev-parse", "--abbrev-ref", "HEAD"),
+        "git_dirty": bool(_git(root, "status", "--porcelain")),
+        "warning": ("git_dirty=true means the manifest describes the working tree, not a "
+                    "committed release; regenerate after committing"),
+        "identity": {**identity, "git_commit": _git(root, "rev-parse", "HEAD")},
+        "evaluation_sets": {name: _hash_if_exists(root / "data/eval" / f"{name}.csv")
+                            for name in EVAL_SETS},
+        "reports": {name: _hash_if_exists(root / "reports" / f"{name}.json")
+                    for name in REPORTS},
+        "comparison_rule": ("Compare reports only when experiment_id, evaluation-set hashes, "
+                            "report hashes and policy version match"),
+        "note": ("A different policy changes decisions without changing the classifier; "
+                 "such reports are different experiments"),
+    }
+    write_json(out, manifest)
+    return manifest
+
+
+def verify(root, models, out):
+    problems = []
+    if not out.exists():
+        return [f"manifest missing: {out}"]
+    manifest = json.loads(out.read_text(encoding="utf-8"))
+    meta = json.loads((models / "router_meta.json").read_text(encoding="utf-8"))
+    identity, experiment_id = _identity(meta, root)
+    if manifest.get("experiment_id") != experiment_id:
+        problems.append("experiment_id does not match the current model/data/policy identity")
+    stored = manifest.get("experiment_identity") or {}
+    for key, value in identity.items():
+        if stored.get(key) != value:
+            problems.append(f"identity.{key}: manifest={stored.get(key)!r} current={value!r}")
+    if manifest.get("git_dirty"):
+        problems.append("manifest was built from a dirty working tree")
+    for name, expected in (manifest.get("evaluation_sets") or {}).items():
+        current = _hash_if_exists(root / "data/eval" / f"{name}.csv")
+        if current != expected:
+            problems.append(f"evaluation set {name}: hash changed or file missing")
+    for name, expected in (manifest.get("reports") or {}).items():
+        current = _hash_if_exists(root / "reports" / f"{name}.json")
+        if current != expected:
+            problems.append(f"report {name}: hash changed or file missing")
+    return problems
+
+
+def main(argv=None):
     root = Path(sc.project_root())
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--models", type=Path, default=root / "models")
     parser.add_argument("--out", type=Path, default=root / "reports/release_manifest.json")
-    args = parser.parse_args()
-
-    meta = json.loads((args.models / "router_meta.json").read_text(encoding="utf-8"))
-    identity = {
-        "code_version": sc.VERSION,
-        "git_commit": _git(root, "rev-parse", "HEAD"),
-        "git_branch": _git(root, "rev-parse", "--abbrev-ref", "HEAD"),
-        "model_id": meta["model_id"],
-        "model_name": meta["model_name"],
-        "artifact_sha256": meta["artifact_sha256"],
-        "decision_code_sha256": meta["module_sha256"],
-        "policy_version": meta["policy"].get("version"),
-        "policy_auto_enabled": meta["policy"].get("auto_enabled"),
-        "raw_data_sha256": sha256_file(root / "data/raw/20000-Utterances-Training-dataset-for-chatbots-virtual-assistant-Bitext-sample.csv"),
-        "split_manifest_sha256": _hash_if_exists(root / "data/processed/split_manifest.json"),
-        "benchmark_protocol_sha256": independent_cases.sha256(),
-    }
-    experiment_identity = {key: identity[key] for key in (
-        "code_version", "model_id", "model_name", "artifact_sha256", "decision_code_sha256",
-        "policy_version", "policy_auto_enabled", "raw_data_sha256", "split_manifest_sha256",
-        "benchmark_protocol_sha256")}
-    experiment_id = hashlib.sha256(json.dumps(experiment_identity, sort_keys=True,
-                                              separators=(",", ":")).encode("utf-8")).hexdigest()
-    evaluation_sets = {name: _hash_if_exists(root / "data/eval" / f"{name}.csv")
-                       for name in ("hard_test", "ood_eval", "risk_regression",
-                                    "independent_id", "independent_ood",
-                                    "independent_risk", "independent_multi")}
-    reports = {name: _hash_if_exists(root / "reports" / f"{name}.json")
-               for name in ("results", "independent_benchmark", "representation_comparison",
-                            "business_cascade", "review_benchmark", "feedback_simulation")}
-    reports["results_md"] = _hash_if_exists(root / "reports/results.md")
-    manifest = {
-        "generated_at_utc": datetime.now(timezone.utc).isoformat(),
-        "experiment_id": experiment_id,
-        "experiment_identity": experiment_identity,
-        "git_dirty": bool(_git(root, "status", "--porcelain")),
-        "warning": ("git_dirty=true means the manifest describes the working tree, not a "
-                    "committed release; regenerate after committing"),
-        "identity": identity,
-        "evaluation_sets": evaluation_sets,
-        "reports": reports,
-        "comparison_rule": ("Compare reports only when experiment_id, evaluation-set hashes and "
-                            "policy version match"),
-        "note": ("A different policy changes decisions without changing the classifier; "
-                 "such reports are different experiments"),
-    }
-    write_json(args.out, manifest)
-    print(json.dumps({"manifest": str(args.out), "experiment_id": experiment_id,
-                      "model_id": meta["model_id"], "policy_version": meta["policy"].get("version")},
-                     ensure_ascii=False, indent=2))
+    mode = parser.add_mutually_exclusive_group()
+    mode.add_argument("--build", action="store_true", help="write a new manifest (default)")
+    mode.add_argument("--verify", action="store_true", help="verify the existing manifest")
+    args = parser.parse_args(argv)
+    if args.verify:
+        problems = verify(root, args.models, args.out)
+        if problems:
+            print("MANIFEST_MISMATCH")
+            for problem in problems:
+                print(" -", problem)
+            return 2
+        print("MANIFEST_OK")
+        return 0
+    manifest = build(root, args.models, args.out)
+    print(json.dumps({"manifest": str(args.out), "experiment_id": manifest["experiment_id"],
+                      "model_id": manifest["identity"]["model_id"],
+                      "policy_version": manifest["identity"]["policy_version"],
+                      "git_dirty": manifest["git_dirty"]}, ensure_ascii=False, indent=2))
+    return 0
 
 
 if __name__ == "__main__":
-    main()
+    raise SystemExit(main())
