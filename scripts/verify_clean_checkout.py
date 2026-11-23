@@ -6,6 +6,7 @@ copy the working tree, so uncommitted edits are deliberately absent.
 from __future__ import annotations
 
 import argparse
+import os
 import subprocess
 import tempfile
 from pathlib import Path
@@ -13,9 +14,9 @@ from pathlib import Path
 import support_router as sc
 
 
-def run(command, cwd):
+def run(command, cwd, env=None):
     print("+", " ".join(command), flush=True)
-    return subprocess.run(command, cwd=cwd, check=False).returncode
+    return subprocess.run(command, cwd=cwd, check=False, env=env).returncode
 
 
 def main(argv=None):
@@ -34,9 +35,12 @@ def main(argv=None):
               ["python", "scripts/release_manifest.py", "--verify"]]
     if not args.skip_tests:
         checks.append(["python", "-m", "pytest", "-q"])
+    env = os.environ.copy()
+    env["PYTHONPATH"] = str(target / "src")
+    env["SUPPORT_ROUTER_HOME"] = str(target)
     failed = []
     for command in checks:
-        if run(command, cwd=target) != 0:
+        if run(command, cwd=target, env=env) != 0:
             failed.append(" ".join(command))
     if not args.keep:
         import shutil
