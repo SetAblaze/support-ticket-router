@@ -1,11 +1,23 @@
 {
-  "generated_at_utc": "2026-11-23T20:22:14.395005+00:00",
-  "experiment_id": "91886a55f6895478e095219fd721a01b6dcffb9b0f76786e5ba6691ea8fe5f2f",
-  "git_dirty": false,
+  "generated_at_utc": "2026-11-23T20:22:38.526155+00:00",
+  "experiment_id": "f64f5ee528b6be95ee049b48196862a5ead490240445eea1013d28ccec4ef9a1",
+  "experiment_identity": {
+    "code_version": "3.2.0",
+    "model_id": "router-c551bd5d209a4d1a",
+    "model_name": "linsvc_wc_C1",
+    "artifact_sha256": "8e701b91e64310bf93b8de4ddbad7b2bd6cea8a684afe1035096f9d592bda540",
+    "decision_code_sha256": "d2e33c6306fb98e41f007d932dc081e757c65f177d277412c3bda43c39458e44",
+    "policy_version": "retail-cascade-v1",
+    "policy_auto_enabled": false,
+    "raw_data_sha256": "19a3031d649ce432202acd807630b1b52884507185f32832d58714f3fac7d82b",
+    "split_manifest_sha256": "0c8c27b3e9d681ef7266933e8d447e6f322484a73527ccf25b4891693c93b348",
+    "benchmark_protocol_sha256": "97d8404692fc8c8210ea86c8d2fbc7cb68cffbdec60c15e14a3cf070767eac9c"
+  },
+  "git_dirty": true,
   "warning": "git_dirty=true means the manifest describes the working tree, not a committed release; regenerate after committing",
   "identity": {
     "code_version": "3.2.0",
-    "git_commit": "a70966bb24dce64ffad9ccaa1892265fa2ec910b",
+    "git_commit": "7cd5d33ff85cb884d754e79fb89b5e1a4a1e2ea5",
     "git_branch": "codex/router-review-fixes",
     "model_id": "router-c551bd5d209a4d1a",
     "model_name": "linsvc_wc_C1",
@@ -32,7 +44,8 @@
     "representation_comparison": "38108c359b2113797aa0808e8c05fc659acb968a74d1b9bbd77956086ced99dd",
     "business_cascade": "57729c5813a27f694a4c35acd00b99c5027649ee2055153069b5e9970eef4e2c",
     "review_benchmark": "bde73cbf3506774d80371d880e2818053078362893e316cdda5ef1f5baccdcb3",
-    "feedback_simulation": "2a797371048c9f97571fd0a6e32ebbb299403e4dd51a34a317164bd9d8d60677"
+    "feedback_simulation": "2a797371048c9f97571fd0a6e32ebbb299403e4dd51a34a317164bd9d8d60677",
+    "results_md": "d0868410d05c64534ebc8477e405fe795a051b680dc455e7db0c9c699bb1cc99"
   },
   "comparison_rule": "Compare reports only when experiment_id, evaluation-set hashes and policy version match",
   "note": "A different policy changes decisions without changing the classifier; such reports are different experiments"

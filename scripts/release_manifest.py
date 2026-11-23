@@ -47,7 +47,11 @@ def main():
         "split_manifest_sha256": _hash_if_exists(root / "data/processed/split_manifest.json"),
         "benchmark_protocol_sha256": independent_cases.sha256(),
     }
-    experiment_id = hashlib.sha256(json.dumps(identity, sort_keys=True,
+    experiment_identity = {key: identity[key] for key in (
+        "code_version", "model_id", "model_name", "artifact_sha256", "decision_code_sha256",
+        "policy_version", "policy_auto_enabled", "raw_data_sha256", "split_manifest_sha256",
+        "benchmark_protocol_sha256")}
+    experiment_id = hashlib.sha256(json.dumps(experiment_identity, sort_keys=True,
                                               separators=(",", ":")).encode("utf-8")).hexdigest()
     evaluation_sets = {name: _hash_if_exists(root / "data/eval" / f"{name}.csv")
                        for name in ("hard_test", "ood_eval", "risk_regression",
@@ -56,9 +60,11 @@ def main():
     reports = {name: _hash_if_exists(root / "reports" / f"{name}.json")
                for name in ("results", "independent_benchmark", "representation_comparison",
                             "business_cascade", "review_benchmark", "feedback_simulation")}
+    reports["results_md"] = _hash_if_exists(root / "reports/results.md")
     manifest = {
         "generated_at_utc": datetime.now(timezone.utc).isoformat(),
         "experiment_id": experiment_id,
+        "experiment_identity": experiment_identity,
         "git_dirty": bool(_git(root, "status", "--porcelain")),
         "warning": ("git_dirty=true means the manifest describes the working tree, not a "
                     "committed release; regenerate after committing"),
