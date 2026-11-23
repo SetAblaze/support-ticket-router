@@ -1,5 +1,5 @@
 {
-  "generated_at_utc": "2026-11-23T20:22:46.978369+00:00",
+  "generated_at_utc": "2026-11-23T21:10:39.583869+00:00",
   "experiment_id": "f64f5ee528b6be95ee049b48196862a5ead490240445eea1013d28ccec4ef9a1",
   "experiment_identity": {
     "code_version": "3.2.0",
@@ -13,11 +13,11 @@
     "split_manifest_sha256": "0c8c27b3e9d681ef7266933e8d447e6f322484a73527ccf25b4891693c93b348",
     "benchmark_protocol_sha256": "97d8404692fc8c8210ea86c8d2fbc7cb68cffbdec60c15e14a3cf070767eac9c"
   },
-  "git_dirty": false,
+  "git_dirty": true,
   "warning": "git_dirty=true means the manifest describes the working tree, not a committed release; regenerate after committing",
   "identity": {
     "code_version": "3.2.0",
-    "git_commit": "a6c7b9f525205870ef9cfe33db73f78702fcb03b",
+    "git_commit": "4aeb1adb02560b659fde6553e11ce9c3c3d2d018",
     "git_branch": "codex/router-review-fixes",
     "model_id": "router-c551bd5d209a4d1a",
     "model_name": "linsvc_wc_C1",
@@ -45,7 +45,7 @@
     "business_cascade": "57729c5813a27f694a4c35acd00b99c5027649ee2055153069b5e9970eef4e2c",
     "review_benchmark": "bde73cbf3506774d80371d880e2818053078362893e316cdda5ef1f5baccdcb3",
     "feedback_simulation": "2a797371048c9f97571fd0a6e32ebbb299403e4dd51a34a317164bd9d8d60677",
-    "results_md": "fe3e8e74f07aa4fdfc02661cfa6e94f000d7ce710c8e30082b8c571fc9bedebf"
+    "results_md": "8da2500d2928cdb24885426bb04ae2794945f0d52373685c7959933d34a2dae7"
   },
   "comparison_rule": "Compare reports only when experiment_id, evaluation-set hashes and policy version match",
   "note": "A different policy changes decisions without changing the classifier; such reports are different experiments"

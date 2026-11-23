@@ -1,4 +1,6 @@
 """Regression tests for the post-audit methodology fixes."""
+import json
+
 import numpy as np
 import pandas as pd
 import pytest
@@ -156,3 +158,32 @@ def test_feedback_loop_metrics_and_retraining_queue():
     assert retraining_candidates([verified, corrected]) == [corrected]
     with pytest.raises(ValueError):
         make_feedback_event(result, "UNKNOWN", confirmed=False)
+
+
+def test_release_reports_are_internally_consistent():
+    root = sc.project_root()
+    manifest = json.loads((root / "reports/release_manifest.json").read_text(encoding="utf-8"))
+    meta = json.loads((root / "models/router_meta.json").read_text(encoding="utf-8"))
+    independent = json.loads((root / "reports/independent_benchmark.json").read_text(encoding="utf-8"))
+    assert manifest["identity"]["model_id"] == meta["model_id"]
+    assert manifest["identity"]["policy_version"] == meta["policy"]["version"]
+    assert independent["provenance"]["model_id"] == meta["model_id"]
+    assert independent["provenance"]["policy_version"] == meta["policy"]["version"]
+    assert independent["protocol"]["sha256"] == sc.independent_cases.sha256()
+    assert independent["protocol"]["sha256"] == independent["protocol"]["frozen_sha256"]
+    results_md = (root / "reports/results.md").read_text(encoding="utf-8")
+    assert manifest["experiment_id"] in results_md
+    assert meta["model_id"] in results_md
+    assert "Исторический прогон" in results_md
+
+
+def test_notebook_has_current_version_and_audit_stage():
+    root = sc.project_root()
+    notebook = json.loads((root / "notebooks/Этапы_1-12_Colab.ipynb").read_text(encoding="utf-8"))
+    text = "\n".join("".join(cell.get("source", [])) for cell in notebook["cells"])
+    assert "версия 3.2.0" in text
+    assert "Этап 13. Аудит" in text
+    assert "independent_benchmark.json" in text
+    assert "audit_change_map.md" in text
+    assert "исторический прогон 3.1.2" in text
+
