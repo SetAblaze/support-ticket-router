@@ -109,7 +109,10 @@ def test_few_shot_modes_are_exact_and_group_cv_is_disjoint():
                                                   sc.project_root() / "scripts/compare_representations.py")
     module = importlib.util.module_from_spec(spec)
     spec.loader.exec_module(module)
-    train = pd.read_csv(sc.project_root() / "data/processed/train.csv", keep_default_na=False)
+    train_path = sc.project_root() / "data/processed/train.csv"
+    if not train_path.exists():
+        pytest.skip("processed train split is not built; run scripts/prepare_data.py --rebuild")
+    train = pd.read_csv(train_path, keep_default_na=False)
     for mode in ("balanced", "proportional"):
         sample, meta = module._sample_100(train, 0, mode)
         assert len(sample) == 100 and not sample.text.duplicated().any()

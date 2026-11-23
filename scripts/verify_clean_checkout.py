@@ -29,7 +29,8 @@ def main(argv=None):
     target = Path(tmp) / "repo"
     if run(["git", "clone", "--depth", "1", args.repo, str(target)], cwd=tmp) != 0:
         return 2
-    checks = [["python", "scripts/prepare_data.py", "--verify"],
+    checks = [["python", "scripts/prepare_data.py", "--rebuild"],
+              ["python", "scripts/prepare_data.py", "--verify"],
               ["python", "scripts/release_manifest.py", "--verify"]]
     if not args.skip_tests:
         checks.append(["python", "-m", "pytest", "-q"])
