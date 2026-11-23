@@ -1,5 +1,5 @@
 {
-  "generated_at_utc": "2026-11-23T21:16:54.584450+00:00",
+  "generated_at_utc": "2026-11-23T21:17:02.018245+00:00",
   "experiment_id": "f64f5ee528b6be95ee049b48196862a5ead490240445eea1013d28ccec4ef9a1",
   "experiment_identity": {
     "code_version": "3.2.0",
@@ -13,11 +13,11 @@
     "split_manifest_sha256": "0c8c27b3e9d681ef7266933e8d447e6f322484a73527ccf25b4891693c93b348",
     "benchmark_protocol_sha256": "97d8404692fc8c8210ea86c8d2fbc7cb68cffbdec60c15e14a3cf070767eac9c"
   },
-  "git_dirty": true,
+  "git_dirty": false,
   "warning": "git_dirty=true means the manifest describes the working tree, not a committed release; regenerate after committing",
   "identity": {
     "code_version": "3.2.0",
-    "git_commit": "436313d466440317de0dd8a3e411b2d62a8c871c",
+    "git_commit": "e1eca2b615c65c7f593a27b0956324fb841aada1",
     "git_branch": "codex/router-review-fixes",
     "model_id": "router-c551bd5d209a4d1a",
     "model_name": "linsvc_wc_C1",
