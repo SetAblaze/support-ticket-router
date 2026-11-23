@@ -1,6 +1,6 @@
 {
   "schema": "release-manifest-v2",
-  "generated_at_utc": "2026-11-23T22:07:15.718549+00:00",
+  "generated_at_utc": "2026-11-23T22:09:35.354944+00:00",
   "experiment_id": "dfa1f909a140aaf0e61c70c21fa59d3438441633622851fa35d3d43cd3a658c5",
   "experiment_identity": {
     "code_version": "3.2.0",
@@ -15,12 +15,12 @@
     "benchmark_protocol_sha256": "97d8404692fc8c8210ea86c8d2fbc7cb68cffbdec60c15e14a3cf070767eac9c"
   },
   "commits": {
-    "source_commit": "d9cd717af4c5762f77cc079dfb07227972340d42",
-    "build_commit": "d9cd717af4c5762f77cc079dfb07227972340d42",
-    "release_commit": "d9cd717af4c5762f77cc079dfb07227972340d42"
+    "source_commit": "712d1c8d69d0b29c498b7e1486043426bfd2bc2d",
+    "build_commit": "712d1c8d69d0b29c498b7e1486043426bfd2bc2d",
+    "release_commit": "712d1c8d69d0b29c498b7e1486043426bfd2bc2d"
   },
   "git_branch": "codex/router-review-fixes",
-  "git_dirty": true,
+  "git_dirty": false,
   "warning": "git_dirty=true means the manifest describes the working tree, not a committed release; regenerate after committing",
   "identity": {
     "code_version": "3.2.0",
@@ -33,7 +33,7 @@
     "raw_data_sha256": "19a3031d649ce432202acd807630b1b52884507185f32832d58714f3fac7d82b",
     "split_manifest_sha256": "5b7479a439112268dea89b5109c4ec168adf439ed7247de551778872d5b07831",
     "benchmark_protocol_sha256": "97d8404692fc8c8210ea86c8d2fbc7cb68cffbdec60c15e14a3cf070767eac9c",
-    "git_commit": "d9cd717af4c5762f77cc079dfb07227972340d42"
+    "git_commit": "712d1c8d69d0b29c498b7e1486043426bfd2bc2d"
   },
   "evaluation_sets": {
     "hard_test": "f018ae35067d53b3bfbea7d402389b399cf2ba4956a377e675376aad6743e547",
