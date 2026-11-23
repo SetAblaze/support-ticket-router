@@ -15,7 +15,7 @@ support-ticket-router/
 ├── reports/                 результаты прогона ноутбука: results.json, таблицы, графики
 ├── tests/                   автотесты pytest
 ├── data/eval/               замороженные наборы новых фраз этапа 11
-├── data/raw/                сюда кладётся CSV датасета Bitext (в репозиторий не входит)
+├── data/raw/                исходный CSV Bitext, описание и лицензия поставщика
 ├── monitoring/              Prometheus и правила алертов с модульными тестами
 ├── docs/                    архитектура, API, инструкция при сбоях, отчёт и презентация
 ├── Dockerfile, docker-compose.yml
@@ -42,13 +42,13 @@ curl -s -X POST http://localhost:8000/v1/route -H 'content-type: application/jso
 python -m venv .venv && source .venv/bin/activate   # в Windows: .venv\Scripts\activate
 pip install -r requirements.txt
 pip install -e .                                  # пакет support_router из src/
-python -m support_router.train                    # обучить модель заново (нужен CSV Bitext в data/raw)
+python -m support_router.train                    # повторить обучение на CSV из репозитория
 uvicorn support_router.api:app --port 8000        # HTTP-сервис
 python app.py                                     # интерфейс Gradio на http://127.0.0.1:7860
 python -m pytest -q                               # автотесты
 ```
 
-**Colab.** Открыть `notebooks/Этапы_1-12_Colab.ipynb` и выполнить всё. Первая ячейка берёт код проекта из GitHub (переменная `PROJECT_REPO`) или из загруженного архива, затем попросит CSV датасета.
+**Colab.** Открыть `notebooks/Этапы_1-12_Colab.ipynb` и выполнить всё. Ноутбук читает CSV из `data/raw/`. В чистой среде первая ячейка клонирует ветку `codex/router-review-fixes` форка `SofiCholoian888/support-ticket-router`. Если рядом уже есть рабочая копия или `support-ticket-router.zip`, используется она. Адрес и ветку можно сменить в первой ячейке.
 
 Модель загружается только при той же версии scikit-learn (1.8.0), с которой обучена, и с тем же кодом модулей решения: `load_bundle` сверяет хеши и версию и при расхождении отказывается работать. Файл модели открывается через pickle, поэтому загружайте только модель, которую обучили сами.
 
@@ -57,6 +57,8 @@ python -m pytest -q                               # автотесты
 `POST /v1/route` принимает `{"text": ..., "ticket_id": ...}` и возвращает тему, очередь, приоритет, флаги риска, причины ручной проверки и решение теневой политики. `POST /v1/route/batch` делает то же для пачки до 100 обращений. Неверные запросы получают 422, без загруженной модели сервис отвечает 503. Подробности и примеры: [docs/api.md](docs/api.md).
 
 ## Данные и модель
+
+В репозитории лежит оригинальный CSV из набора *Bitext Sample Pre-built Customer Support Dataset for English* (© Bitext Innovations, 2020). SHA-256 исходного файла — `19a3031d649ce432202acd807630b1b52884507185f32832d58714f3fac7d82b`. Лицензия данных — CDLA-Sharing-1.0. [Источник на Kaggle](https://www.kaggle.com/datasets/bitext/training-dataset-for-chatbotsvirtual-assistants) · [Описание Bitext](data/raw/README.txt) · [Лицензия данных](data/raw/LICENSE.txt)
 
 Bitext Customer Support: 21 534 обращения, 11 тем, 27 интентов, фразы синтетические, по шаблонам. После очистки и удаления дублей осталось 19 700 фраз. Похожие фразы объединены в 3 646 групп, и каждая группа целиком попадает в одну часть выборки: обучение 11 970, калибровка 2 240, выбор порога 2 368, test 3 122.
 

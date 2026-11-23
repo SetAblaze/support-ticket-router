@@ -4,9 +4,11 @@ __pycache__/
 .pytest_cache/
 .ruff_cache/
 .ipynb_checkpoints/
-# Датасет Bitext в репозиторий не кладём: CSV скачивается с Kaggle и кладётся в data/raw.
 # Части выборки пересоздают ноутбук и скрипт обучения, паспорт разбиения остаётся в репозитории.
-data/raw/
+data/raw/*
+!data/raw/20000-Utterances-Training-dataset-for-chatbots-virtual-assistant-Bitext-sample.csv
+!data/raw/LICENSE.txt
+!data/raw/README.txt
 data/processed/*.csv
 # Модель (16 МБ) хранится в репозитории, чтобы docker compose собирал образ сразу после клонирования.
 # Файлы энкодера MiniLM скачиваются сами при первом запуске, в репозитории только их паспорт.

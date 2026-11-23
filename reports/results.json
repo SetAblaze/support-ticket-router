@@ -2965,6 +2965,10 @@
       "models/router_meta.json",
       "models/encoder/encoder_manifest.json",
       "data/processed/split_manifest.json",
+      ".gitattributes",
+      "data/raw/20000-Utterances-Training-dataset-for-chatbots-virtual-assistant-Bitext-sample.csv",
+      "data/raw/LICENSE.txt",
+      "data/raw/README.txt",
       "src/support_router/__init__.py",
       "src/support_router/api.py",
       "src/support_router/artifacts.py",
@@ -3036,7 +3040,7 @@
       "reports/figures/stage11_topic_accuracy.png"
     ],
     "clean_folder_app_check": true,
-    "clean_folder_tests": "219 passed, 2 skipped in 10.12s",
+    "clean_folder_tests": "219 passed, 2 skipped in 10.56s",
     "results_report": "reports/results.md"
   }
 }

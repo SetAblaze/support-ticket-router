@@ -1,6 +1,6 @@
 """Обучение итоговой модели вне ноутбука: те же шаги и те же функции, что в этапах 4-7.
 
-    python -m support_router.train --raw data/raw/<Bitext>.csv --out models
+    python -m support_router.train --out models
 
 Шаги: очистка (clean_frame) → группы похожих фраз (lexical_groups) → разбиение по группам
 (make_splits) → обучение выбранной конфигурации с калибровкой на отдельной части
@@ -43,7 +43,7 @@ def build_splits(raw_path, processed_dir):
     splits = make_splits(frame)
     processed_dir.mkdir(parents=True, exist_ok=True)
     for name, part in splits.items():
-        part.to_csv(processed_dir / f"{name}.csv", index=False)
+        part.to_csv(processed_dir / f"{name}.csv", index=False, lineterminator="\n")
     short.to_csv(processed_dir / "short_examples_retained.csv", index=False)
     # Ноутбук обучает модель на частях, прочитанных из CSV (ячейка 24): повторяем это дословно.
     splits = {k: pd.read_csv(processed_dir / f"{k}.csv", keep_default_na=False) for k in SPLIT_ROLES}
@@ -112,7 +112,7 @@ def main(argv=None):
                         help="конфигурация, выбранная на этапе 6")
     args = parser.parse_args(argv)
     if not Path(args.raw).exists():
-        sys.exit(f"Нет файла {args.raw}: скачайте датасет Bitext с Kaggle и положите его в data/raw")
+        sys.exit(f"Нет файла {args.raw}: восстановите CSV из репозитория или укажите путь через --raw")
     processed = args.processed or str(Path(args.out).resolve().parent / "data" / "processed")
     train(args.raw, args.out, model_name=args.model, processed_dir=processed)
 
