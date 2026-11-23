@@ -8,7 +8,6 @@
 | Версия кода | 3.2.0 |
 | Политика | `retail-cascade-v1` |
 | experiment_id | `f64f5ee528b6be95ee049b48196862a5ead490240445eea1013d28ccec4ef9a1` |
-| Build commit | `a6c7b9f525205870ef9cfe33db73f78702fcb03b` |
 | Test Bitext, macro-F1 | 0.9963, ошибок 10 |
 | Test Bitext, теневой режим | 3059 сам, ошибок очереди 0, к оператору 63 |
 | Независимый `natural` | 28/55 = 50.9%, macro-F1 0.439 |

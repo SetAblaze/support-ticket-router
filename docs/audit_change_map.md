@@ -23,7 +23,7 @@
 
 | № | Приоритет | Замечание аудита | Что сделано | Где | Доказательство | Тест |
 |---|---|---|---|---|---|---|
-| 1 | P0 | LOIO использовался и для выбора модели, и как независимая оценка | LOIO явно назван выбором архитектуры; независимая оценка вынесена в замороженный набор | `src/support_router/evaluation.py`, `reports/results.json`, `docs/independent_benchmark_protocol.md` | `selection.loio_role`, `independent_benchmark.json` | `tests/test_audit_fixes.py` |
+| 1 | P0 | LOIO использовался и для выбора модели, и как независимая оценка | LOIO явно назван выбором архитектуры; независимая оценка вынесена в замороженный набор | `src/support_router/evaluation.py`, исторический `reports/results.json`, `docs/independent_benchmark_protocol.md` | `selection.loio_role`, `independent_benchmark.json` | `tests/test_audit_fixes.py` |
 | 2 | P0 | Нет независимого бенчмарка на новые формулировки | Создан `independent-v1-2026-11-23`: 110 ID-фраз в двух режимах, 20 OOD, 16 риск, 12 многотемных | `src/support_router/independent_cases.py`, `data/eval/independent_*.csv`, `docs/independent_benchmark_protocol.md` | SHA-256 `97d84046…eac9c`, проверка в ячейке 59 | `test_independent_benchmark_is_disjoint_and_labelled` |
 | 3 | P1 | Тест Bitext слишком простой | Основное сравнение разделено на «известные шаблоны» и «новые формулировки»; Bitext не выдаётся за доказательство robustness | `reports/results.md`, `reports/independent_benchmark.json`, `README.md` | `natural` 50.9%, `no_keywords` 21.8% | `test_release_reports_are_internally_consistent` |
 | 4 | P1 | Порог уверенности не учитывает полную стоимость ошибки | Добавлена матрица `L(y,a)` и правило `R(a|x)=Σ P(y|x)L(y,a)`; решение блокируется, если минимум потерь — ручная проверка | `src/support_router/business.py`, `src/support_router/routing.py` | 6 старых ошибок `PAYMENT → REFUNDS` заблокированы; 3059 авто, 0 ошибок | `test_expected_loss_matches_audit_example`, `test_route_blocks_when_expected_loss_prefers_review` |
@@ -92,6 +92,7 @@
 | `docs/architecture.md` | Новые модули и поток решения |
 | `docs/api.md` | Версия модели и поля ответа |
 | `docs/runbook.md` | Мониторинг, feedback, действия при деградации |
+| `reports/README.md` | Какие отчёты текущие, какие исторические, как пересобрать |
 | `docs/audit_change_map.md` | Этот документ |
 
 ### Тесты
