@@ -1,0 +1,127 @@
+{
+  "model_id": "router-f4247752d96f4346",
+  "policy": "retail-cascade-v1",
+  "gate": {
+    "enabled": true,
+    "eligible_id": 24,
+    "eligible_ood": 9,
+    "wrong_hint_cost": 4,
+    "review_cost": 1,
+    "confidence": 0.75,
+    "semantic_similarity": 0.35,
+    "development_suggestions": 14,
+    "development_errors": 0
+  },
+  "bitext_test": {
+    "n": 3122,
+    "semantic_status": {
+      "NOT_REQUESTED": 3098,
+      "SUGGESTED": 14,
+      "ABSTAINED": 10
+    },
+    "shadow_auto": 3060,
+    "shadow_auto_from_fallback": 0,
+    "primary_correct": 3112,
+    "cascade_correct": 3112,
+    "corrected": 0,
+    "regressed": 0
+  },
+  "hard": {
+    "natural": {
+      "n": 110,
+      "semantic_status": {
+        "NOT_REQUESTED": 65,
+        "SUGGESTED": 40,
+        "ABSTAINED": 5
+      },
+      "shadow_auto": 60,
+      "shadow_auto_from_fallback": 0,
+      "primary_correct": 98,
+      "cascade_correct": 105,
+      "corrected": 8,
+      "regressed": 1
+    },
+    "no_keywords": {
+      "n": 110,
+      "semantic_status": {
+        "SUGGESTED": 55,
+        "ABSTAINED": 45,
+        "NOT_REQUESTED": 10
+      },
+      "shadow_auto": 3,
+      "shadow_auto_from_fallback": 0,
+      "primary_correct": 17,
+      "cascade_correct": 48,
+      "corrected": 32,
+      "regressed": 1
+    }
+  },
+  "ood": {
+    "n": 100,
+    "semantic_status": {
+      "ABSTAINED": 61,
+      "NOT_REQUESTED": 33,
+      "SUGGESTED": 6
+    },
+    "shadow_auto": 3,
+    "shadow_auto_from_fallback": 0
+  },
+  "ood_by_topic": {
+    "app_failure": {
+      "n": 15,
+      "semantic_status": {
+        "ABSTAINED": 12,
+        "SUGGESTED": 2,
+        "NOT_REQUESTED": 1
+      },
+      "shadow_auto": 0,
+      "shadow_auto_from_fallback": 0
+    },
+    "gibberish": {
+      "n": 15,
+      "semantic_status": {
+        "ABSTAINED": 11,
+        "NOT_REQUESTED": 4
+      },
+      "shadow_auto": 0,
+      "shadow_auto_from_fallback": 0
+    },
+    "multiple_topics": {
+      "n": 15,
+      "semantic_status": {
+        "NOT_REQUESTED": 15
+      },
+      "shadow_auto": 1,
+      "shadow_auto_from_fallback": 0
+    },
+    "off_topic": {
+      "n": 25,
+      "semantic_status": {
+        "ABSTAINED": 22,
+        "NOT_REQUESTED": 3
+      },
+      "shadow_auto": 2,
+      "shadow_auto_from_fallback": 0
+    },
+    "other_language": {
+      "n": 15,
+      "semantic_status": {
+        "NOT_REQUESTED": 7,
+        "ABSTAINED": 8
+      },
+      "shadow_auto": 0,
+      "shadow_auto_from_fallback": 0
+    },
+    "out_of_scope": {
+      "n": 15,
+      "semantic_status": {
+        "NOT_REQUESTED": 3,
+        "ABSTAINED": 8,
+        "SUGGESTED": 4
+      },
+      "shadow_auto": 0,
+      "shadow_auto_from_fallback": 0
+    }
+  },
+  "scope": "Frozen synthetic diagnostics. Some cases were previously reviewed by the authors."
+}

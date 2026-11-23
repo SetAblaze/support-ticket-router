@@ -92,6 +92,10 @@ def main():
     for name in splits:
         if sha256_file(args.processed / f"{name}.csv") != meta["provenance"]["split_manifest"]["splits"][name]["sha256"]:
             raise ValueError(f"Split differs from the deployed model: {name}")
+    # Reproduce the stage-11 comparison of two standalone classifiers.
+    # The deployed cascade has its own end-to-end evaluation in evaluate_cascade.py.
+    deployed.semantic_head = None
+    select_policy(deployed, splits["val"], scenario_data.frames()[0])
     candidate = fit_calibrated_bundle("semantic_lr_C1", splits["train"], splits["calibration"])
     select_policy(candidate, splits["val"], scenario_data.frames()[0])
     datasets = root / "data/eval"

@@ -3,6 +3,7 @@ from __future__ import annotations
 
 import hashlib
 import json
+import shutil
 from pathlib import Path
 
 import joblib
@@ -15,7 +16,7 @@ from .utils import runtime_versions, sha256_file, write_json
 # api.py, monitoring.py, train.py, data.py и evaluation.py сюда не входят:
 # их правка не меняет того, как обученная модель решает.
 DECISION_MODULES = ("config.py", "text.py", "models.py", "rules.py", "routing.py", "multiple_requests.py",
-                    "semantic_encoder.py", "category_examples.py")
+                    "semantic_encoder.py", "category_examples.py", "business.py", "cascade.py")
 
 
 def decision_code_sha256():
@@ -30,6 +31,16 @@ def decision_code_sha256():
 
 def save_bundle(bundle, directory, test_metrics=None):
     directory = Path(directory); directory.mkdir(parents=True, exist_ok=True)
+    has_head = getattr(bundle, "semantic_head", None) is not None
+    if has_head or bundle.model_name.startswith("semantic_"):
+        from .semantic_encoder import ensure_encoder
+        source = ensure_encoder(getattr(bundle, "encoder_directory", None))
+        target = directory / "encoder"
+        if source.resolve() != target.resolve():
+            target.mkdir(parents=True, exist_ok=True)
+            for name in ("encoder_manifest.json", "model.onnx", "tokenizer.json", "LICENSE", "NOTICE.md"):
+                if (source / name).is_file():
+                    shutil.copyfile(source / name, target / name)
     path = directory / "router.joblib"
     joblib.dump(bundle, path, compress=3)
     auxiliary = {name:sha256_file(Path(__file__).parent/name)
@@ -44,6 +55,7 @@ def save_bundle(bundle, directory, test_metrics=None):
             "module_sha256_covers": list(DECISION_MODULES),
             "auxiliary_module_sha256":auxiliary,
             "encoder":json.loads(encoder_manifest.read_text()) if bundle.model_name.startswith('semantic_') else None,
+            "semantic_fallback_encoder": json.loads(encoder_manifest.read_text()) if has_head else None,
             "versions": runtime_versions(), "provenance": bundle.metadata,
             "test": test_metrics, "external_validation_status": "NOT_AVAILABLE",
             "security_notice":"Adjacent SHA256 is not authenticity; joblib is unsafe for untrusted artifacts"}
@@ -73,4 +85,6 @@ def load_bundle(directory, *, trust_local_artifact=False):
     obj = joblib.load(directory/"router.joblib")
     if obj.model_id != meta["model_id"] or list(obj.classes_) != meta["classes"] or obj.policy != meta["policy"]:
         raise ValueError("Artifact metadata mismatch")
+    if getattr(obj, "semantic_head", None) is not None:
+        obj.encoder_directory = directory.resolve() / "encoder"
     return obj, meta

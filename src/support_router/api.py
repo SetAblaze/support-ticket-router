@@ -84,6 +84,14 @@ class DecisionOut(BaseModel):
     queue: str | None
     topic_queue: str | None
     priority: Literal["P1", "P2", "P3"]
+    priority_reasons: list[str]
+    classification_source: Literal["primary", "minilm"] | None
+    primary_category: str | None
+    primary_confidence: float | None
+    primary_confidence_threshold: float | None
+    semantic_status: str
+    semantic_confidence: float | None
+    semantic_similarity: float | None
     confidence: float | None
     similarity: float | None
     top3: dict[str, float]
@@ -184,6 +192,7 @@ def create_app(models_directory=None, registry=None) -> FastAPI:
                   status=result["status"], priority=result["priority"], category=result["suggested_category"],
                   queue=result["queue"], risk_flags=result["risk_flags"], reason_codes=result["reason_codes"],
                   confidence=result["confidence"], similarity=result["similarity"],
+                  classification_source=result["classification_source"], semantic_status=result["semantic_status"],
                   shadow_status=shadow_result["status"], text_length=len(ticket.text),
                   model_id=result["model_id"])
 
@@ -212,7 +221,8 @@ def create_app(models_directory=None, registry=None) -> FastAPI:
         return {"model_id": meta["model_id"], "model_name": meta["model_name"], "classes": meta["classes"],
                 "policy": {k: meta["policy"].get(k) for k in ["version", "auto_enabled", "candidate_auto_enabled",
                                                                "confidence_threshold", "similarity_threshold",
-                                                               "status"]},
+                                                               "status", "misroute_cost", "default_misroute_cost",
+                                                               "review_cost", "semantic_gate"]},
                 "scikit_learn": meta["versions"].get("scikit-learn"), "code_version": VERSION,
                 "decision_code_sha256": decision_code_sha256(),
                 "test": {"n": classification.get("n"), "macro_f1": classification.get("macro_f1"),

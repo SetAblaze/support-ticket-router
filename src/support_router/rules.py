@@ -79,8 +79,8 @@ def _context_effects(context, now):
     if not context or context.get("source") != "trusted_crm":
         return [], 3, {"vip": "unknown", "repeat": "unknown", "sla_overdue": "unknown"}
     reasons, priority = [], 3
-    facts = {"vip": bool(context.get("vip_verified", False)),
-             "repeat": bool(context.get("open_related_ticket", False) and
+    facts = {"vip": context.get("vip_verified") is True,
+             "repeat": bool(context.get("open_related_ticket") is True and
                             isinstance(context.get("contact_count"), int) and context["contact_count"] >= 2),
              "sla_overdue": "unknown"}
     if facts["vip"]:

@@ -1,4 +1,4 @@
-# В образ попадают только requirements-api.txt, src/ и два файла модели.
+# В образ попадают только requirements-api.txt, src/ и релизные модели.
 .git
 .venv
 **/__pycache__
@@ -9,6 +9,6 @@ reports
 tests
 docs
 monitoring
-models/encoder
+models/encoder/embeddings_cache.npz
 *.zip
 *.ipynb

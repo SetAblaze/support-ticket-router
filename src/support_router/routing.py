@@ -8,6 +8,8 @@ from datetime import datetime, timezone
 import numpy as np
 import pandas as pd
 
+from .business import confidence_floor, triage
+from .cascade import second_opinion
 from .config import CATEGORY_TO_QUEUE, MANUAL_QUEUE, SCHEMA_VERSION
 from .evaluation import wilson_upper
 from .models import checked_proba
@@ -23,7 +25,9 @@ def _assess_ticket(text, model, context, now, scored, detect_multiple):
               "decision_category": None, "accepted_category": None,
               "queue": MANUAL_QUEUE, "topic_queue": None, "confidence": None,
               "similarity": None, "top3": {}, "request_parts": [], "status": "MANUAL_REVIEW",
-              "priority": "P3", "risk_flags": [], "reason_codes": [],
+              "priority": "P3", "priority_reasons": [], "classification_source": None,
+              "primary_category": None, "primary_confidence": None, "primary_confidence_threshold": None,
+              "semantic_status": "NOT_REQUESTED", "semantic_confidence": None, "semantic_similarity": None, "risk_flags": [], "reason_codes": [],
               "model_id": getattr(model, "model_id", "unidentified"),
               "business_policy_approved": False, "delivery_status": "NOT_SENT",
               "created_at_utc": now.isoformat(), "context": {}}
@@ -40,11 +44,9 @@ def _assess_ticket(text, model, context, now, scored, detect_multiple):
     context_reasons, priority, facts = _context_effects(context, now)
     result["context"] = facts
     result["reason_codes"].extend(context_reasons)
-    if any(f in signals["risk_flags"] for f in ["POSSIBLE_THREAT", "POSSIBLE_FRAUD"]):
-        priority = 1
-    elif "POSSIBLE_LEGAL_CLAIM" in signals["risk_flags"]:
-        priority = min(priority, 2)
-    result["priority"] = f"P{priority}"
+    result["priority"], result["priority_reasons"] = triage(text, signals["risk_flags"], context_reasons, priority)
+    if result["priority"] != "P3" and getattr(model, "policy", {}).get("misroute_cost"):
+        result["reason_codes"].append("PRIORITY_REQUIRES_REVIEW")
     for flag in signals["risk_flags"]:
         if flag != "ABUSE_LANGUAGE":
             result["reason_codes"].append(flag + "_SPECIALIST_REVIEW")
@@ -74,10 +76,13 @@ def _assess_ticket(text, model, context, now, scored, detect_multiple):
                       suggested_category=cat, confidence=conf, similarity=sim,
                       topic_queue=CATEGORY_TO_QUEUE.get(cat),
                       top3={str(model.classes_[i]): float(p[i]) for i in order[:3]})
+        result.update(classification_source="primary", primary_category=cat, primary_confidence=conf,
+                      primary_confidence_threshold=confidence_floor(getattr(model, "policy", {}), cat))
         if cat == "OTHER":
             result["reason_codes"].append("MODEL_OTHER")
         elif cat not in CATEGORY_TO_QUEUE:
             result["reason_codes"].append("UNKNOWN_CATEGORY")
+        second_opinion(result, text, model)
     except Exception as exc:
         result["reason_codes"].append("MODEL_CAPABILITY_OR_SCORING_ERROR")
         result["error_type"] = type(exc).__name__
@@ -92,11 +97,11 @@ def _apply_policy(assessment, policy):
     if result["confidence"] is None or result["status"] == "MODEL_ERROR":
         return result
     cat = result["suggested_category"]
-    conf, sim = result["confidence"], result["similarity"]
+    conf, sim = result["primary_confidence"], result["similarity"]
     try:
         if not policy.get("auto_enabled", False):
             result["reason_codes"].append("AUTO_POLICY_DISABLED")
-        if conf < float(policy.get("confidence_threshold", 1.)):
+        if conf < confidence_floor(policy, result["primary_category"]):
             result["reason_codes"].append("LOW_CONFIDENCE")
         if sim < float(policy.get("similarity_threshold", 1.)):
             result["reason_codes"].append("LOW_TRAINING_SIMILARITY")

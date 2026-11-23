@@ -8,6 +8,7 @@ import json
 import platform
 import urllib.request
 from pathlib import Path
+from threading import Lock
 
 import numpy as np
 from sklearn.base import BaseEstimator, TransformerMixin
@@ -16,11 +17,14 @@ from .paths import encoder_dir
 
 REPO = 'sentence-transformers/all-MiniLM-L6-v2'
 REVISION = '1110a243fdf4706b3f48f1d95db1a4f5529b4d41'
+PINNED_FILES = {"model.onnx": "b941bf19f1f1283680f449fa6a7336bb5600bdcd5f84d10ddc5cd72218a0fd21",
+                "tokenizer.json": "be50c3628f2bf5bb5e3a7f17b1f74611b2561a3a27eeab05e5aa30f411572037"}
 COMPUTATION = 'mean_pool_qint8_single_text_v2_arch_checked'
 _ENGINES = {}
+_ENGINE_LOCK = Lock()
 _VECTORS = {}
 
-def ensure_encoder(directory=None):
+def ensure_encoder(directory=None, *, local_only=False):
     directory = Path(directory) if directory else encoder_dir()
     manifest_path = directory/'encoder_manifest.json'
     if not manifest_path.exists():
@@ -31,9 +35,13 @@ def ensure_encoder(directory=None):
         raise RuntimeError('Pinned MiniLM quantized AVX2 model is x86_64-only in this project; run semantic candidates on Colab x86_64')
     if manifest['model'] != REPO or manifest['revision'] != REVISION:
         raise ValueError('Encoder identity mismatch')
-    for filename in ['model.onnx','tokenizer.json']:
+    for filename, expected in PINNED_FILES.items():
+        if manifest["files"][filename]["sha256"] != expected:
+            raise ValueError(f"Unexpected encoder identity: {filename}")
         path = directory/filename
         if not path.exists():
+            if local_only:
+                raise FileNotFoundError(f'Local encoder file missing: {filename}')
             info = manifest['files'][filename]
             url = f'https://huggingface.co/{REPO}/resolve/{REVISION}/{info["source"]}'
             temporary = path.with_suffix(path.suffix+'.part')
@@ -46,27 +54,30 @@ def ensure_encoder(directory=None):
             raise ValueError(f'Encoder file hash mismatch: {filename}')
     return directory
 
-def _engine(directory):
+def _engine(directory, *, local_only=False):
     key = str(Path(directory).resolve())
-    if key not in _ENGINES:
-        directory = ensure_encoder(directory)
-        import onnxruntime as ort
-        from tokenizers import Tokenizer
-        options = ort.SessionOptions()
-        options.intra_op_num_threads = 2
-        options.inter_op_num_threads = 1
-        session = ort.InferenceSession(str(directory/'model.onnx'), sess_options=options,
-                                      providers=['CPUExecutionProvider'])
-        tokenizer = Tokenizer.from_file(str(directory/'tokenizer.json'))
-        tokenizer.enable_truncation(max_length=256)
-        tokenizer.enable_padding(pad_id=0,pad_token='[PAD]')
-        _ENGINES[key] = session,tokenizer
-        cache = directory/'embeddings_cache.npz'
-        if cache.exists():
-            stored = np.load(cache,allow_pickle=False)
-            if str(stored['revision']) == REVISION and 'computation' in stored.files and str(stored['computation']) == COMPUTATION:
-                _VECTORS[key] = {str(k):v for k,v in zip(stored['keys'],stored['vectors'])}
-        _VECTORS.setdefault(key,{})
+    if key in _ENGINES:
+        return key, _ENGINES[key]
+    with _ENGINE_LOCK:
+        if key not in _ENGINES:
+            directory = ensure_encoder(directory, local_only=local_only)
+            import onnxruntime as ort
+            from tokenizers import Tokenizer
+            options = ort.SessionOptions()
+            options.intra_op_num_threads = 2
+            options.inter_op_num_threads = 1
+            session = ort.InferenceSession(str(directory/'model.onnx'), sess_options=options,
+                                          providers=['CPUExecutionProvider'])
+            tokenizer = Tokenizer.from_file(str(directory/'tokenizer.json'))
+            tokenizer.enable_truncation(max_length=256)
+            tokenizer.enable_padding(pad_id=0,pad_token='[PAD]')
+            cache = directory/'embeddings_cache.npz'
+            if not local_only and cache.exists():
+                stored = np.load(cache,allow_pickle=False)
+                if str(stored['revision']) == REVISION and 'computation' in stored.files and str(stored['computation']) == COMPUTATION:
+                    _VECTORS[key] = {str(k):v for k,v in zip(stored['keys'],stored['vectors'])}
+            _VECTORS.setdefault(key,{})
+            _ENGINES[key] = session,tokenizer
     return key, _ENGINES[key]
 
 def _key(text):
@@ -83,17 +94,26 @@ def encode(texts, directory=None, batch_size=64):
     # Dynamic quantization changes scales with batch composition. Encode each
     # sentence alone so notebook batches and interactive requests are identical.
     for text in missing:
-        part = [text]
-        tokens = tokenizer.encode_batch(part)
-        inputs = {'input_ids':np.asarray([t.ids for t in tokens],dtype=np.int64),
-                  'attention_mask':np.asarray([t.attention_mask for t in tokens],dtype=np.int64),
-                  'token_type_ids':np.asarray([t.type_ids for t in tokens],dtype=np.int64)}
-        hidden = session.run(['last_hidden_state'],inputs)[0]
-        mask = inputs['attention_mask'][...,None].astype(np.float32)
-        embeddings = (hidden*mask).sum(axis=1)/np.maximum(mask.sum(axis=1),1e-9)
-        embeddings /= np.maximum(np.linalg.norm(embeddings,axis=1,keepdims=True),1e-9)
-        for text,vector in zip(part,embeddings):cache[_key(text)] = vector.astype(np.float32)
+        cache[_key(text)] = _vector(tokenizer.encode(text), session)
     return np.stack([cache[_key(t)] for t in texts])
+
+def _vector(tokens, session):
+    inputs = {name: np.asarray([values], dtype=np.int64) for name, values in
+              (("input_ids", tokens.ids), ("attention_mask", tokens.attention_mask),
+               ("token_type_ids", tokens.type_ids))}
+    hidden = session.run(["last_hidden_state"], inputs)[0][0]
+    vector = np.average(hidden, axis=0, weights=inputs["attention_mask"][0].astype(np.float32))
+    return (vector / max(np.linalg.norm(vector), 1e-9)).astype(np.float32)
+
+
+def serving_vector(text, directory):
+    """Local inference only. Do not retain vectors from incoming tickets."""
+    _, (session, tokenizer) = _engine(directory, local_only=True)
+    tokens = tokenizer.encode(text)
+    if tokens.overflowing:
+        return None
+    return _vector(tokens, session)
+
 
 def save_cache(directory=None):
     directory = Path(directory) if directory else encoder_dir()

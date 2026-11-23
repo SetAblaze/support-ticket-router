@@ -30,6 +30,7 @@ class RouterMetrics:
                                  ["status", "queue", "priority"], registry=r)
         self.shadow = Counter("router_shadow_decisions", "Решения теневой политики (ничего не отправляют)",
                               ["status"], registry=r)
+        self.semantic = Counter("router_semantic_decisions", "Итог обращения к MiniLM", ["status"], registry=r)
         self.categories = Counter("router_suggested_category", "Тема, предложенная моделью",
                                   ["category"], registry=r)
         self.risk_flags = Counter("router_risk_flags", "Флаги риска", ["flag"], registry=r)
@@ -53,6 +54,7 @@ class RouterMetrics:
     def observe_decision(self, result, shadow_result, text_length):
         self.decisions.labels(result["status"], result["queue"] or "none", result["priority"]).inc()
         self.shadow.labels(shadow_result["status"]).inc()
+        self.semantic.labels(result.get("semantic_status", "NOT_REQUESTED")).inc()
         self.text_length.observe(text_length)
         if result.get("suggested_category"):
             self.categories.labels(result["suggested_category"]).inc()

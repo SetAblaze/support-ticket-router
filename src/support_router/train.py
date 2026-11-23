@@ -22,6 +22,8 @@ import pandas as pd
 
 from . import scenario_data
 from .artifacts import save_bundle
+from .business import misroute_costs
+from .cascade import fit_business_cascade
 from .config import SEED
 from .data import assert_split_integrity, clean_frame, lexical_groups, make_splits
 from .evaluation import classification_metrics, routing_metrics
@@ -58,12 +60,13 @@ def build_splits(raw_path, processed_dir):
     return splits, manifest
 
 
-def train(raw_path, out_dir, model_name="linsvc_wc_C1", processed_dir=None, log=print):
+def train(raw_path, out_dir, model_name="linsvc_wc_C1", processed_dir=None, log=print, *, cost_overrides=None):
     started = time.time()
     raw_path, out_dir = Path(raw_path), Path(out_dir)
     processed_dir = Path(processed_dir) if processed_dir else out_dir.parent / "data" / "processed"
     if model_name not in CONFIG_NAMES:
         raise ValueError(f"Неизвестная конфигурация {model_name!r}; доступны: {CONFIG_NAMES}")
+    costs = misroute_costs(cost_overrides)
     splits, manifest = build_splits(raw_path, processed_dir)
     train_part, calibration, val, test = (splits[k] for k in SPLIT_ROLES)
     log("Части: " + ", ".join(f"{k} {len(v)}" for k, v in splits.items()))
@@ -72,6 +75,7 @@ def train(raw_path, out_dir, model_name="linsvc_wc_C1", processed_dir=None, log=
     ood_dev, _ = scenario_data.frames()
     policy, _ = select_policy(bundle, val, ood_dev, target_error_upper=.01, min_auto=30,
                               false_auto_cost=25., review_cost=1.)
+    fit_business_cascade(bundle, train_part, calibration, val, ood_dev, cost_overrides=costs)
     assert policy["auto_enabled"] is False, "автоотправка в рабочей политике должна быть выключена"
     bundle.metadata = {"split_manifest": manifest,
                        "model_selection": {"selected": model_name,
@@ -110,11 +114,18 @@ def main(argv=None):
     parser.add_argument("--processed", default=None, help="куда сохранить части выборки (data/processed)")
     parser.add_argument("--model", default="linsvc_wc_C1", choices=CONFIG_NAMES,
                         help="конфигурация, выбранная на этапе 6")
+    parser.add_argument("--misroute-cost", action="append", default=[], metavar="CATEGORY=UNITS",
+                        help="цена ошибки в единицах ручного разбора, например PAYMENT=40 (можно повторять)")
     args = parser.parse_args(argv)
+    try:
+        entries = (item.split("=", 1) for item in args.misroute_cost)
+        costs = misroute_costs({category: float(cost) for category, cost in entries})
+    except ValueError as exc:
+        parser.error(str(exc))
     if not Path(args.raw).exists():
         sys.exit(f"Нет файла {args.raw}: восстановите CSV из репозитория или укажите путь через --raw")
     processed = args.processed or str(Path(args.out).resolve().parent / "data" / "processed")
-    train(args.raw, args.out, model_name=args.model, processed_dir=processed)
+    train(args.raw, args.out, model_name=args.model, processed_dir=processed, cost_overrides=costs)
 
 
 if __name__ == "__main__":

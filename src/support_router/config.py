@@ -1,7 +1,7 @@
 """Константы проекта: версии, темы и очереди, флаги Bitext."""
 from __future__ import annotations
 
-VERSION = "3.1.2"
+VERSION = "3.2.0"
 
 PREPROCESS_VERSION = "2.0-negation-placeholders"
 

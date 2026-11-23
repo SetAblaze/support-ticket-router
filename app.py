@@ -52,7 +52,8 @@ CHECK_TEXTS = ["I want to cancel my order", "I can't log in", "Where is my refun
                "Где мой заказ?", "Reset my password and check my refund"]
 BATCH_COLUMNS = ["row", "text_masked", "suggested_category", "category", "queue", "topic_queue",
                  "status", "priority", "confidence", "similarity", "risk_flags", "reason_codes",
-                 "shadow_status", "shadow_queue", "model_id", "policy_version"]
+                 "shadow_status", "shadow_queue", "model_id", "policy_version", "priority_reasons",
+                 "classification_source", "semantic_status", "primary_category", "primary_confidence", "primary_confidence_threshold"]
 
 
 def load_router(models_dir=MODELS_DIR):
@@ -71,6 +72,10 @@ def deployed_message(result):
         parts = [f"{part['intent'].replace('_', ' ')} ({part['category']} → {part['queue']})"
                  for part in result["request_parts"]]
         return "Оператору нужно проверить каждый запрос. " + " · ".join(parts)
+    if result.get("semantic_status") in ("ABSTAINED", "UNAVAILABLE", "INPUT_TOO_LONG", "NO_VALIDATED_GATE"):
+        return "Первичный прогноз требует проверки. У MiniLM нет подтверждённой подсказки."
+    if result.get("classification_source") == "minilm":
+        return "MiniLM предложила тему для незнакомой формулировки. Очередь должен подтвердить оператор."
     if result["category"] is None:
         return "Категория не определена для этого ввода. Нужна ручная проверка."
     if result["status"] == "MANUAL_REVIEW":
@@ -85,7 +90,7 @@ def shadow_message(shadow_result, shadow_policy):
         return "Теневая политика: нужен текст обращения."
     if shadow_result["status"] == "AUTO_RECOMMENDED":
         return (f"Теневая политика (только для анализа) отправила бы сама: {shadow_result['queue']}. "
-                f"Пороги: уверенность ≥ {shadow_policy.get('confidence_threshold')}, "
+                f"Пороги: уверенность ≥ {shadow_result.get('primary_confidence_threshold') or shadow_policy.get('confidence_threshold')}, "
                 f"сходство с обучением ≥ {shadow_policy.get('similarity_threshold')}.")
     return "Теневая политика (только для анализа) тоже оставила бы обращение оператору."
 
@@ -125,6 +130,8 @@ def model_card(meta):
              f"**Политика:** {policy.get('version')}, автоотправка "
              f"{'включена' if policy.get('auto_enabled') else 'выключена'}; теневые пороги: уверенность ≥ "
              f"{policy.get('confidence_threshold')}, сходство ≥ {policy.get('similarity_threshold')}"]
+    if policy.get("misroute_cost"):
+        lines.append("Порог зависит от цены ошибочной очереди. Для незнакомых формулировок доступна подсказка MiniLM.")
     if test:
         lines.append(f"**Test Bitext:** macro-F1 {test.get('macro_f1', 0):.4f}, accuracy "
                      f"{test.get('accuracy', 0):.4f}, ошибок {test.get('errors')} из {test.get('n')}")
@@ -144,8 +151,9 @@ def make_handler(model, shadow):
         return (result["category"] or "Не определена", result["queue"] or "", result["status"],
                 result["priority"], "; ".join(result["reason_codes"]), result["top3"],
                 pd.DataFrame(updated[::-1], columns=HISTORY_COLUMNS), updated,
-                deployed_message(result), shadow_message(shadow_result, shadow.policy),
-                pd.DataFrame(explanation_rows(model, user_text), columns=["Признак", "Вклад"]))
+                deployed_message(result) + (" Причина приоритета: " + ", ".join(result["priority_reasons"])
+                                            if result["priority_reasons"] else ""), shadow_message(shadow_result, shadow.policy),
+                pd.DataFrame([] if result["classification_source"] == "minilm" else explanation_rows(model, user_text), columns=["Признак", "Вклад"]))
     return process
 
 
@@ -214,6 +222,9 @@ def batch_file(src, dst, model, shadow, *, detect_multiple=False):
                "risk_flags": ";".join(r["risk_flags"]), "reason_codes": ";".join(r["reason_codes"]),
                "shadow_status": s["status"], "shadow_queue": s["queue"],
                "model_id": r["model_id"], "policy_version": r["policy_version"]}
+        row.update({key: r[key] for key in ("classification_source", "semantic_status", "primary_category",
+                                            "primary_confidence", "primary_confidence_threshold")})
+        row["priority_reasons"] = ";".join(r["priority_reasons"])
         if detect_multiple:
             row["request_parts"] = json.dumps(r["request_parts"], ensure_ascii=False)
         if "id" in frame.columns:

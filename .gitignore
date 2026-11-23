@@ -11,9 +11,13 @@ data/raw/*
 !data/raw/README.txt
 data/processed/*.csv
 # Модель (16 МБ) хранится в репозитории, чтобы docker compose собирал образ сразу после клонирования.
-# Файлы энкодера MiniLM скачиваются сами при первом запуске, в репозитории только их паспорт.
+# Релизный энкодер работает локально. Кеш обучающих эмбеддингов не публикуется.
 models/encoder/*
 !models/encoder/encoder_manifest.json
+!models/encoder/model.onnx
+!models/encoder/tokenizer.json
+!models/encoder/LICENSE
+!models/encoder/NOTICE.md
 # Большие и служебные файлы прогона; results.json и остальные отчёты остаются.
 reports/loio_all_models_predictions.csv
 reports/server_logs/

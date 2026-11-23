@@ -29,6 +29,7 @@
 
 ```json
 {
+  "request_parts": [],
   "ticket_id": "CRM-1042",
   "status": "MANUAL_REVIEW",
   "category": "ORDER",
@@ -36,16 +37,34 @@
   "queue": "Queue_Manual_Review",
   "topic_queue": "Queue_Orders",
   "priority": "P3",
-  "confidence": 0.988,
-  "similarity": 0.973,
-  "top3": {"ORDER": 0.988, "ACCOUNT": 0.009, "CANCELLATION_FEE": 0.001},
+  "priority_reasons": [],
+  "classification_source": "primary",
+  "primary_category": "ORDER",
+  "primary_confidence": 0.9884,
+  "primary_confidence_threshold": 0.9,
+  "semantic_status": "NOT_REQUESTED",
+  "semantic_confidence": null,
+  "semantic_similarity": null,
+  "confidence": 0.9884,
+  "similarity": 0.9727,
+  "top3": {
+    "ORDER": 0.9884,
+    "ACCOUNT": 0.0088,
+    "CANCELLATION_FEE": 0.0008
+  },
   "risk_flags": [],
-  "reason_codes": ["AUTO_POLICY_DISABLED"],
-  "model_id": "router-7f7d5b68a20f49b5",
-  "policy_version": "selective-v3-shadow",
+  "reason_codes": [
+    "AUTO_POLICY_DISABLED"
+  ],
+  "model_id": "router-f4247752d96f4346",
+  "policy_version": "retail-cascade-v1",
   "delivery_status": "NOT_SENT",
-  "created_at_utc": "2026-11-18T11:28:24.436197+00:00",
-  "shadow": {"status": "AUTO_RECOMMENDED", "queue": "Queue_Orders", "policy_version": "selective-v3-shadow-SHADOW"}
+  "created_at_utc": "2026-11-23T18:55:05.356932+00:00",
+  "shadow": {
+    "status": "AUTO_RECOMMENDED",
+    "queue": "Queue_Orders",
+    "policy_version": "retail-cascade-v1-SHADOW"
+  }
 }
 ```
 
@@ -54,9 +73,13 @@
 | `status` | `NEEDS_CLARIFICATION` (нет текста), `MANUAL_REVIEW` (к оператору), `AUTO_RECOMMENDED` (только в теневом режиме), `MODEL_ERROR` (модель не смогла оценить, к оператору) |
 | `queue` | куда положить обращение сейчас; пока автоотправка выключена, это всегда ручная очередь |
 | `topic_queue` | очередь темы: подсказка оператору |
-| `priority` | P1 угроза или мошенничество, P2 судебная претензия, P3 остальное |
+| `priority` | срочность P1–P3 по правилам магазина. Основания возвращает `priority_reasons` |
 | `reason_codes` | почему обращение ушло оператору: другой язык, несколько тем, сбой сайта, низкая уверенность, малое сходство с обучением и т.д. |
 | `shadow` | что сделала бы политика-кандидат; ничего не отправляет |
+
+## Источник предложенной темы
+
+`classification_source` принимает `primary`, `minilm` или null при отсутствии прогноза. `primary_confidence_threshold` — применённый к основной теме порог. `similarity` всегда относится к лексическому сходству. Для MiniLM отдельно доступны `semantic_confidence` и `semantic_similarity`. Значения `semantic_status` — `NOT_REQUESTED`, `SUGGESTED`, `ABSTAINED`, `INPUT_TOO_LONG`, `UNAVAILABLE` или `NO_VALIDATED_GATE`. При `SUGGESTED` очередь для проверки находится в `topic_queue`, фактическая очередь — ручная. Действующие пороги и условные цены доступны через `GET /v1/model`. [Правила приоритета и маршрутизации](business_policy.md)
 
 ## Режим нескольких запросов
 
