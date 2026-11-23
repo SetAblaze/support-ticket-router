@@ -6,6 +6,7 @@ from pathlib import Path
 import pandas as pd
 
 from support_router import batch_route, load_bundle, models_dir, project_root, sha256_file, shadow_bundle, write_json
+from support_router.evaluation import cascade_metrics, cascade_ood_metrics
 
 
 def measure(bundle, texts, labels=None):
@@ -15,11 +16,9 @@ def measure(bundle, texts, labels=None):
               "shadow_auto": sum(r["status"] == "AUTO_RECOMMENDED" for r in routes),
               "shadow_auto_from_fallback": sum(r["status"] == "AUTO_RECOMMENDED" for r in fallback)}
     if labels is not None:
-        pairs = list(zip(routes, labels, strict=True))
-        report.update(primary_correct=sum(r["primary_category"] == y for r, y in pairs),
-                      cascade_correct=sum(r["category"] == y for r, y in pairs),
-                      corrected=sum(r["category"] == y != r["primary_category"] for r, y in pairs),
-                      regressed=sum(r["primary_category"] == y != r["category"] for r, y in pairs))
+        report.update(cascade_metrics(routes, labels))
+    else:
+        report.update(cascade_ood_metrics(routes))
     return report
 
 

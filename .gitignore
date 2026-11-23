@@ -22,3 +22,5 @@ models/encoder/*
 reports/loio_all_models_predictions.csv
 reports/server_logs/
 *.zip
+
+*.egg-info/

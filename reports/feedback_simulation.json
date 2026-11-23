@@ -1,0 +1,774 @@
+{
+  "generated_at_utc": "2026-11-23T20:17:20.686749+00:00",
+  "model_id": "router-c551bd5d209a4d1a",
+  "policy_version": "retail-cascade-v1",
+  "artifact_sha256": "8e701b91e64310bf93b8de4ddbad7b2bd6cea8a684afe1035096f9d592bda540",
+  "benchmark_sha256": "97d8404692fc8c8210ea86c8d2fbc7cb68cffbdec60c15e14a3cf070767eac9c",
+  "stream": "Frozen independent benchmark; operator behaviour is simulated",
+  "runs": {
+    "natural": {
+      "operator_error_0.0": {
+        "metrics": {
+          "n": 55,
+          "verified": 34,
+          "corrected": 21,
+          "measured_accuracy": 0.6181818181818182,
+          "correction_rate": 0.38181818181818183,
+          "per_category": {
+            "ACCOUNT": {
+              "proposed_n": 10,
+              "verified_n": 5,
+              "corrected_n": 5,
+              "measured_accuracy": 0.5,
+              "support_status": "INSUFFICIENT_SUPPORT"
+            },
+            "REFUNDS": {
+              "proposed_n": 6,
+              "verified_n": 5,
+              "corrected_n": 1,
+              "measured_accuracy": 0.8333333333333334,
+              "support_status": "INSUFFICIENT_SUPPORT"
+            },
+            "CANCELLATION_FEE": {
+              "proposed_n": 2,
+              "verified_n": 2,
+              "corrected_n": 0,
+              "measured_accuracy": 1.0,
+              "support_status": "INSUFFICIENT_SUPPORT"
+            },
+            "CONTACT": {
+              "proposed_n": 6,
+              "verified_n": 4,
+              "corrected_n": 2,
+              "measured_accuracy": 0.6666666666666666,
+              "support_status": "INSUFFICIENT_SUPPORT"
+            },
+            "DELIVERY": {
+              "proposed_n": 6,
+              "verified_n": 2,
+              "corrected_n": 4,
+              "measured_accuracy": 0.3333333333333333,
+              "support_status": "INSUFFICIENT_SUPPORT"
+            },
+            "ORDER": {
+              "proposed_n": 12,
+              "verified_n": 5,
+              "corrected_n": 7,
+              "measured_accuracy": 0.4166666666666667,
+              "support_status": "INSUFFICIENT_SUPPORT"
+            },
+            "PAYMENT": {
+              "proposed_n": 5,
+              "verified_n": 4,
+              "corrected_n": 1,
+              "measured_accuracy": 0.8,
+              "support_status": "INSUFFICIENT_SUPPORT"
+            },
+            "FEEDBACK": {
+              "proposed_n": 4,
+              "verified_n": 3,
+              "corrected_n": 1,
+              "measured_accuracy": 0.75,
+              "support_status": "INSUFFICIENT_SUPPORT"
+            },
+            "INVOICES": {
+              "proposed_n": 4,
+              "verified_n": 4,
+              "corrected_n": 0,
+              "measured_accuracy": 1.0,
+              "support_status": "INSUFFICIENT_SUPPORT"
+            }
+          },
+          "confusion_proposed_to_final": {
+            "ACCOUNT": {
+              "ACCOUNT": 5,
+              "CONTACT": 1,
+              "FEEDBACK": 1,
+              "NEWSLETTER": 1,
+              "SHIPPING": 2
+            },
+            "REFUNDS": {
+              "CANCELLATION_FEE": 1,
+              "REFUNDS": 5
+            },
+            "CANCELLATION_FEE": {
+              "CANCELLATION_FEE": 2
+            },
+            "CONTACT": {
+              "CANCELLATION_FEE": 1,
+              "CONTACT": 4,
+              "SHIPPING": 1
+            },
+            "DELIVERY": {
+              "CANCELLATION_FEE": 1,
+              "DELIVERY": 2,
+              "NEWSLETTER": 2,
+              "PAYMENT": 1
+            },
+            "ORDER": {
+              "DELIVERY": 3,
+              "INVOICES": 1,
+              "NEWSLETTER": 1,
+              "ORDER": 5,
+              "SHIPPING": 2
+            },
+            "PAYMENT": {
+              "FEEDBACK": 1,
+              "PAYMENT": 4
+            },
+            "FEEDBACK": {
+              "FEEDBACK": 3,
+              "NEWSLETTER": 1
+            },
+            "INVOICES": {
+              "INVOICES": 4
+            }
+          },
+          "caveat": "Operator confirmations are not an external audit: a rubber-stamped wrong proposal would look correct"
+        },
+        "retraining_candidates": 21
+      },
+      "operator_error_0.1": {
+        "metrics": {
+          "n": 55,
+          "verified": 34,
+          "corrected": 21,
+          "measured_accuracy": 0.6181818181818182,
+          "correction_rate": 0.38181818181818183,
+          "per_category": {
+            "ACCOUNT": {
+              "proposed_n": 10,
+              "verified_n": 4,
+              "corrected_n": 6,
+              "measured_accuracy": 0.4,
+              "support_status": "INSUFFICIENT_SUPPORT"
+            },
+            "REFUNDS": {
+              "proposed_n": 6,
+              "verified_n": 5,
+              "corrected_n": 1,
+              "measured_accuracy": 0.8333333333333334,
+              "support_status": "INSUFFICIENT_SUPPORT"
+            },
+            "CANCELLATION_FEE": {
+              "proposed_n": 2,
+              "verified_n": 2,
+              "corrected_n": 0,
+              "measured_accuracy": 1.0,
+              "support_status": "INSUFFICIENT_SUPPORT"
+            },
+            "CONTACT": {
+              "proposed_n": 6,
+              "verified_n": 4,
+              "corrected_n": 2,
+              "measured_accuracy": 0.6666666666666666,
+              "support_status": "INSUFFICIENT_SUPPORT"
+            },
+            "DELIVERY": {
+              "proposed_n": 6,
+              "verified_n": 2,
+              "corrected_n": 4,
+              "measured_accuracy": 0.3333333333333333,
+              "support_status": "INSUFFICIENT_SUPPORT"
+            },
+            "ORDER": {
+              "proposed_n": 12,
+              "verified_n": 7,
+              "corrected_n": 5,
+              "measured_accuracy": 0.5833333333333334,
+              "support_status": "INSUFFICIENT_SUPPORT"
+            },
+            "PAYMENT": {
+              "proposed_n": 5,
+              "verified_n": 4,
+              "corrected_n": 1,
+              "measured_accuracy": 0.8,
+              "support_status": "INSUFFICIENT_SUPPORT"
+            },
+            "FEEDBACK": {
+              "proposed_n": 4,
+              "verified_n": 3,
+              "corrected_n": 1,
+              "measured_accuracy": 0.75,
+              "support_status": "INSUFFICIENT_SUPPORT"
+            },
+            "INVOICES": {
+              "proposed_n": 4,
+              "verified_n": 3,
+              "corrected_n": 1,
+              "measured_accuracy": 0.75,
+              "support_status": "INSUFFICIENT_SUPPORT"
+            }
+          },
+          "confusion_proposed_to_final": {
+            "ACCOUNT": {
+              "ACCOUNT": 4,
+              "NEWSLETTER": 2,
+              "CONTACT": 1,
+              "FEEDBACK": 1,
+              "SHIPPING": 2
+            },
+            "REFUNDS": {
+              "CANCELLATION_FEE": 1,
+              "REFUNDS": 5
+            },
+            "CANCELLATION_FEE": {
+              "CANCELLATION_FEE": 2
+            },
+            "CONTACT": {
+              "CANCELLATION_FEE": 1,
+              "CONTACT": 4,
+              "SHIPPING": 1
+            },
+            "DELIVERY": {
+              "CANCELLATION_FEE": 1,
+              "DELIVERY": 2,
+              "NEWSLETTER": 2,
+              "PAYMENT": 1
+            },
+            "ORDER": {
+              "DELIVERY": 2,
+              "ORDER": 7,
+              "INVOICES": 1,
+              "NEWSLETTER": 1,
+              "SHIPPING": 1
+            },
+            "PAYMENT": {
+              "FEEDBACK": 1,
+              "PAYMENT": 4
+            },
+            "FEEDBACK": {
+              "FEEDBACK": 3,
+              "NEWSLETTER": 1
+            },
+            "INVOICES": {
+              "SHIPPING": 1,
+              "INVOICES": 3
+            }
+          },
+          "caveat": "Operator confirmations are not an external audit: a rubber-stamped wrong proposal would look correct"
+        },
+        "retraining_candidates": 21
+      },
+      "operator_error_0.2": {
+        "metrics": {
+          "n": 55,
+          "verified": 33,
+          "corrected": 22,
+          "measured_accuracy": 0.6,
+          "correction_rate": 0.4,
+          "per_category": {
+            "ACCOUNT": {
+              "proposed_n": 10,
+              "verified_n": 4,
+              "corrected_n": 6,
+              "measured_accuracy": 0.4,
+              "support_status": "INSUFFICIENT_SUPPORT"
+            },
+            "REFUNDS": {
+              "proposed_n": 6,
+              "verified_n": 3,
+              "corrected_n": 3,
+              "measured_accuracy": 0.5,
+              "support_status": "INSUFFICIENT_SUPPORT"
+            },
+            "CANCELLATION_FEE": {
+              "proposed_n": 2,
+              "verified_n": 2,
+              "corrected_n": 0,
+              "measured_accuracy": 1.0,
+              "support_status": "INSUFFICIENT_SUPPORT"
+            },
+            "CONTACT": {
+              "proposed_n": 6,
+              "verified_n": 5,
+              "corrected_n": 1,
+              "measured_accuracy": 0.8333333333333334,
+              "support_status": "INSUFFICIENT_SUPPORT"
+            },
+            "DELIVERY": {
+              "proposed_n": 6,
+              "verified_n": 3,
+              "corrected_n": 3,
+              "measured_accuracy": 0.5,
+              "support_status": "INSUFFICIENT_SUPPORT"
+            },
+            "ORDER": {
+              "proposed_n": 12,
+              "verified_n": 6,
+              "corrected_n": 6,
+              "measured_accuracy": 0.5,
+              "support_status": "INSUFFICIENT_SUPPORT"
+            },
+            "PAYMENT": {
+              "proposed_n": 5,
+              "verified_n": 4,
+              "corrected_n": 1,
+              "measured_accuracy": 0.8,
+              "support_status": "INSUFFICIENT_SUPPORT"
+            },
+            "FEEDBACK": {
+              "proposed_n": 4,
+              "verified_n": 3,
+              "corrected_n": 1,
+              "measured_accuracy": 0.75,
+              "support_status": "INSUFFICIENT_SUPPORT"
+            },
+            "INVOICES": {
+              "proposed_n": 4,
+              "verified_n": 3,
+              "corrected_n": 1,
+              "measured_accuracy": 0.75,
+              "support_status": "INSUFFICIENT_SUPPORT"
+            }
+          },
+          "confusion_proposed_to_final": {
+            "ACCOUNT": {
+              "ACCOUNT": 4,
+              "NEWSLETTER": 2,
+              "CONTACT": 1,
+              "FEEDBACK": 1,
+              "SHIPPING": 2
+            },
+            "REFUNDS": {
+              "CANCELLATION_FEE": 2,
+              "REFUNDS": 3,
+              "PAYMENT": 1
+            },
+            "CANCELLATION_FEE": {
+              "CANCELLATION_FEE": 2
+            },
+            "CONTACT": {
+              "CONTACT": 5,
+              "SHIPPING": 1
+            },
+            "DELIVERY": {
+              "CANCELLATION_FEE": 1,
+              "DELIVERY": 3,
+              "NEWSLETTER": 1,
+              "PAYMENT": 1
+            },
+            "ORDER": {
+              "DELIVERY": 2,
+              "ORDER": 6,
+              "INVOICES": 1,
+              "NEWSLETTER": 1,
+              "SHIPPING": 2
+            },
+            "PAYMENT": {
+              "FEEDBACK": 1,
+              "PAYMENT": 4
+            },
+            "FEEDBACK": {
+              "FEEDBACK": 3,
+              "SHIPPING": 1
+            },
+            "INVOICES": {
+              "NEWSLETTER": 1,
+              "INVOICES": 3
+            }
+          },
+          "caveat": "Operator confirmations are not an external audit: a rubber-stamped wrong proposal would look correct"
+        },
+        "retraining_candidates": 22
+      }
+    },
+    "no_keywords": {
+      "operator_error_0.0": {
+        "metrics": {
+          "n": 55,
+          "verified": 25,
+          "corrected": 30,
+          "measured_accuracy": 0.45454545454545453,
+          "correction_rate": 0.5454545454545454,
+          "per_category": {
+            "CONTACT": {
+              "proposed_n": 11,
+              "verified_n": 5,
+              "corrected_n": 6,
+              "measured_accuracy": 0.45454545454545453,
+              "support_status": "INSUFFICIENT_SUPPORT"
+            },
+            "REFUNDS": {
+              "proposed_n": 7,
+              "verified_n": 4,
+              "corrected_n": 3,
+              "measured_accuracy": 0.5714285714285714,
+              "support_status": "INSUFFICIENT_SUPPORT"
+            },
+            "ACCOUNT": {
+              "proposed_n": 9,
+              "verified_n": 3,
+              "corrected_n": 6,
+              "measured_accuracy": 0.3333333333333333,
+              "support_status": "INSUFFICIENT_SUPPORT"
+            },
+            "CANCELLATION_FEE": {
+              "proposed_n": 1,
+              "verified_n": 1,
+              "corrected_n": 0,
+              "measured_accuracy": 1.0,
+              "support_status": "INSUFFICIENT_SUPPORT"
+            },
+            "DELIVERY": {
+              "proposed_n": 5,
+              "verified_n": 0,
+              "corrected_n": 5,
+              "measured_accuracy": 0.0,
+              "support_status": "INSUFFICIENT_SUPPORT"
+            },
+            "INVOICES": {
+              "proposed_n": 3,
+              "verified_n": 1,
+              "corrected_n": 2,
+              "measured_accuracy": 0.3333333333333333,
+              "support_status": "INSUFFICIENT_SUPPORT"
+            },
+            "ORDER": {
+              "proposed_n": 10,
+              "verified_n": 4,
+              "corrected_n": 6,
+              "measured_accuracy": 0.4,
+              "support_status": "INSUFFICIENT_SUPPORT"
+            },
+            "PAYMENT": {
+              "proposed_n": 5,
+              "verified_n": 4,
+              "corrected_n": 1,
+              "measured_accuracy": 0.8,
+              "support_status": "INSUFFICIENT_SUPPORT"
+            },
+            "FEEDBACK": {
+              "proposed_n": 4,
+              "verified_n": 3,
+              "corrected_n": 1,
+              "measured_accuracy": 0.75,
+              "support_status": "INSUFFICIENT_SUPPORT"
+            }
+          },
+          "confusion_proposed_to_final": {
+            "CONTACT": {
+              "ACCOUNT": 1,
+              "CANCELLATION_FEE": 1,
+              "CONTACT": 5,
+              "DELIVERY": 2,
+              "INVOICES": 1,
+              "SHIPPING": 1
+            },
+            "REFUNDS": {
+              "ACCOUNT": 1,
+              "CANCELLATION_FEE": 1,
+              "INVOICES": 1,
+              "REFUNDS": 4
+            },
+            "ACCOUNT": {
+              "ACCOUNT": 3,
+              "CANCELLATION_FEE": 1,
+              "DELIVERY": 1,
+              "FEEDBACK": 1,
+              "INVOICES": 1,
+              "NEWSLETTER": 1,
+              "SHIPPING": 1
+            },
+            "CANCELLATION_FEE": {
+              "CANCELLATION_FEE": 1
+            },
+            "DELIVERY": {
+              "CANCELLATION_FEE": 1,
+              "NEWSLETTER": 2,
+              "REFUNDS": 1,
+              "SHIPPING": 1
+            },
+            "INVOICES": {
+              "DELIVERY": 1,
+              "INVOICES": 1,
+              "ORDER": 1
+            },
+            "ORDER": {
+              "DELIVERY": 1,
+              "INVOICES": 1,
+              "NEWSLETTER": 1,
+              "ORDER": 4,
+              "PAYMENT": 1,
+              "SHIPPING": 2
+            },
+            "PAYMENT": {
+              "FEEDBACK": 1,
+              "PAYMENT": 4
+            },
+            "FEEDBACK": {
+              "FEEDBACK": 3,
+              "NEWSLETTER": 1
+            }
+          },
+          "caveat": "Operator confirmations are not an external audit: a rubber-stamped wrong proposal would look correct"
+        },
+        "retraining_candidates": 30
+      },
+      "operator_error_0.1": {
+        "metrics": {
+          "n": 55,
+          "verified": 25,
+          "corrected": 30,
+          "measured_accuracy": 0.45454545454545453,
+          "correction_rate": 0.5454545454545454,
+          "per_category": {
+            "CONTACT": {
+              "proposed_n": 11,
+              "verified_n": 6,
+              "corrected_n": 5,
+              "measured_accuracy": 0.5454545454545454,
+              "support_status": "INSUFFICIENT_SUPPORT"
+            },
+            "REFUNDS": {
+              "proposed_n": 7,
+              "verified_n": 4,
+              "corrected_n": 3,
+              "measured_accuracy": 0.5714285714285714,
+              "support_status": "INSUFFICIENT_SUPPORT"
+            },
+            "ACCOUNT": {
+              "proposed_n": 9,
+              "verified_n": 2,
+              "corrected_n": 7,
+              "measured_accuracy": 0.2222222222222222,
+              "support_status": "INSUFFICIENT_SUPPORT"
+            },
+            "CANCELLATION_FEE": {
+              "proposed_n": 1,
+              "verified_n": 1,
+              "corrected_n": 0,
+              "measured_accuracy": 1.0,
+              "support_status": "INSUFFICIENT_SUPPORT"
+            },
+            "DELIVERY": {
+              "proposed_n": 5,
+              "verified_n": 1,
+              "corrected_n": 4,
+              "measured_accuracy": 0.2,
+              "support_status": "INSUFFICIENT_SUPPORT"
+            },
+            "INVOICES": {
+              "proposed_n": 3,
+              "verified_n": 0,
+              "corrected_n": 3,
+              "measured_accuracy": 0.0,
+              "support_status": "INSUFFICIENT_SUPPORT"
+            },
+            "ORDER": {
+              "proposed_n": 10,
+              "verified_n": 4,
+              "corrected_n": 6,
+              "measured_accuracy": 0.4,
+              "support_status": "INSUFFICIENT_SUPPORT"
+            },
+            "PAYMENT": {
+              "proposed_n": 5,
+              "verified_n": 4,
+              "corrected_n": 1,
+              "measured_accuracy": 0.8,
+              "support_status": "INSUFFICIENT_SUPPORT"
+            },
+            "FEEDBACK": {
+              "proposed_n": 4,
+              "verified_n": 3,
+              "corrected_n": 1,
+              "measured_accuracy": 0.75,
+              "support_status": "INSUFFICIENT_SUPPORT"
+            }
+          },
+          "confusion_proposed_to_final": {
+            "CONTACT": {
+              "ACCOUNT": 1,
+              "CANCELLATION_FEE": 1,
+              "CONTACT": 6,
+              "DELIVERY": 1,
+              "INVOICES": 1,
+              "SHIPPING": 1
+            },
+            "REFUNDS": {
+              "ACCOUNT": 1,
+              "CANCELLATION_FEE": 1,
+              "INVOICES": 1,
+              "REFUNDS": 4
+            },
+            "ACCOUNT": {
+              "ACCOUNT": 2,
+              "NEWSLETTER": 2,
+              "CANCELLATION_FEE": 1,
+              "DELIVERY": 1,
+              "FEEDBACK": 1,
+              "INVOICES": 1,
+              "SHIPPING": 1
+            },
+            "CANCELLATION_FEE": {
+              "CANCELLATION_FEE": 1
+            },
+            "DELIVERY": {
+              "CANCELLATION_FEE": 1,
+              "NEWSLETTER": 2,
+              "REFUNDS": 1,
+              "DELIVERY": 1
+            },
+            "INVOICES": {
+              "DELIVERY": 1,
+              "SHIPPING": 1,
+              "ORDER": 1
+            },
+            "ORDER": {
+              "DELIVERY": 1,
+              "INVOICES": 1,
+              "NEWSLETTER": 1,
+              "ORDER": 4,
+              "PAYMENT": 1,
+              "SHIPPING": 2
+            },
+            "PAYMENT": {
+              "FEEDBACK": 1,
+              "PAYMENT": 4
+            },
+            "FEEDBACK": {
+              "FEEDBACK": 3,
+              "NEWSLETTER": 1
+            }
+          },
+          "caveat": "Operator confirmations are not an external audit: a rubber-stamped wrong proposal would look correct"
+        },
+        "retraining_candidates": 30
+      },
+      "operator_error_0.2": {
+        "metrics": {
+          "n": 55,
+          "verified": 25,
+          "corrected": 30,
+          "measured_accuracy": 0.45454545454545453,
+          "correction_rate": 0.5454545454545454,
+          "per_category": {
+            "CONTACT": {
+              "proposed_n": 11,
+              "verified_n": 7,
+              "corrected_n": 4,
+              "measured_accuracy": 0.6363636363636364,
+              "support_status": "INSUFFICIENT_SUPPORT"
+            },
+            "REFUNDS": {
+              "proposed_n": 7,
+              "verified_n": 2,
+              "corrected_n": 5,
+              "measured_accuracy": 0.2857142857142857,
+              "support_status": "INSUFFICIENT_SUPPORT"
+            },
+            "ACCOUNT": {
+              "proposed_n": 9,
+              "verified_n": 2,
+              "corrected_n": 7,
+              "measured_accuracy": 0.2222222222222222,
+              "support_status": "INSUFFICIENT_SUPPORT"
+            },
+            "CANCELLATION_FEE": {
+              "proposed_n": 1,
+              "verified_n": 1,
+              "corrected_n": 0,
+              "measured_accuracy": 1.0,
+              "support_status": "INSUFFICIENT_SUPPORT"
+            },
+            "DELIVERY": {
+              "proposed_n": 5,
+              "verified_n": 2,
+              "corrected_n": 3,
+              "measured_accuracy": 0.4,
+              "support_status": "INSUFFICIENT_SUPPORT"
+            },
+            "INVOICES": {
+              "proposed_n": 3,
+              "verified_n": 0,
+              "corrected_n": 3,
+              "measured_accuracy": 0.0,
+              "support_status": "INSUFFICIENT_SUPPORT"
+            },
+            "ORDER": {
+              "proposed_n": 10,
+              "verified_n": 4,
+              "corrected_n": 6,
+              "measured_accuracy": 0.4,
+              "support_status": "INSUFFICIENT_SUPPORT"
+            },
+            "PAYMENT": {
+              "proposed_n": 5,
+              "verified_n": 4,
+              "corrected_n": 1,
+              "measured_accuracy": 0.8,
+              "support_status": "INSUFFICIENT_SUPPORT"
+            },
+            "FEEDBACK": {
+              "proposed_n": 4,
+              "verified_n": 3,
+              "corrected_n": 1,
+              "measured_accuracy": 0.75,
+              "support_status": "INSUFFICIENT_SUPPORT"
+            }
+          },
+          "confusion_proposed_to_final": {
+            "CONTACT": {
+              "ACCOUNT": 1,
+              "CONTACT": 7,
+              "DELIVERY": 1,
+              "INVOICES": 1,
+              "SHIPPING": 1
+            },
+            "REFUNDS": {
+              "ACCOUNT": 1,
+              "CANCELLATION_FEE": 2,
+              "INVOICES": 1,
+              "REFUNDS": 2,
+              "ORDER": 1
+            },
+            "ACCOUNT": {
+              "ACCOUNT": 2,
+              "NEWSLETTER": 2,
+              "CANCELLATION_FEE": 1,
+              "DELIVERY": 1,
+              "FEEDBACK": 1,
+              "INVOICES": 1,
+              "SHIPPING": 1
+            },
+            "CANCELLATION_FEE": {
+              "CANCELLATION_FEE": 1
+            },
+            "DELIVERY": {
+              "CANCELLATION_FEE": 1,
+              "NEWSLETTER": 1,
+              "DELIVERY": 2,
+              "SHIPPING": 1
+            },
+            "INVOICES": {
+              "DELIVERY": 1,
+              "NEWSLETTER": 1,
+              "ORDER": 1
+            },
+            "ORDER": {
+              "DELIVERY": 1,
+              "INVOICES": 1,
+              "NEWSLETTER": 1,
+              "ORDER": 4,
+              "PAYMENT": 1,
+              "SHIPPING": 2
+            },
+            "PAYMENT": {
+              "FEEDBACK": 1,
+              "PAYMENT": 4
+            },
+            "FEEDBACK": {
+              "FEEDBACK": 3,
+              "SHIPPING": 1
+            }
+          },
+          "caveat": "Operator confirmations are not an external audit: a rubber-stamped wrong proposal would look correct"
+        },
+        "retraining_candidates": 30
+      }
+    }
+  },
+  "note": "Perfect operator feedback recovers the proposal accuracy. Noisy feedback shows how operator mistakes leak into the measured metric.",
+  "scope": "Simulation only; no real operator labels"
+}

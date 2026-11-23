@@ -95,6 +95,10 @@ class DecisionOut(BaseModel):
     confidence: float | None
     similarity: float | None
     top3: dict[str, float]
+    category_probabilities: dict[str, float] = Field(default_factory=dict)
+    expected_loss: dict[str, float] | None = None
+    expected_loss_action: str | None = None
+    expected_loss_review: float | None = None
     risk_flags: list[str]
     reason_codes: list[str]
     model_id: str
@@ -113,7 +117,7 @@ def _json_log(event, **fields):
 
 
 def _decision(result, shadow_result, ticket_id):
-    out = {key: result[key] for key in DecisionOut.model_fields if key not in ("ticket_id", "shadow")}
+    out = {key: result.get(key) for key in DecisionOut.model_fields if key not in ("ticket_id", "shadow")}
     out["ticket_id"] = ticket_id
     out["shadow"] = {"status": shadow_result["status"], "queue": shadow_result["queue"],
                      "policy_version": shadow_result["policy_version"]}

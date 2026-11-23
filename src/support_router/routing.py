@@ -8,7 +8,7 @@ from datetime import datetime, timezone
 import numpy as np
 import pandas as pd
 
-from .business import confidence_floor, triage
+from .business import REVIEW_ACTION, confidence_floor, cost_sensitive_action, triage
 from .cascade import second_opinion
 from .config import CATEGORY_TO_QUEUE, MANUAL_QUEUE, SCHEMA_VERSION
 from .evaluation import wilson_upper
@@ -24,7 +24,7 @@ def _assess_ticket(text, model, context, now, scored, detect_multiple):
     result = {"schema_version": SCHEMA_VERSION, "category": None, "suggested_category": None,
               "decision_category": None, "accepted_category": None,
               "queue": MANUAL_QUEUE, "topic_queue": None, "confidence": None,
-              "similarity": None, "top3": {}, "request_parts": [], "status": "MANUAL_REVIEW",
+              "similarity": None, "top3": {}, "category_probabilities": {}, "request_parts": [], "status": "MANUAL_REVIEW",
               "priority": "P3", "priority_reasons": [], "classification_source": None,
               "primary_category": None, "primary_confidence": None, "primary_confidence_threshold": None,
               "semantic_status": "NOT_REQUESTED", "semantic_confidence": None, "semantic_similarity": None, "risk_flags": [], "reason_codes": [],
@@ -75,7 +75,8 @@ def _assess_ticket(text, model, context, now, scored, detect_multiple):
         result.update(category=cat if cat in CATEGORY_TO_QUEUE else None,
                       suggested_category=cat, confidence=conf, similarity=sim,
                       topic_queue=CATEGORY_TO_QUEUE.get(cat),
-                      top3={str(model.classes_[i]): float(p[i]) for i in order[:3]})
+                      top3={str(model.classes_[i]): float(p[i]) for i in order[:3]},
+                      category_probabilities={str(model.classes_[i]): float(p[i]) for i in range(len(model.classes_))})
         result.update(classification_source="primary", primary_category=cat, primary_confidence=conf,
                       primary_confidence_threshold=confidence_floor(getattr(model, "policy", {}), cat))
         if cat == "OTHER":
@@ -88,6 +89,31 @@ def _assess_ticket(text, model, context, now, scored, detect_multiple):
         result["error_type"] = type(exc).__name__
         result["status"] = "MODEL_ERROR"
     return result, context_reasons
+
+
+def _apply_expected_loss(result, policy):
+    """Guard auto-routing with the full cost matrix, not only the predicted class."""
+    costs = policy.get("misroute_cost")
+    probabilities = result.get("category_probabilities") or {}
+    predicted = result.get("primary_category")
+    if not costs or not probabilities or predicted not in probabilities:
+        return
+    classes = list(probabilities)
+    review_cost = float(policy.get("review_cost", 1.))
+    actions, losses, action_names = cost_sensitive_action(
+        [probabilities[c] for c in classes], classes, costs=costs, review_cost=review_cost,
+        default_misroute_cost=float(policy.get("default_misroute_cost", 5.)))
+    row = losses[0]
+    best = action_names[int(np.argmin(row))]
+    result["expected_loss"] = {action: float(value) for action, value in zip(action_names, row)}
+    result["expected_loss_action"] = best
+    result["expected_loss_review"] = review_cost
+    if best == REVIEW_ACTION:
+        result["reason_codes"].append("EXPECTED_LOSS_PREFERS_REVIEW")
+    elif best != predicted:
+        result["reason_codes"].append("EXPECTED_LOSS_DIFFERS_FROM_PREDICTION")
+    if row[action_names.index(predicted)] >= review_cost:
+        result["reason_codes"].append("EXPECTED_LOSS_ROUTE_NOT_BETTER_THAN_REVIEW")
 
 
 def _apply_policy(assessment, policy):
@@ -105,6 +131,7 @@ def _apply_policy(assessment, policy):
             result["reason_codes"].append("LOW_CONFIDENCE")
         if sim < float(policy.get("similarity_threshold", 1.)):
             result["reason_codes"].append("LOW_TRAINING_SIMILARITY")
+        _apply_expected_loss(result, policy)
         blockers = [r for r in result["reason_codes"] if r not in context_reasons]
         if blockers:
             result['decision_category'] = 'OTHER'

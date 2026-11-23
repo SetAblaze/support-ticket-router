@@ -1,0 +1,39 @@
+{
+  "generated_at_utc": "2026-11-23T20:20:21.990894+00:00",
+  "experiment_id": "aa72e1aeb0d0369534811808a2cf9aa5d59834e89211e13bdb95a77cc2de0497",
+  "git_dirty": true,
+  "warning": "git_dirty=true means the manifest describes the working tree, not a committed release; regenerate after committing",
+  "identity": {
+    "code_version": "3.2.0",
+    "git_commit": "2fe07edabeacebca4498f772ddb4961fbbdc5812",
+    "git_branch": "codex/router-review-fixes",
+    "model_id": "router-c551bd5d209a4d1a",
+    "model_name": "linsvc_wc_C1",
+    "artifact_sha256": "8e701b91e64310bf93b8de4ddbad7b2bd6cea8a684afe1035096f9d592bda540",
+    "decision_code_sha256": "d2e33c6306fb98e41f007d932dc081e757c65f177d277412c3bda43c39458e44",
+    "policy_version": "retail-cascade-v1",
+    "policy_auto_enabled": false,
+    "raw_data_sha256": "19a3031d649ce432202acd807630b1b52884507185f32832d58714f3fac7d82b",
+    "split_manifest_sha256": "0c8c27b3e9d681ef7266933e8d447e6f322484a73527ccf25b4891693c93b348",
+    "benchmark_protocol_sha256": "97d8404692fc8c8210ea86c8d2fbc7cb68cffbdec60c15e14a3cf070767eac9c"
+  },
+  "evaluation_sets": {
+    "hard_test": "f018ae35067d53b3bfbea7d402389b399cf2ba4956a377e675376aad6743e547",
+    "ood_eval": "5e3c4a8327511816c0b3f9a52702796ab3a214efd31533a8267463576eebbd39",
+    "risk_regression": "6e4728597e1d13831b444afc2bac29ec42d052d063d87e8ff257ac456d766f25",
+    "independent_id": "c4a31d54af25ba9ed71d5d4c201031e614ddf98142777ccfff83cf76983f0846",
+    "independent_ood": "ea798848c7a0c1c16a782d1026b0b7ee34fcd42e0b2dd57e8f37120b49362077",
+    "independent_risk": "59059d7e230c8136d33625b48f934f62a851a0174bb24e7bc2f67116ac18aef8",
+    "independent_multi": "a316e2428fd8db247b402b0b7b65dfef533aacdc5827f9581fa0a72073aace2f"
+  },
+  "reports": {
+    "results": "f7fed51f816e8e534f2ced56d33d36aa9ccc7e8421172bbe3e6425f18a45c813",
+    "independent_benchmark": "573b52e2f823ff11d15630dd638dc5a5e5d249c3d76b7bdbfcaaabeba2c1dd91",
+    "representation_comparison": "38108c359b2113797aa0808e8c05fc659acb968a74d1b9bbd77956086ced99dd",
+    "business_cascade": "57729c5813a27f694a4c35acd00b99c5027649ee2055153069b5e9970eef4e2c",
+    "review_benchmark": "bde73cbf3506774d80371d880e2818053078362893e316cdda5ef1f5baccdcb3",
+    "feedback_simulation": "2a797371048c9f97571fd0a6e32ebbb299403e4dd51a34a317164bd9d8d60677"
+  },
+  "comparison_rule": "Compare reports only when experiment_id, evaluation-set hashes and policy version match",
+  "note": "A different policy changes decisions without changing the classifier; such reports are different experiments"
+}

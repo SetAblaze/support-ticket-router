@@ -46,6 +46,8 @@ class RouterMetrics:
                                   registry=r)
         self.model_info = Gauge("router_model_info", "Паспорт загруженной модели",
                                 ["model_id", "model_name", "policy_version", "code_version"], registry=r)
+        self.feedback = Counter("router_feedback_total", "Подтверждённые и исправленные оператором решения",
+                                ["outcome", "proposed_category", "final_category"], registry=r)
 
     def observe_request(self, endpoint, method, status_code, seconds):
         self.requests.labels(endpoint, method, str(status_code)).inc()
@@ -68,6 +70,10 @@ class RouterMetrics:
             self.similarity.observe(result["similarity"])
         if result["status"] == "MODEL_ERROR":
             self.model_errors.inc()
+
+    def observe_feedback(self, event):
+        self.feedback.labels(str(event.get("outcome")), str(event.get("proposed_category")),
+                             str(event.get("final_category"))).inc()
 
     def set_model(self, meta, code_version):
         self.model_loaded.set(1)

@@ -1,6 +1,6 @@
 {
   "schema_version": "3.0",
-  "model_id": "router-f4247752d96f4346",
+  "model_id": "router-c551bd5d209a4d1a",
   "model_name": "linsvc_wc_C1",
   "model_type": "CalibratedClassifierCV",
   "base_type": "LinearSVC",
@@ -49,6 +49,201 @@
     },
     "review_cost": 1,
     "default_misroute_cost": 5,
+    "cost_matrix": {
+      "classes": [
+        "ACCOUNT",
+        "CANCELLATION_FEE",
+        "CONTACT",
+        "DELIVERY",
+        "FEEDBACK",
+        "INVOICES",
+        "NEWSLETTER",
+        "ORDER",
+        "PAYMENT",
+        "REFUNDS",
+        "SHIPPING"
+      ],
+      "actions": [
+        "ACCOUNT",
+        "CANCELLATION_FEE",
+        "CONTACT",
+        "DELIVERY",
+        "FEEDBACK",
+        "INVOICES",
+        "NEWSLETTER",
+        "ORDER",
+        "PAYMENT",
+        "REFUNDS",
+        "SHIPPING",
+        "REVIEW"
+      ],
+      "matrix": [
+        [
+          0.0,
+          20.0,
+          20.0,
+          20.0,
+          20.0,
+          20.0,
+          20.0,
+          20.0,
+          20.0,
+          20.0,
+          20.0,
+          1.0
+        ],
+        [
+          20.0,
+          0.0,
+          20.0,
+          20.0,
+          20.0,
+          20.0,
+          20.0,
+          20.0,
+          20.0,
+          20.0,
+          20.0,
+          1.0
+        ],
+        [
+          5.0,
+          5.0,
+          0.0,
+          5.0,
+          5.0,
+          5.0,
+          5.0,
+          5.0,
+          5.0,
+          5.0,
+          5.0,
+          1.0
+        ],
+        [
+          5.0,
+          5.0,
+          5.0,
+          0.0,
+          5.0,
+          5.0,
+          5.0,
+          5.0,
+          5.0,
+          5.0,
+          5.0,
+          1.0
+        ],
+        [
+          5.0,
+          5.0,
+          5.0,
+          5.0,
+          0.0,
+          5.0,
+          5.0,
+          5.0,
+          5.0,
+          5.0,
+          5.0,
+          1.0
+        ],
+        [
+          5.0,
+          5.0,
+          5.0,
+          5.0,
+          5.0,
+          0.0,
+          5.0,
+          5.0,
+          5.0,
+          5.0,
+          5.0,
+          1.0
+        ],
+        [
+          5.0,
+          5.0,
+          5.0,
+          5.0,
+          5.0,
+          5.0,
+          0.0,
+          5.0,
+          5.0,
+          5.0,
+          5.0,
+          1.0
+        ],
+        [
+          10.0,
+          10.0,
+          10.0,
+          10.0,
+          10.0,
+          10.0,
+          10.0,
+          0.0,
+          10.0,
+          10.0,
+          10.0,
+          1.0
+        ],
+        [
+          20.0,
+          20.0,
+          20.0,
+          20.0,
+          20.0,
+          20.0,
+          20.0,
+          20.0,
+          0.0,
+          20.0,
+          20.0,
+          1.0
+        ],
+        [
+          20.0,
+          20.0,
+          20.0,
+          20.0,
+          20.0,
+          20.0,
+          20.0,
+          20.0,
+          20.0,
+          0.0,
+          20.0,
+          1.0
+        ],
+        [
+          10.0,
+          10.0,
+          10.0,
+          10.0,
+          10.0,
+          10.0,
+          10.0,
+          10.0,
+          10.0,
+          10.0,
+          0.0,
+          1.0
+        ]
+      ],
+      "misroute_cost": {
+        "ACCOUNT": 20.0,
+        "PAYMENT": 20.0,
+        "REFUNDS": 20.0,
+        "CANCELLATION_FEE": 20.0,
+        "ORDER": 10.0,
+        "SHIPPING": 10.0
+      },
+      "review_cost": 1.0,
+      "default_misroute_cost": 5.0
+    },
     "semantic_gate": {
       "enabled": true,
       "eligible_id": 24,
@@ -61,8 +256,8 @@
       "development_errors": 0
     }
   },
-  "artifact_sha256": "e54bfd61ceb8310103d18ba4bc637cab29535a898a98292e7c6b0c3868f201fc",
-  "module_sha256": "46103def4b4a859fc12efdfeaf5591cb9298cf6912ea182d90853c8fe25ff7ee",
+  "artifact_sha256": "8e701b91e64310bf93b8de4ddbad7b2bd6cea8a684afe1035096f9d592bda540",
+  "module_sha256": "d2e33c6306fb98e41f007d932dc081e757c65f177d277412c3bda43c39458e44",
   "module_sha256_covers": [
     "config.py",
     "text.py",
@@ -193,6 +388,35 @@
           "text": 0,
           "row_id": 0,
           "group": 0
+        }
+      },
+      "similarity_checks": {
+        "calibration": {
+          "n": 2240,
+          "mean": 0.7739931260444353,
+          "p95": 0.8616469308924349,
+          "n_ge_085": 180,
+          "n_ge_090": 30,
+          "method": "train-only max(word_1_2, char_wb_3_5)",
+          "warning": "Residual lexical similarity remains possible; never prove semantic disjointness"
+        },
+        "val": {
+          "n": 2368,
+          "mean": 0.7776447967259432,
+          "p95": 0.8699650930170907,
+          "n_ge_085": 228,
+          "n_ge_090": 49,
+          "method": "train-only max(word_1_2, char_wb_3_5)",
+          "warning": "Residual lexical similarity remains possible; never prove semantic disjointness"
+        },
+        "test": {
+          "n": 3122,
+          "mean": 0.7799559681225868,
+          "p95": 0.8810670102942474,
+          "n_ge_085": 448,
+          "n_ge_090": 56,
+          "method": "train-only max(word_1_2, char_wb_3_5)",
+          "warning": "Residual lexical similarity remains possible; never prove semantic disjointness"
         }
       },
       "roles": {
@@ -544,18 +768,18 @@
     },
     "shadow_routing": {
       "n": 3122,
-      "automatic_n": 3060,
-      "manual_n": 62,
-      "coverage": 0.9801409352978859,
-      "manual_rate": 0.01985906470211403,
+      "automatic_n": 3059,
+      "manual_n": 63,
+      "coverage": 0.9798206278026906,
+      "manual_rate": 0.020179372197309416,
       "automatic_category_errors": 0,
       "accuracy_automatic_category": 1.0,
       "automatic_queue_errors": 0,
       "accuracy_automatic_queue": 1.0,
       "manual_is_not_a_classification_error": true,
-      "automatic_category_error_upper_wilson_95": 0.0012538507212644413,
-      "automatic_queue_error_upper_wilson_95": 0.0012538507212644413,
-      "id_other_decision_rate": 0.01985906470211403,
+      "automatic_category_error_upper_wilson_95": 0.0012542600962452647,
+      "automatic_queue_error_upper_wilson_95": 0.0012542600962452647,
+      "id_other_decision_rate": 0.020179372197309416,
       "per_category": {
         "ACCOUNT": {
           "n": 920,
@@ -573,8 +797,8 @@
         },
         "CONTACT": {
           "n": 487,
-          "coverage": 1.0,
-          "auto_n": 487,
+          "coverage": 0.997946611909651,
+          "auto_n": 486,
           "auto_category_accuracy": 1.0,
           "auto_queue_accuracy": 1.0
         },

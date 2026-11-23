@@ -23,6 +23,12 @@ def intent_protocol(frame):
     return dev, diag, excluded
 
 def loio_evaluate(frame, name, intents):
+    """LOIO diagnostic for architecture selection, not independent validation.
+
+    Every intent may take part in choosing the model. The same intents cannot
+    then serve as an independent estimate of the selected model; use the frozen
+    benchmark in ``independent_cases`` for that.
+    """
     rows, predictions = [], []
     for intent in intents:
         te = frame[frame.intent.eq(intent)]
@@ -160,6 +166,125 @@ def paired_intent_bootstrap(intents_and_scores, reference, candidate, iterations
             'intent_unit':'held_out_intent','iterations':iterations,
             'candidate_wins':int((b>a).sum()),'candidate_losses':int((b<a).sum()),
             'interpretation':'Exploratory CI with same 25 intents used for selection; not independent validation'}
+
+def per_category_calibration(model, frame, min_support=30, bins=10):
+    """Per-category calibration and support. Rare categories are marked, not celebrated."""
+    p = checked_proba(model, frame.text.tolist())
+    classes = np.asarray(model.classes_)
+    index = {c: i for i, c in enumerate(classes)}
+    y = frame.category.to_numpy()
+    pred = classes[p.argmax(axis=1)]
+    eps = 1e-6
+    rows = {}
+    for c in classes:
+        i = index[c]
+        prob = np.clip(p[:, i], eps, 1 - eps)
+        truth = (y == c).astype(int)
+        n = int(truth.sum())
+        bucket = np.minimum((prob * bins).astype(int), bins - 1)
+        ece = 0.
+        for b in range(bins):
+            mask = bucket == b
+            if mask.any():
+                ece += mask.sum() * abs(prob[mask].mean() - truth[mask].mean())
+        ece = float(ece / len(frame))
+        rows[c] = {
+            "support": n,
+            "support_status": "INSUFFICIENT_SUPPORT" if n < min_support else "ADEQUATE",
+            "prevalence": float(truth.mean()),
+            "mean_predicted_probability": float(prob.mean()),
+            "brier": float(np.mean((prob - truth) ** 2)),
+            "log_loss": float(-np.mean(truth * np.log(prob) + (1 - truth) * np.log(1 - prob))),
+            "ece": ece,
+            "precision": float(np.mean(y[pred == c] == c)) if (pred == c).any() else None,
+            "recall": float(np.mean(pred[truth == 1] == c)) if n else None,
+        }
+    insuff = sorted(c for c, r in rows.items() if r["support_status"] == "INSUFFICIENT_SUPPORT")
+    return {"n": len(frame), "min_support": min_support, "per_category": rows,
+            "insufficient_support": insuff,
+            "note": "Rare classes cannot support a 100% precision/recall claim"}
+
+
+def similarity_binned_accuracy(bundle, frame, bins=(0., .5, .6, .7, .8, .85, .9, .95, 1.01)):
+    """Accuracy by maximum lexical similarity to the training reference."""
+    sim = np.asarray(bundle.similarity(frame.text.tolist()), dtype=float)
+    pred = bundle.predict(frame.text.tolist())
+    truth = frame.category.to_numpy()
+    correct = pred == truth
+    rows = []
+    for lo, hi in zip(bins[:-1], bins[1:]):
+        mask = (sim >= lo) & (sim < hi)
+        n = int(mask.sum())
+        errs = int((~correct[mask]).sum()) if n else 0
+        rows.append({"low": float(lo), "high": float(hi), "n": n,
+                     "mean_similarity": float(sim[mask].mean()) if n else None,
+                     "accuracy": float(correct[mask].mean()) if n else None,
+                     "errors": errs,
+                     "error_upper_wilson_95": wilson_upper(errs, n)})
+    return {"n": len(frame), "bins": rows,
+            "note": "Lexical similarity is descriptive; it does not prove semantic separation"}
+
+
+def cascade_metrics(routes, y_true):
+    """Separate cascade value from raw accuracy: fixed vs newly broken tickets."""
+    y = np.asarray(y_true, dtype=object)
+    primary = np.asarray([r.get("primary_category") for r in routes], dtype=object)
+    final = np.asarray([r.get("category") for r in routes], dtype=object)
+    hints = np.asarray([r.get("classification_source") == "minilm" for r in routes])
+    suggest = int(hints.sum())
+    hint_correct = int((hints & (final == y)).sum())
+    correct = int((final == y).sum())
+    primary_correct = int((primary == y).sum())
+    return {"n": len(routes), "suggestions_n": suggest,
+            "primary_correct": primary_correct, "cascade_correct": correct,
+            "corrected": int(((final == y) & (primary != y)).sum()),
+            "regressed": int(((primary == y) & (final != y)).sum()),
+            "suggestion_precision": hint_correct / suggest if suggest else None,
+            "hint_accuracy_on_suggested": hint_correct / suggest if suggest else None,
+            "coverage_of_cascade": suggest / len(routes) if routes else None,
+            "note": "A suggestion is an operator hint, not an automatic delivery"}
+
+
+def cascade_ood_metrics(routes):
+    """False MiniLM suggestions on tickets that do not belong to any category."""
+    hints = [r for r in routes if r.get("classification_source") == "minilm"]
+    return {"n": len(routes), "false_hints": len(hints),
+            "false_hint_rate": len(hints) / len(routes) if routes else None,
+            "false_hint_upper_wilson_95": wilson_upper(len(hints), len(routes)),
+            "note": "OOD has no true category; every hint is a false suggestion"}
+
+
+def risk_coverage_curve(probabilities, y_true, classes, thresholds=(.5, .6, .7, .75, .8, .85, .9, .95, .975, .99)):
+    """Risk-coverage trade-off on an independent labelled set."""
+    p = np.asarray(probabilities, dtype=float)
+    y = np.asarray(y_true, dtype=object)
+    classes = np.asarray(list(classes), dtype=object)
+    pred = classes[p.argmax(axis=1)]
+    conf = p.max(axis=1)
+    rows = []
+    for t in thresholds:
+        accept = conf >= t
+        n = int(accept.sum())
+        errs = int((pred[accept] != y[accept]).sum()) if n else 0
+        rows.append({"threshold": float(t), "coverage": float(accept.mean()),
+                     "accepted_n": n, "errors": errs,
+                     "accuracy_accepted": 1 - errs / n if n else None,
+                     "error_upper_wilson_95": wilson_upper(errs, n)})
+    return {"n": len(y), "curve": rows,
+            "note": "Post-hoc curve on an independent set; not a guarantee on production"}
+
+
+def ood_acceptance_curve(probabilities, classes, thresholds=(.5, .6, .7, .75, .8, .85, .9, .95, .975, .99)):
+    """Acceptance rate on OOD: every accepted ticket is a false auto decision."""
+    p = np.asarray(probabilities, dtype=float)
+    conf = p.max(axis=1)
+    return {"n": len(p), "curve": [
+        {"threshold": float(t), "accepted_n": int((conf >= t).sum()),
+         "accepted_rate": float((conf >= t).mean()),
+         "accepted_rate_upper_wilson_95": wilson_upper(int((conf >= t).sum()), len(p))}
+        for t in thresholds],
+        "note": "OOD has no correct queue; accepted means a false suggestion"}
+
 
 def risk_recall(results,labels):
     if len(results)!=len(labels):raise ValueError('length mismatch')

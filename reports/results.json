@@ -180,7 +180,9 @@
     "reason": "Reference has highest observable mean on eligible candidates",
     "manual_dev_selection_weight": 0,
     "validation_roles": "25 LOIO intents for development; val for shadow policy; test untouched",
-    "not_independent": "Selection and bootstrap both use same 25 intent folds"
+    "not_independent": "Selection and bootstrap both use same 25 intent folds",
+    "loio_role": "architecture selection only; the same 25 intents are not independent validation of the selected model",
+    "independent_evaluation": "reports/independent_benchmark.json"
   },
   "loio_11x25": [
     {
@@ -2523,7 +2525,9 @@
     "No independent production labelled sample supplied by default",
     "Author-written diagnostics are not blind or statistically independent",
     "No validated P1 risk detector or business-approved routing thresholds",
-    "Shadow policy does not send tickets; operational automation disabled"
+    "Shadow policy does not send tickets; operational automation disabled",
+    "LOIO selection and reporting reuse the same 25 intents",
+    "The independent benchmark is author-written, not a customer sample"
   ],
   "stage10": {
     "status": "APP_BUILT_AND_CHECKED_IN_SEPARATE_PROCESS",
@@ -3042,5 +3046,32 @@
     "clean_folder_app_check": true,
     "clean_folder_tests": "219 passed, 2 skipped in 10.56s",
     "results_report": "reports/results.md"
+  },
+  "independent_benchmark": {
+    "protocol_version": "independent-v1-2026-11-23",
+    "protocol_sha256": "97d8404692fc8c8210ea86c8d2fbc7cb68cffbdec60c15e14a3cf070767eac9c",
+    "report": "reports/independent_benchmark.json",
+    "natural_top1": 0.509090909090909,
+    "no_keywords_top1": 0.21818181818181817,
+    "ood_shadow_false_auto_rate": 0.05,
+    "criteria": {
+      "checks": {
+        "no_keywords_top1_at_least_0.50": false,
+        "ood_false_auto_at_most_0.05": true,
+        "cascade_net_positive": true,
+        "risk_recall_at_least_0.80": false
+      },
+      "natural_top1": 0.509090909090909,
+      "no_keywords_top1": 0.21818181818181817,
+      "ood_false_auto_rate": 0.05,
+      "risk_recall": 0.5,
+      "all_passed": false
+    }
+  },
+  "release": {
+    "note": "results.json is the notebook output for an earlier artifact. Current release metrics are in models/router_meta.json, reports/independent_benchmark.json and reports/release_manifest.json",
+    "current_model_id": "router-c551bd5d209a4d1a",
+    "current_policy_version": "retail-cascade-v1",
+    "release_manifest": "reports/release_manifest.json"
   }
 }

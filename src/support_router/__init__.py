@@ -6,7 +6,7 @@
 """
 from __future__ import annotations
 
-from . import category_examples, manual_cases, scenario_data, semantic_encoder  # noqa: F401
+from . import category_examples, independent_cases, manual_cases, scenario_data, semantic_encoder  # noqa: F401
 from .artifacts import (  # noqa: F401
     DECISION_MODULES,
     decision_code_sha256,
@@ -33,19 +33,35 @@ from .data import (  # noqa: F401
 )
 from .evaluation import (  # noqa: F401
     calibration_diagnostics,
+    cascade_metrics,
+    cascade_ood_metrics,
     classification_metrics,
     intent_protocol,
     loio_evaluate,
+    ood_acceptance_curve,
     paired_error_test,
     paired_group_bootstrap,
     paired_intent_bootstrap,
+    per_category_calibration,
+    risk_coverage_curve,
     risk_recall,
     routing_metrics,
+    similarity_binned_accuracy,
     wilson_lower,
     wilson_upper,
 )
 from .explain import (  # noqa: F401
     local_explanation,
+)
+from .feedback import (  # noqa: F401
+    CORRECTED,
+    VERIFIED,
+    append_feedback,
+    feedback_metrics,
+    load_feedback,
+    make_feedback_event,
+    retraining_candidates,
+    simulate_stream,
 )
 from .models import (  # noqa: F401
     CONFIG_NAMES,
@@ -103,6 +119,8 @@ __all__ = [
     'cross_split_similarity', 'make_model', 'CONFIG_NAMES', 'fit_model',
     'checked_proba', 'RouterBundle', 'fit_calibrated_bundle', 'intent_protocol',
     'loio_evaluate', 'classification_metrics', 'wilson_upper', 'calibration_diagnostics',
+    'per_category_calibration', 'similarity_binned_accuracy', 'cascade_metrics',
+    'cascade_ood_metrics', 'risk_coverage_curve', 'ood_acceptance_curve',
     'routing_metrics', 'paired_error_test', 'paired_group_bootstrap', 'wilson_lower',
     'paired_intent_bootstrap', 'risk_recall', '_risk_signals', '_input_reasons',
     'detect_signals', '_context_effects', 'route_ticket', 'batch_route',
@@ -110,5 +128,7 @@ __all__ = [
     'schedule_demo', 'DECISION_MODULES', 'decision_code_sha256', 'save_bundle',
     'load_bundle', 'local_explanation', 'project_root', 'models_dir',
     'encoder_dir', 'category_examples', 'manual_cases', 'scenario_data',
-    'semantic_encoder', '__version__',
+    'semantic_encoder', 'independent_cases', 'VERIFIED', 'CORRECTED',
+    'make_feedback_event', 'append_feedback', 'load_feedback', 'feedback_metrics',
+    'retraining_candidates', 'simulate_stream', '__version__',
 ]

@@ -1,5 +1,5 @@
 {
-  "model_id": "router-f4247752d96f4346",
+  "model_id": "router-c551bd5d209a4d1a",
   "policy": "retail-cascade-v1",
   "gate": {
     "enabled": true,
@@ -19,12 +19,17 @@
       "SUGGESTED": 14,
       "ABSTAINED": 10
     },
-    "shadow_auto": 3060,
+    "shadow_auto": 3059,
     "shadow_auto_from_fallback": 0,
+    "suggestions_n": 14,
     "primary_correct": 3112,
     "cascade_correct": 3112,
     "corrected": 0,
-    "regressed": 0
+    "regressed": 0,
+    "suggestion_precision": 1.0,
+    "hint_accuracy_on_suggested": 1.0,
+    "coverage_of_cascade": 0.004484304932735426,
+    "note": "A suggestion is an operator hint, not an automatic delivery"
   },
   "hard": {
     "natural": {
@@ -34,12 +39,17 @@
         "SUGGESTED": 40,
         "ABSTAINED": 5
       },
-      "shadow_auto": 60,
+      "shadow_auto": 56,
       "shadow_auto_from_fallback": 0,
+      "suggestions_n": 40,
       "primary_correct": 98,
       "cascade_correct": 105,
       "corrected": 8,
-      "regressed": 1
+      "regressed": 1,
+      "suggestion_precision": 0.925,
+      "hint_accuracy_on_suggested": 0.925,
+      "coverage_of_cascade": 0.36363636363636365,
+      "note": "A suggestion is an operator hint, not an automatic delivery"
     },
     "no_keywords": {
       "n": 110,
@@ -48,12 +58,17 @@
         "ABSTAINED": 45,
         "NOT_REQUESTED": 10
       },
-      "shadow_auto": 3,
+      "shadow_auto": 2,
       "shadow_auto_from_fallback": 0,
+      "suggestions_n": 55,
       "primary_correct": 17,
       "cascade_correct": 48,
       "corrected": 32,
-      "regressed": 1
+      "regressed": 1,
+      "suggestion_precision": 0.8,
+      "hint_accuracy_on_suggested": 0.8,
+      "coverage_of_cascade": 0.5,
+      "note": "A suggestion is an operator hint, not an automatic delivery"
     }
   },
   "ood": {
@@ -64,7 +79,11 @@
       "SUGGESTED": 6
     },
     "shadow_auto": 3,
-    "shadow_auto_from_fallback": 0
+    "shadow_auto_from_fallback": 0,
+    "false_hints": 6,
+    "false_hint_rate": 0.06,
+    "false_hint_upper_wilson_95": 0.12476968531222504,
+    "note": "OOD has no true category; every hint is a false suggestion"
   },
   "ood_by_topic": {
     "app_failure": {
@@ -75,7 +94,11 @@
         "NOT_REQUESTED": 1
       },
       "shadow_auto": 0,
-      "shadow_auto_from_fallback": 0
+      "shadow_auto_from_fallback": 0,
+      "false_hints": 2,
+      "false_hint_rate": 0.13333333333333333,
+      "false_hint_upper_wilson_95": 0.3788249920651624,
+      "note": "OOD has no true category; every hint is a false suggestion"
     },
     "gibberish": {
       "n": 15,
@@ -84,7 +107,11 @@
         "NOT_REQUESTED": 4
       },
       "shadow_auto": 0,
-      "shadow_auto_from_fallback": 0
+      "shadow_auto_from_fallback": 0,
+      "false_hints": 0,
+      "false_hint_rate": 0.0,
+      "false_hint_upper_wilson_95": 0.20388926630434784,
+      "note": "OOD has no true category; every hint is a false suggestion"
     },
     "multiple_topics": {
       "n": 15,
@@ -92,7 +119,11 @@
         "NOT_REQUESTED": 15
       },
       "shadow_auto": 1,
-      "shadow_auto_from_fallback": 0
+      "shadow_auto_from_fallback": 0,
+      "false_hints": 0,
+      "false_hint_rate": 0.0,
+      "false_hint_upper_wilson_95": 0.20388926630434784,
+      "note": "OOD has no true category; every hint is a false suggestion"
     },
     "off_topic": {
       "n": 25,
@@ -101,7 +132,11 @@
         "NOT_REQUESTED": 3
       },
       "shadow_auto": 2,
-      "shadow_auto_from_fallback": 0
+      "shadow_auto_from_fallback": 0,
+      "false_hints": 0,
+      "false_hint_rate": 0.0,
+      "false_hint_upper_wilson_95": 0.13319649395317873,
+      "note": "OOD has no true category; every hint is a false suggestion"
     },
     "other_language": {
       "n": 15,
@@ -110,7 +145,11 @@
         "ABSTAINED": 8
       },
       "shadow_auto": 0,
-      "shadow_auto_from_fallback": 0
+      "shadow_auto_from_fallback": 0,
+      "false_hints": 0,
+      "false_hint_rate": 0.0,
+      "false_hint_upper_wilson_95": 0.20388926630434784,
+      "note": "OOD has no true category; every hint is a false suggestion"
     },
     "out_of_scope": {
       "n": 15,
@@ -120,7 +159,11 @@
         "SUGGESTED": 4
       },
       "shadow_auto": 0,
-      "shadow_auto_from_fallback": 0
+      "shadow_auto_from_fallback": 0,
+      "false_hints": 4,
+      "false_hint_rate": 0.26666666666666666,
+      "false_hint_upper_wilson_95": 0.5195088965768675,
+      "note": "OOD has no true category; every hint is a false suggestion"
     }
   },
   "scope": "Frozen synthetic diagnostics. Some cases were previously reviewed by the authors."

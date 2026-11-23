@@ -9,7 +9,7 @@ from sklearn.preprocessing import normalize
 from threadpoolctl import threadpool_limits
 
 from . import manual_cases, semantic_encoder
-from .business import confidence_floor, misroute_costs
+from .business import confidence_floor, cost_matrix, misroute_costs
 from .config import CATEGORY_TO_QUEUE, SEED
 from .multiple_requests import request_parts
 from .paths import encoder_dir
@@ -76,8 +76,10 @@ def fit_business_cascade(bundle, train, calibration, val, ood_dev, *, cost_overr
 
     if any(set(a.group) & set(b.group) for a, b in ((train, calibration), (calibration, val), (train, val))):
         raise ValueError("Cascade splits must have disjoint template groups")
-    bundle.policy.update(version="retail-cascade-v1", misroute_cost=misroute_costs(cost_overrides),
-                         review_cost=1, default_misroute_cost=5)
+    costs = misroute_costs(cost_overrides)
+    bundle.policy.update(version="retail-cascade-v1", misroute_cost=costs,
+                         review_cost=1, default_misroute_cost=5,
+                         cost_matrix=cost_matrix(costs=costs, review_cost=1, default_misroute_cost=5))
     if bundle.model_name.startswith("semantic_"):
         return  # An already-semantic primary does not need the same encoder again.
     vectors = semantic_encoder.encode(preprocess_batch(train.text))
@@ -94,7 +96,9 @@ def fit_business_cascade(bundle, train, calibration, val, ood_dev, *, cost_overr
     routes = batch_route(bundle, texts)
     eligible = []
     for i, (r, text) in enumerate(zip(routes, texts, strict=True)):
-        if set(r["reason_codes"]) <= {"LOW_CONFIDENCE", "LOW_TRAINING_SIMILARITY", "AUTO_POLICY_DISABLED"}:
+        if set(r["reason_codes"]) <= {"LOW_CONFIDENCE", "LOW_TRAINING_SIMILARITY", "AUTO_POLICY_DISABLED",
+                                      "EXPECTED_LOSS_PREFERS_REVIEW", "EXPECTED_LOSS_DIFFERS_FROM_PREDICTION",
+                                      "EXPECTED_LOSS_ROUTE_NOT_BETTER_THAN_REVIEW"}:
             if candidate({**r, "reason_codes": []}, text, bundle.policy) and not semantic_encoder.was_truncated(preprocess(text)):
                 eligible.append(i)
     gate = {"enabled": False, "eligible_id": int((labels[eligible] != "OTHER").sum()),

@@ -2,12 +2,16 @@
 import math
 import re
 
-from .config import CATEGORY_TO_QUEUE
+import numpy as np
+
+from .config import CATEGORIES, CATEGORY_TO_QUEUE
 from .text import preprocess
 
 # Unit: one manual review. These are editable educational assumptions.
 MISROUTE_COST = {"ACCOUNT": 20, "PAYMENT": 20, "REFUNDS": 20, "CANCELLATION_FEE": 20,
                 "ORDER": 10, "SHIPPING": 10}
+DEFAULT_MISROUTE_COST = 5.
+REVIEW_ACTION = "REVIEW"
 
 _IMPACTS = {
     "DUPLICATE_DEBIT": r"\b(?:i (?:was|got)|(?:my (?:card|account)|you) (?:was |has been )?)\s*charged (?:me )?(?:twice|two times)\b",
@@ -53,3 +57,59 @@ def confidence_floor(policy, category):
     if not costs:
         return float(base)
     return max(float(base), 1 - policy["review_cost"] / costs.get(category, policy["default_misroute_cost"]))
+
+
+def loss_matrix(classes, costs=None, review_cost=1., default_misroute_cost=DEFAULT_MISROUTE_COST):
+    """Return ``L(y, a)`` for every true category ``y`` and action ``a``.
+
+    Routing to the true category costs nothing. Routing to any other category
+    costs that category's misroute cost. Handing the ticket to an operator costs
+    one review, independently of the true category.
+    """
+    classes = list(classes)
+    costs = dict(costs or MISROUTE_COST)
+    actions = classes + [REVIEW_ACTION]
+    matrix = np.zeros((len(classes), len(actions)), dtype=float)
+    for i, truth in enumerate(classes):
+        wrong = float(costs.get(truth, default_misroute_cost))
+        for j, action in enumerate(actions):
+            if action == REVIEW_ACTION:
+                matrix[i, j] = float(review_cost)
+            elif action != truth:
+                matrix[i, j] = wrong
+    return classes, actions, matrix
+
+
+def expected_losses(probabilities, classes, costs=None, review_cost=1.,
+                    default_misroute_cost=DEFAULT_MISROUTE_COST):
+    """``R(a|x) = sum_y P(y|x) L(y,a)`` for each routing action and review."""
+    probabilities = np.asarray(probabilities, dtype=float)
+    if probabilities.ndim == 1:
+        probabilities = probabilities[None, :]
+    classes = list(classes)
+    if probabilities.shape[1] != len(classes):
+        raise ValueError("Probability columns do not match classes")
+    if not np.isfinite(probabilities).all() or (probabilities < 0).any():
+        raise ValueError("Invalid class probabilities")
+    _, actions, matrix = loss_matrix(classes, costs, review_cost, default_misroute_cost)
+    return actions, probabilities @ matrix
+
+
+def cost_sensitive_action(probabilities, classes, costs=None, review_cost=1.,
+                          default_misroute_cost=DEFAULT_MISROUTE_COST):
+    """Choose the action with the lowest expected loss for each row."""
+    actions, losses = expected_losses(probabilities, classes, costs, review_cost, default_misroute_cost)
+    chosen = [actions[i] for i in np.argmin(losses, axis=1)]
+    return chosen, losses, actions
+
+
+def cost_matrix(classes=None, costs=None, review_cost=1.,
+                default_misroute_cost=DEFAULT_MISROUTE_COST):
+    """Serialisable loss matrix for reports and business review."""
+    classes = list(classes or CATEGORIES)
+    _, actions, matrix = loss_matrix(classes, costs, review_cost, default_misroute_cost)
+    return {"classes": classes, "actions": actions,
+            "matrix": matrix.tolist(),
+            "misroute_cost": dict(costs or MISROUTE_COST),
+            "review_cost": float(review_cost),
+            "default_misroute_cost": float(default_misroute_cost)}

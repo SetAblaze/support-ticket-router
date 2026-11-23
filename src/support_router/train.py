@@ -25,7 +25,7 @@ from .artifacts import save_bundle
 from .business import misroute_costs
 from .cascade import fit_business_cascade
 from .config import SEED
-from .data import assert_split_integrity, clean_frame, lexical_groups, make_splits
+from .data import assert_split_integrity, clean_frame, cross_split_similarity, lexical_groups, make_splits
 from .evaluation import classification_metrics, routing_metrics
 from .models import CONFIG_NAMES, fit_calibrated_bundle
 from .paths import models_dir, project_root
@@ -50,8 +50,11 @@ def build_splits(raw_path, processed_dir):
     # Ноутбук обучает модель на частях, прочитанных из CSV (ячейка 24): повторяем это дословно.
     splits = {k: pd.read_csv(processed_dir / f"{k}.csv", keep_default_na=False) for k in SPLIT_ROLES}
     overlap = assert_split_integrity(splits)
+    similarity_checks = {name: cross_split_similarity(splits["train"], splits[name])[0]
+                         for name in ("calibration", "val", "test")}
     manifest = {"seed": SEED, "raw_sha256": sha256_file(raw_path), "cleaning": cleaning,
-                "grouping": grouping, "overlap_checks": overlap, "roles": SPLIT_ROLES,
+                "grouping": grouping, "overlap_checks": overlap,
+                "similarity_checks": similarity_checks, "roles": SPLIT_ROLES,
                 "splits": {k: {"rows": len(v), "sha256": sha256_file(processed_dir / f"{k}.csv"),
                                "class_counts": v.category.value_counts().to_dict()}
                            for k, v in splits.items()},
