@@ -1,6 +1,6 @@
 {
   "schema_version": "3.0",
-  "model_id": "router-937116a8646a48e3",
+  "model_id": "router-c551bd5d209a4d1a",
   "model_name": "linsvc_wc_C1",
   "model_type": "CalibratedClassifierCV",
   "base_type": "LinearSVC",
@@ -20,7 +20,7 @@
   "other_is_rejection_not_trained_class": true,
   "preprocess_version": "2.0-negation-placeholders",
   "policy": {
-    "version": "selective-v3-shadow",
+    "version": "retail-cascade-v1",
     "auto_enabled": false,
     "candidate_auto_enabled": true,
     "confidence_threshold": 0.85,
@@ -38,24 +38,275 @@
       "labelled risk/P1 evaluation",
       "business signoff"
     ],
-    "warning": "Val Wilson post-selection is NOT a risk guarantee; synthetic OOD is not external validation"
+    "warning": "Val Wilson post-selection is NOT a risk guarantee; synthetic OOD is not external validation",
+    "misroute_cost": {
+      "ACCOUNT": 20.0,
+      "PAYMENT": 20.0,
+      "REFUNDS": 20.0,
+      "CANCELLATION_FEE": 20.0,
+      "ORDER": 10.0,
+      "SHIPPING": 10.0
+    },
+    "review_cost": 1,
+    "default_misroute_cost": 5,
+    "cost_matrix": {
+      "classes": [
+        "ACCOUNT",
+        "CANCELLATION_FEE",
+        "CONTACT",
+        "DELIVERY",
+        "FEEDBACK",
+        "INVOICES",
+        "NEWSLETTER",
+        "ORDER",
+        "PAYMENT",
+        "REFUNDS",
+        "SHIPPING"
+      ],
+      "actions": [
+        "ACCOUNT",
+        "CANCELLATION_FEE",
+        "CONTACT",
+        "DELIVERY",
+        "FEEDBACK",
+        "INVOICES",
+        "NEWSLETTER",
+        "ORDER",
+        "PAYMENT",
+        "REFUNDS",
+        "SHIPPING",
+        "REVIEW"
+      ],
+      "matrix": [
+        [
+          0.0,
+          20.0,
+          20.0,
+          20.0,
+          20.0,
+          20.0,
+          20.0,
+          20.0,
+          20.0,
+          20.0,
+          20.0,
+          1.0
+        ],
+        [
+          20.0,
+          0.0,
+          20.0,
+          20.0,
+          20.0,
+          20.0,
+          20.0,
+          20.0,
+          20.0,
+          20.0,
+          20.0,
+          1.0
+        ],
+        [
+          5.0,
+          5.0,
+          0.0,
+          5.0,
+          5.0,
+          5.0,
+          5.0,
+          5.0,
+          5.0,
+          5.0,
+          5.0,
+          1.0
+        ],
+        [
+          5.0,
+          5.0,
+          5.0,
+          0.0,
+          5.0,
+          5.0,
+          5.0,
+          5.0,
+          5.0,
+          5.0,
+          5.0,
+          1.0
+        ],
+        [
+          5.0,
+          5.0,
+          5.0,
+          5.0,
+          0.0,
+          5.0,
+          5.0,
+          5.0,
+          5.0,
+          5.0,
+          5.0,
+          1.0
+        ],
+        [
+          5.0,
+          5.0,
+          5.0,
+          5.0,
+          5.0,
+          0.0,
+          5.0,
+          5.0,
+          5.0,
+          5.0,
+          5.0,
+          1.0
+        ],
+        [
+          5.0,
+          5.0,
+          5.0,
+          5.0,
+          5.0,
+          5.0,
+          0.0,
+          5.0,
+          5.0,
+          5.0,
+          5.0,
+          1.0
+        ],
+        [
+          10.0,
+          10.0,
+          10.0,
+          10.0,
+          10.0,
+          10.0,
+          10.0,
+          0.0,
+          10.0,
+          10.0,
+          10.0,
+          1.0
+        ],
+        [
+          20.0,
+          20.0,
+          20.0,
+          20.0,
+          20.0,
+          20.0,
+          20.0,
+          20.0,
+          0.0,
+          20.0,
+          20.0,
+          1.0
+        ],
+        [
+          20.0,
+          20.0,
+          20.0,
+          20.0,
+          20.0,
+          20.0,
+          20.0,
+          20.0,
+          20.0,
+          0.0,
+          20.0,
+          1.0
+        ],
+        [
+          10.0,
+          10.0,
+          10.0,
+          10.0,
+          10.0,
+          10.0,
+          10.0,
+          10.0,
+          10.0,
+          10.0,
+          0.0,
+          1.0
+        ]
+      ],
+      "misroute_cost": {
+        "ACCOUNT": 20.0,
+        "PAYMENT": 20.0,
+        "REFUNDS": 20.0,
+        "CANCELLATION_FEE": 20.0,
+        "ORDER": 10.0,
+        "SHIPPING": 10.0
+      },
+      "review_cost": 1.0,
+      "default_misroute_cost": 5.0
+    },
+    "semantic_gate": {
+      "enabled": true,
+      "eligible_id": 24,
+      "eligible_ood": 9,
+      "wrong_hint_cost": 4,
+      "review_cost": 1,
+      "confidence": 0.75,
+      "semantic_similarity": 0.35,
+      "development_suggestions": 14,
+      "development_errors": 0
+    }
   },
-  "artifact_sha256": "5feda5f4e6da5d4d31b5defbf304a270b4b35944025e337e6929cfcd164409a0",
-  "module_sha256": "e8777fdf3f67d61db647aa461cc4702fabd2d68d245fbd993c9556f7d87332d6",
+  "artifact_sha256": "8e701b91e64310bf93b8de4ddbad7b2bd6cea8a684afe1035096f9d592bda540",
+  "module_sha256": "d2e33c6306fb98e41f007d932dc081e757c65f177d277412c3bda43c39458e44",
   "module_sha256_covers": [
     "config.py",
     "text.py",
     "models.py",
     "rules.py",
     "routing.py",
+    "multiple_requests.py",
     "semantic_encoder.py",
-    "category_examples.py"
+    "category_examples.py",
+    "business.py",
+    "cascade.py"
   ],
   "auxiliary_module_sha256": {
-    "semantic_encoder.py": "98e8cf9141af29fbc38899e81c8fb973cd4126bf78d6564264f46a93e547a4f2",
+    "semantic_encoder.py": "63e52d64bf11e436225707712708148289fd8179b67e652bb685891fa1565fc7",
     "category_examples.py": "f0fe89771f404f75aac486d097df2b8ef69f5926c012f4b30399d8ff753acb79"
   },
   "encoder": null,
+  "semantic_fallback_encoder": {
+    "model": "sentence-transformers/all-MiniLM-L6-v2",
+    "revision": "1110a243fdf4706b3f48f1d95db1a4f5529b4d41",
+    "format": "ONNX quint8 AVX2",
+    "files": {
+      "model.onnx": {
+        "source": "onnx/model_quint8_avx2.onnx",
+        "bytes": 23046789,
+        "sha256": "b941bf19f1f1283680f449fa6a7336bb5600bdcd5f84d10ddc5cd72218a0fd21"
+      },
+      "tokenizer.json": {
+        "source": "tokenizer.json",
+        "bytes": 466247,
+        "sha256": "be50c3628f2bf5bb5e3a7f17b1f74611b2561a3a27eeab05e5aa30f411572037"
+      },
+      "config.json": {
+        "source": "config.json",
+        "bytes": 612,
+        "sha256": "953f9c0d463486b10a6871cc2fd59f223b2c70184f49815e7efbcab5d8908b41"
+      },
+      "pooling_config.json": {
+        "source": "1_Pooling/config.json",
+        "bytes": 190,
+        "sha256": "4be450dde3b0273bb9787637cfbd28fe04a7ba6ab9d36ac48e92b11e350ffc23"
+      },
+      "README.md": {
+        "source": "README.md",
+        "bytes": 10502,
+        "sha256": "dcd602d2fd35c203a247304a06fec6654a12f7941b739f9221a064fe8dc3b7f0"
+      }
+    }
+  },
   "versions": {
     "numpy": "2.4.6",
     "pandas": "2.2.3",
@@ -243,24 +494,18 @@
             "CANCELLATION_FEE": 8
           }
         }
-      }
+      },
+      "built_by": "support_router.train"
     },
     "model_selection": {
       "selected": "linsvc_wc_C1",
-      "reference": "linsvc_wc_C1",
-      "observed_leader": "linsvc_wc_C1",
-      "reason": "Reference has highest observable mean on eligible candidates",
-      "manual_dev_selection_weight": 0,
-      "validation_roles": "25 LOIO intents for development; val for shadow policy; test untouched",
-      "not_independent": "Selection and bootstrap both use same 25 intent folds"
+      "how": "LOIO over 25 intents in notebook stage 6"
     },
     "fit_rows": 11970,
     "calibration_rows": 2240,
     "policy_rows": 2368,
     "synthetic_ood_dev_rows": 24,
     "training_extension": [],
-    "manual_dev_n": 33,
-    "manual_holdout_n": 33,
     "operational_auto_enabled": false,
     "real_external_validation": false,
     "feature_columns": [
@@ -273,7 +518,7 @@
       "row_id",
       "category"
     ],
-    "encoder_revision": null
+    "trained_by": "support_router.train"
   },
   "test": {
     "classification": {
@@ -523,18 +768,18 @@
     },
     "shadow_routing": {
       "n": 3122,
-      "automatic_n": 3068,
-      "manual_n": 54,
-      "coverage": 0.982703395259449,
-      "manual_rate": 0.01729660474055093,
-      "automatic_category_errors": 6,
-      "accuracy_automatic_category": 0.9980443285528031,
-      "automatic_queue_errors": 6,
-      "accuracy_automatic_queue": 0.9980443285528031,
+      "automatic_n": 3059,
+      "manual_n": 63,
+      "coverage": 0.9798206278026906,
+      "manual_rate": 0.020179372197309416,
+      "automatic_category_errors": 0,
+      "accuracy_automatic_category": 1.0,
+      "automatic_queue_errors": 0,
+      "accuracy_automatic_queue": 1.0,
       "manual_is_not_a_classification_error": true,
-      "automatic_category_error_upper_wilson_95": 0.004260448582625746,
-      "automatic_queue_error_upper_wilson_95": 0.004260448582625746,
-      "id_other_decision_rate": 0.01729660474055093,
+      "automatic_category_error_upper_wilson_95": 0.0012542600962452647,
+      "automatic_queue_error_upper_wilson_95": 0.0012542600962452647,
+      "id_other_decision_rate": 0.020179372197309416,
       "per_category": {
         "ACCOUNT": {
           "n": 920,
@@ -552,8 +797,8 @@
         },
         "CONTACT": {
           "n": 487,
-          "coverage": 1.0,
-          "auto_n": 487,
+          "coverage": 0.997946611909651,
+          "auto_n": 486,
           "auto_category_accuracy": 1.0,
           "auto_queue_accuracy": 1.0
         },
@@ -594,10 +839,10 @@
         },
         "PAYMENT": {
           "n": 844,
-          "coverage": 0.9822274881516587,
-          "auto_n": 829,
-          "auto_category_accuracy": 0.9927623642943305,
-          "auto_queue_accuracy": 0.9927623642943305
+          "coverage": 0.9727488151658767,
+          "auto_n": 821,
+          "auto_category_accuracy": 1.0,
+          "auto_queue_accuracy": 1.0
         },
         "REFUNDS": {
           "n": 141,

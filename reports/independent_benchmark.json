@@ -1,0 +1,1436 @@
+{
+  "protocol": {
+    "version": "independent-v1-2026-11-23",
+    "sha256": "97d8404692fc8c8210ea86c8d2fbc7cb68cffbdec60c15e14a3cf070767eac9c",
+    "frozen_sha256": "97d8404692fc8c8210ea86c8d2fbc7cb68cffbdec60c15e14a3cf070767eac9c",
+    "document": "docs/independent_benchmark_protocol.md"
+  },
+  "provenance": {
+    "generated_at_utc": "2026-11-23T20:15:17.403377+00:00",
+    "git_commit": "2fe07edabeacebca4498f772ddb4961fbbdc5812",
+    "model_id": "router-c551bd5d209a4d1a",
+    "model_name": "linsvc_wc_C1",
+    "policy_version": "retail-cascade-v1",
+    "policy_auto_enabled": false,
+    "artifact_sha256": "8e701b91e64310bf93b8de4ddbad7b2bd6cea8a684afe1035096f9d592bda540",
+    "raw_data_sha256": "19a3031d649ce432202acd807630b1b52884507185f32832d58714f3fac7d82b",
+    "benchmark_files": {
+      "independent_id": "c4a31d54af25ba9ed71d5d4c201031e614ddf98142777ccfff83cf76983f0846",
+      "independent_ood": "ea798848c7a0c1c16a782d1026b0b7ee34fcd42e0b2dd57e8f37120b49362077",
+      "independent_risk": "59059d7e230c8136d33625b48f934f62a851a0174bb24e7bc2f67116ac18aef8",
+      "independent_multi": "a316e2428fd8db247b402b0b7b65dfef533aacdc5827f9581fa0a72073aace2f"
+    }
+  },
+  "disjointness": {
+    "exact_duplicates_with_bitext": [],
+    "max_lexical_similarity_to_bitext": 0.7942292083344812,
+    "n_similarity_ge_085": 0,
+    "n_similarity_ge_080": 0,
+    "exact_duplicates_with_development_sets": {
+      "manual_cases_dev": [],
+      "manual_cases_holdout": [],
+      "scenario_dev": [],
+      "scenario_holdout": [],
+      "hard_test": [],
+      "ood_eval": [],
+      "risk_regression": []
+    },
+    "note": "Lexical checks do not prove semantic novelty"
+  },
+  "deployed": {
+    "natural": {
+      "n": 55,
+      "top1_correct": 28,
+      "top1_accuracy": 0.509090909090909,
+      "top1_wilson_lower_95": 0.3807603840748446,
+      "top3_correct": 36,
+      "macro_f1": 0.43939040757222575,
+      "errors": 27,
+      "per_category": {
+        "ACCOUNT": {
+          "n": 5,
+          "correct": 5,
+          "top1_accuracy": 1.0,
+          "top1_wilson_lower_95": 0.565508505247919
+        },
+        "CANCELLATION_FEE": {
+          "n": 5,
+          "correct": 1,
+          "top1_accuracy": 0.2,
+          "top1_wilson_lower_95": 0.036223160969787505
+        },
+        "CONTACT": {
+          "n": 5,
+          "correct": 3,
+          "top1_accuracy": 0.6,
+          "top1_wilson_lower_95": 0.23071993220883702
+        },
+        "DELIVERY": {
+          "n": 5,
+          "correct": 2,
+          "top1_accuracy": 0.4,
+          "top1_wilson_lower_95": 0.1176182311592533
+        },
+        "FEEDBACK": {
+          "n": 5,
+          "correct": 1,
+          "top1_accuracy": 0.2,
+          "top1_wilson_lower_95": 0.036223160969787505
+        },
+        "INVOICES": {
+          "n": 5,
+          "correct": 3,
+          "top1_accuracy": 0.6,
+          "top1_wilson_lower_95": 0.23071993220883702
+        },
+        "NEWSLETTER": {
+          "n": 5,
+          "correct": 0,
+          "top1_accuracy": 0.0,
+          "top1_wilson_lower_95": -2.220446049250313e-16
+        },
+        "ORDER": {
+          "n": 5,
+          "correct": 5,
+          "top1_accuracy": 1.0,
+          "top1_wilson_lower_95": 0.565508505247919
+        },
+        "PAYMENT": {
+          "n": 5,
+          "correct": 3,
+          "top1_accuracy": 0.6,
+          "top1_wilson_lower_95": 0.23071993220883702
+        },
+        "REFUNDS": {
+          "n": 5,
+          "correct": 5,
+          "top1_accuracy": 1.0,
+          "top1_wilson_lower_95": 0.565508505247919
+        },
+        "SHIPPING": {
+          "n": 5,
+          "correct": 0,
+          "top1_accuracy": 0.0,
+          "top1_wilson_lower_95": -2.220446049250313e-16
+        }
+      },
+      "similarity_bins": {
+        "n": 55,
+        "bins": [
+          {
+            "low": 0.0,
+            "high": 0.5,
+            "n": 44,
+            "mean_similarity": 0.36415172128443624,
+            "accuracy": 0.4090909090909091,
+            "errors": 26,
+            "error_upper_wilson_95": 0.7231235612099318
+          },
+          {
+            "low": 0.5,
+            "high": 0.6,
+            "n": 9,
+            "mean_similarity": 0.5472645167902321,
+            "accuracy": 0.8888888888888888,
+            "errors": 1,
+            "error_upper_wilson_95": 0.4350062147680602
+          },
+          {
+            "low": 0.6,
+            "high": 0.7,
+            "n": 0,
+            "mean_similarity": null,
+            "accuracy": null,
+            "errors": 0,
+            "error_upper_wilson_95": null
+          },
+          {
+            "low": 0.7,
+            "high": 0.8,
+            "n": 1,
+            "mean_similarity": 0.7172531583883935,
+            "accuracy": 1.0,
+            "errors": 0,
+            "error_upper_wilson_95": 0.7934567085261071
+          },
+          {
+            "low": 0.8,
+            "high": 0.85,
+            "n": 1,
+            "mean_similarity": 0.8407725250920317,
+            "accuracy": 1.0,
+            "errors": 0,
+            "error_upper_wilson_95": 0.7934567085261071
+          },
+          {
+            "low": 0.85,
+            "high": 0.9,
+            "n": 0,
+            "mean_similarity": null,
+            "accuracy": null,
+            "errors": 0,
+            "error_upper_wilson_95": null
+          },
+          {
+            "low": 0.9,
+            "high": 0.95,
+            "n": 0,
+            "mean_similarity": null,
+            "accuracy": null,
+            "errors": 0,
+            "error_upper_wilson_95": null
+          },
+          {
+            "low": 0.95,
+            "high": 1.01,
+            "n": 0,
+            "mean_similarity": null,
+            "accuracy": null,
+            "errors": 0,
+            "error_upper_wilson_95": null
+          }
+        ],
+        "note": "Lexical similarity is descriptive; it does not prove semantic separation"
+      },
+      "policy": {
+        "n": 55,
+        "automatic_n": 10,
+        "manual_n": 45,
+        "coverage": 0.18181818181818182,
+        "manual_rate": 0.8181818181818182,
+        "automatic_category_errors": 1,
+        "accuracy_automatic_category": 0.9,
+        "automatic_queue_errors": 1,
+        "accuracy_automatic_queue": 0.9,
+        "manual_is_not_a_classification_error": true,
+        "automatic_category_error_upper_wilson_95": 0.4041563854975721,
+        "automatic_queue_error_upper_wilson_95": 0.4041563854975721,
+        "id_other_decision_rate": 0.8181818181818182,
+        "per_category": {
+          "ACCOUNT": {
+            "n": 5,
+            "coverage": 0.6,
+            "auto_n": 3,
+            "auto_category_accuracy": 1.0,
+            "auto_queue_accuracy": 1.0
+          },
+          "CANCELLATION_FEE": {
+            "n": 5,
+            "coverage": 0.0,
+            "auto_n": 0,
+            "auto_category_accuracy": null,
+            "auto_queue_accuracy": null
+          },
+          "CONTACT": {
+            "n": 5,
+            "coverage": 0.2,
+            "auto_n": 1,
+            "auto_category_accuracy": 1.0,
+            "auto_queue_accuracy": 1.0
+          },
+          "DELIVERY": {
+            "n": 5,
+            "coverage": 0.0,
+            "auto_n": 0,
+            "auto_category_accuracy": null,
+            "auto_queue_accuracy": null
+          },
+          "FEEDBACK": {
+            "n": 5,
+            "coverage": 0.0,
+            "auto_n": 0,
+            "auto_category_accuracy": null,
+            "auto_queue_accuracy": null
+          },
+          "INVOICES": {
+            "n": 5,
+            "coverage": 0.0,
+            "auto_n": 0,
+            "auto_category_accuracy": null,
+            "auto_queue_accuracy": null
+          },
+          "NEWSLETTER": {
+            "n": 5,
+            "coverage": 0.0,
+            "auto_n": 0,
+            "auto_category_accuracy": null,
+            "auto_queue_accuracy": null
+          },
+          "ORDER": {
+            "n": 5,
+            "coverage": 0.6,
+            "auto_n": 3,
+            "auto_category_accuracy": 1.0,
+            "auto_queue_accuracy": 1.0
+          },
+          "PAYMENT": {
+            "n": 5,
+            "coverage": 0.2,
+            "auto_n": 1,
+            "auto_category_accuracy": 1.0,
+            "auto_queue_accuracy": 1.0
+          },
+          "REFUNDS": {
+            "n": 5,
+            "coverage": 0.2,
+            "auto_n": 1,
+            "auto_category_accuracy": 1.0,
+            "auto_queue_accuracy": 1.0
+          },
+          "SHIPPING": {
+            "n": 5,
+            "coverage": 0.2,
+            "auto_n": 1,
+            "auto_category_accuracy": 0.0,
+            "auto_queue_accuracy": 0.0
+          }
+        }
+      }
+    },
+    "no_keywords": {
+      "n": 55,
+      "top1_correct": 12,
+      "top1_accuracy": 0.21818181818181817,
+      "top1_wilson_lower_95": 0.12945897827653208,
+      "top3_correct": 25,
+      "macro_f1": 0.1734867471709577,
+      "errors": 43,
+      "per_category": {
+        "ACCOUNT": {
+          "n": 5,
+          "correct": 2,
+          "top1_accuracy": 0.4,
+          "top1_wilson_lower_95": 0.1176182311592533
+        },
+        "CANCELLATION_FEE": {
+          "n": 5,
+          "correct": 0,
+          "top1_accuracy": 0.0,
+          "top1_wilson_lower_95": -2.220446049250313e-16
+        },
+        "CONTACT": {
+          "n": 5,
+          "correct": 4,
+          "top1_accuracy": 0.8,
+          "top1_wilson_lower_95": 0.3755282641185388
+        },
+        "DELIVERY": {
+          "n": 5,
+          "correct": 1,
+          "top1_accuracy": 0.2,
+          "top1_wilson_lower_95": 0.036223160969787505
+        },
+        "FEEDBACK": {
+          "n": 5,
+          "correct": 1,
+          "top1_accuracy": 0.2,
+          "top1_wilson_lower_95": 0.036223160969787505
+        },
+        "INVOICES": {
+          "n": 5,
+          "correct": 0,
+          "top1_accuracy": 0.0,
+          "top1_wilson_lower_95": -2.220446049250313e-16
+        },
+        "NEWSLETTER": {
+          "n": 5,
+          "correct": 0,
+          "top1_accuracy": 0.0,
+          "top1_wilson_lower_95": -2.220446049250313e-16
+        },
+        "ORDER": {
+          "n": 5,
+          "correct": 2,
+          "top1_accuracy": 0.4,
+          "top1_wilson_lower_95": 0.1176182311592533
+        },
+        "PAYMENT": {
+          "n": 5,
+          "correct": 1,
+          "top1_accuracy": 0.2,
+          "top1_wilson_lower_95": 0.036223160969787505
+        },
+        "REFUNDS": {
+          "n": 5,
+          "correct": 1,
+          "top1_accuracy": 0.2,
+          "top1_wilson_lower_95": 0.036223160969787505
+        },
+        "SHIPPING": {
+          "n": 5,
+          "correct": 0,
+          "top1_accuracy": 0.0,
+          "top1_wilson_lower_95": -2.220446049250313e-16
+        }
+      },
+      "similarity_bins": {
+        "n": 55,
+        "bins": [
+          {
+            "low": 0.0,
+            "high": 0.5,
+            "n": 48,
+            "mean_similarity": 0.3421780881514562,
+            "accuracy": 0.20833333333333334,
+            "errors": 38,
+            "error_upper_wilson_95": 0.8826985220411018
+          },
+          {
+            "low": 0.5,
+            "high": 0.6,
+            "n": 5,
+            "mean_similarity": 0.5413632611403721,
+            "accuracy": 0.2,
+            "errors": 4,
+            "error_upper_wilson_95": 0.9637768390302125
+          },
+          {
+            "low": 0.6,
+            "high": 0.7,
+            "n": 1,
+            "mean_similarity": 0.6654899004495277,
+            "accuracy": 1.0,
+            "errors": 0,
+            "error_upper_wilson_95": 0.7934567085261071
+          },
+          {
+            "low": 0.7,
+            "high": 0.8,
+            "n": 1,
+            "mean_similarity": 0.732801318719997,
+            "accuracy": 0.0,
+            "errors": 1,
+            "error_upper_wilson_95": 1.0
+          },
+          {
+            "low": 0.8,
+            "high": 0.85,
+            "n": 0,
+            "mean_similarity": null,
+            "accuracy": null,
+            "errors": 0,
+            "error_upper_wilson_95": null
+          },
+          {
+            "low": 0.85,
+            "high": 0.9,
+            "n": 0,
+            "mean_similarity": null,
+            "accuracy": null,
+            "errors": 0,
+            "error_upper_wilson_95": null
+          },
+          {
+            "low": 0.9,
+            "high": 0.95,
+            "n": 0,
+            "mean_similarity": null,
+            "accuracy": null,
+            "errors": 0,
+            "error_upper_wilson_95": null
+          },
+          {
+            "low": 0.95,
+            "high": 1.01,
+            "n": 0,
+            "mean_similarity": null,
+            "accuracy": null,
+            "errors": 0,
+            "error_upper_wilson_95": null
+          }
+        ],
+        "note": "Lexical similarity is descriptive; it does not prove semantic separation"
+      },
+      "policy": {
+        "n": 55,
+        "automatic_n": 4,
+        "manual_n": 51,
+        "coverage": 0.07272727272727272,
+        "manual_rate": 0.9272727272727272,
+        "automatic_category_errors": 2,
+        "accuracy_automatic_category": 0.5,
+        "automatic_queue_errors": 2,
+        "accuracy_automatic_queue": 0.5,
+        "manual_is_not_a_classification_error": true,
+        "automatic_category_error_upper_wilson_95": 0.8499642911798285,
+        "automatic_queue_error_upper_wilson_95": 0.8499642911798285,
+        "id_other_decision_rate": 0.9272727272727272,
+        "per_category": {
+          "ACCOUNT": {
+            "n": 5,
+            "coverage": 0.0,
+            "auto_n": 0,
+            "auto_category_accuracy": null,
+            "auto_queue_accuracy": null
+          },
+          "CANCELLATION_FEE": {
+            "n": 5,
+            "coverage": 0.0,
+            "auto_n": 0,
+            "auto_category_accuracy": null,
+            "auto_queue_accuracy": null
+          },
+          "CONTACT": {
+            "n": 5,
+            "coverage": 0.2,
+            "auto_n": 1,
+            "auto_category_accuracy": 1.0,
+            "auto_queue_accuracy": 1.0
+          },
+          "DELIVERY": {
+            "n": 5,
+            "coverage": 0.2,
+            "auto_n": 1,
+            "auto_category_accuracy": 0.0,
+            "auto_queue_accuracy": 0.0
+          },
+          "FEEDBACK": {
+            "n": 5,
+            "coverage": 0.2,
+            "auto_n": 1,
+            "auto_category_accuracy": 1.0,
+            "auto_queue_accuracy": 1.0
+          },
+          "INVOICES": {
+            "n": 5,
+            "coverage": 0.0,
+            "auto_n": 0,
+            "auto_category_accuracy": null,
+            "auto_queue_accuracy": null
+          },
+          "NEWSLETTER": {
+            "n": 5,
+            "coverage": 0.0,
+            "auto_n": 0,
+            "auto_category_accuracy": null,
+            "auto_queue_accuracy": null
+          },
+          "ORDER": {
+            "n": 5,
+            "coverage": 0.0,
+            "auto_n": 0,
+            "auto_category_accuracy": null,
+            "auto_queue_accuracy": null
+          },
+          "PAYMENT": {
+            "n": 5,
+            "coverage": 0.0,
+            "auto_n": 0,
+            "auto_category_accuracy": null,
+            "auto_queue_accuracy": null
+          },
+          "REFUNDS": {
+            "n": 5,
+            "coverage": 0.2,
+            "auto_n": 1,
+            "auto_category_accuracy": 0.0,
+            "auto_queue_accuracy": 0.0
+          },
+          "SHIPPING": {
+            "n": 5,
+            "coverage": 0.0,
+            "auto_n": 0,
+            "auto_category_accuracy": null,
+            "auto_queue_accuracy": null
+          }
+        }
+      }
+    }
+  },
+  "baseline_tfidf_logreg": {
+    "natural": {
+      "n": 55,
+      "top1_correct": 27,
+      "top1_accuracy": 0.4909090909090909,
+      "top1_wilson_lower_95": 0.36376560487101595,
+      "top3_correct": 36,
+      "macro_f1": 0.4396345140927184,
+      "errors": 28,
+      "per_category": {
+        "ACCOUNT": {
+          "n": 5,
+          "correct": 5,
+          "top1_accuracy": 1.0,
+          "top1_wilson_lower_95": 0.565508505247919
+        },
+        "CANCELLATION_FEE": {
+          "n": 5,
+          "correct": 0,
+          "top1_accuracy": 0.0,
+          "top1_wilson_lower_95": -2.220446049250313e-16
+        },
+        "CONTACT": {
+          "n": 5,
+          "correct": 3,
+          "top1_accuracy": 0.6,
+          "top1_wilson_lower_95": 0.23071993220883702
+        },
+        "DELIVERY": {
+          "n": 5,
+          "correct": 2,
+          "top1_accuracy": 0.4,
+          "top1_wilson_lower_95": 0.1176182311592533
+        },
+        "FEEDBACK": {
+          "n": 5,
+          "correct": 2,
+          "top1_accuracy": 0.4,
+          "top1_wilson_lower_95": 0.1176182311592533
+        },
+        "INVOICES": {
+          "n": 5,
+          "correct": 3,
+          "top1_accuracy": 0.6,
+          "top1_wilson_lower_95": 0.23071993220883702
+        },
+        "NEWSLETTER": {
+          "n": 5,
+          "correct": 1,
+          "top1_accuracy": 0.2,
+          "top1_wilson_lower_95": 0.036223160969787505
+        },
+        "ORDER": {
+          "n": 5,
+          "correct": 5,
+          "top1_accuracy": 1.0,
+          "top1_wilson_lower_95": 0.565508505247919
+        },
+        "PAYMENT": {
+          "n": 5,
+          "correct": 2,
+          "top1_accuracy": 0.4,
+          "top1_wilson_lower_95": 0.1176182311592533
+        },
+        "REFUNDS": {
+          "n": 5,
+          "correct": 4,
+          "top1_accuracy": 0.8,
+          "top1_wilson_lower_95": 0.3755282641185388
+        },
+        "SHIPPING": {
+          "n": 5,
+          "correct": 0,
+          "top1_accuracy": 0.0,
+          "top1_wilson_lower_95": -2.220446049250313e-16
+        }
+      }
+    },
+    "no_keywords": {
+      "n": 55,
+      "top1_correct": 15,
+      "top1_accuracy": 0.2727272727272727,
+      "top1_wilson_lower_95": 0.17280602508013654,
+      "top3_correct": 24,
+      "macro_f1": 0.22308377896613193,
+      "errors": 40,
+      "per_category": {
+        "ACCOUNT": {
+          "n": 5,
+          "correct": 1,
+          "top1_accuracy": 0.2,
+          "top1_wilson_lower_95": 0.036223160969787505
+        },
+        "CANCELLATION_FEE": {
+          "n": 5,
+          "correct": 0,
+          "top1_accuracy": 0.0,
+          "top1_wilson_lower_95": -2.220446049250313e-16
+        },
+        "CONTACT": {
+          "n": 5,
+          "correct": 4,
+          "top1_accuracy": 0.8,
+          "top1_wilson_lower_95": 0.3755282641185388
+        },
+        "DELIVERY": {
+          "n": 5,
+          "correct": 1,
+          "top1_accuracy": 0.2,
+          "top1_wilson_lower_95": 0.036223160969787505
+        },
+        "FEEDBACK": {
+          "n": 5,
+          "correct": 2,
+          "top1_accuracy": 0.4,
+          "top1_wilson_lower_95": 0.1176182311592533
+        },
+        "INVOICES": {
+          "n": 5,
+          "correct": 0,
+          "top1_accuracy": 0.0,
+          "top1_wilson_lower_95": -2.220446049250313e-16
+        },
+        "NEWSLETTER": {
+          "n": 5,
+          "correct": 1,
+          "top1_accuracy": 0.2,
+          "top1_wilson_lower_95": 0.036223160969787505
+        },
+        "ORDER": {
+          "n": 5,
+          "correct": 4,
+          "top1_accuracy": 0.8,
+          "top1_wilson_lower_95": 0.3755282641185388
+        },
+        "PAYMENT": {
+          "n": 5,
+          "correct": 0,
+          "top1_accuracy": 0.0,
+          "top1_wilson_lower_95": -2.220446049250313e-16
+        },
+        "REFUNDS": {
+          "n": 5,
+          "correct": 2,
+          "top1_accuracy": 0.4,
+          "top1_wilson_lower_95": 0.1176182311592533
+        },
+        "SHIPPING": {
+          "n": 5,
+          "correct": 0,
+          "top1_accuracy": 0.0,
+          "top1_wilson_lower_95": -2.220446049250313e-16
+        }
+      }
+    }
+  },
+  "ood": {
+    "n": 20,
+    "shadow_false_auto_n": 1,
+    "shadow_false_auto_rate": 0.05,
+    "shadow_false_auto_upper_wilson_95": 0.23613589351256678,
+    "acceptance_curve": {
+      "n": 20,
+      "curve": [
+        {
+          "threshold": 0.5,
+          "accepted_n": 12,
+          "accepted_rate": 0.6,
+          "accepted_rate_upper_wilson_95": 0.7811960325858073
+        },
+        {
+          "threshold": 0.6,
+          "accepted_n": 11,
+          "accepted_rate": 0.55,
+          "accepted_rate_upper_wilson_95": 0.741804979142907
+        },
+        {
+          "threshold": 0.7,
+          "accepted_n": 7,
+          "accepted_rate": 0.35,
+          "accepted_rate_upper_wilson_95": 0.5671494897805353
+        },
+        {
+          "threshold": 0.75,
+          "accepted_n": 6,
+          "accepted_rate": 0.3,
+          "accepted_rate_upper_wilson_95": 0.5189767762289793
+        },
+        {
+          "threshold": 0.8,
+          "accepted_n": 5,
+          "accepted_rate": 0.25,
+          "accepted_rate_upper_wilson_95": 0.4687050099580635
+        },
+        {
+          "threshold": 0.85,
+          "accepted_n": 4,
+          "accepted_rate": 0.2,
+          "accepted_rate_upper_wilson_95": 0.4160217220257599
+        },
+        {
+          "threshold": 0.9,
+          "accepted_n": 3,
+          "accepted_rate": 0.15,
+          "accepted_rate_upper_wilson_95": 0.36042329588695743
+        },
+        {
+          "threshold": 0.95,
+          "accepted_n": 1,
+          "accepted_rate": 0.05,
+          "accepted_rate_upper_wilson_95": 0.23613589351256678
+        },
+        {
+          "threshold": 0.975,
+          "accepted_n": 0,
+          "accepted_rate": 0.0,
+          "accepted_rate_upper_wilson_95": 0.1611301254949332
+        },
+        {
+          "threshold": 0.99,
+          "accepted_n": 0,
+          "accepted_rate": 0.0,
+          "accepted_rate_upper_wilson_95": 0.1611301254949332
+        }
+      ],
+      "note": "OOD has no correct queue; accepted means a false suggestion"
+    }
+  },
+  "cascade": {
+    "natural": {
+      "n": 55,
+      "suggestions_n": 26,
+      "primary_correct": 28,
+      "cascade_correct": 34,
+      "corrected": 7,
+      "regressed": 1,
+      "suggestion_precision": 0.8461538461538461,
+      "hint_accuracy_on_suggested": 0.8461538461538461,
+      "coverage_of_cascade": 0.4727272727272727,
+      "note": "A suggestion is an operator hint, not an automatic delivery"
+    },
+    "no_keywords": {
+      "n": 55,
+      "suggestions_n": 29,
+      "primary_correct": 12,
+      "cascade_correct": 25,
+      "corrected": 14,
+      "regressed": 1,
+      "suggestion_precision": 0.6551724137931034,
+      "hint_accuracy_on_suggested": 0.6551724137931034,
+      "coverage_of_cascade": 0.5272727272727272,
+      "note": "A suggestion is an operator hint, not an automatic delivery"
+    },
+    "ood": {
+      "n": 20,
+      "false_hints": 1,
+      "false_hint_rate": 0.05,
+      "false_hint_upper_wilson_95": 0.23613589351256678,
+      "note": "OOD has no true category; every hint is a false suggestion"
+    }
+  },
+  "risk_coverage": {
+    "natural": {
+      "n": 55,
+      "curve": [
+        {
+          "threshold": 0.5,
+          "coverage": 0.7636363636363637,
+          "accepted_n": 42,
+          "errors": 16,
+          "accuracy_accepted": 0.6190476190476191,
+          "error_upper_wilson_95": 0.5318623178000363
+        },
+        {
+          "threshold": 0.6,
+          "coverage": 0.7272727272727273,
+          "accepted_n": 40,
+          "errors": 15,
+          "accuracy_accepted": 0.625,
+          "error_upper_wilson_95": 0.529678399454681
+        },
+        {
+          "threshold": 0.7,
+          "coverage": 0.6181818181818182,
+          "accepted_n": 34,
+          "errors": 11,
+          "accuracy_accepted": 0.6764705882352942,
+          "error_upper_wilson_95": 0.49157415951880606
+        },
+        {
+          "threshold": 0.75,
+          "coverage": 0.6,
+          "accepted_n": 33,
+          "errors": 11,
+          "accuracy_accepted": 0.6666666666666667,
+          "error_upper_wilson_95": 0.5039241820005003
+        },
+        {
+          "threshold": 0.8,
+          "coverage": 0.5272727272727272,
+          "accepted_n": 29,
+          "errors": 8,
+          "accuracy_accepted": 0.7241379310344828,
+          "error_upper_wilson_95": 0.4571747634443597
+        },
+        {
+          "threshold": 0.85,
+          "coverage": 0.5272727272727272,
+          "accepted_n": 29,
+          "errors": 8,
+          "accuracy_accepted": 0.7241379310344828,
+          "error_upper_wilson_95": 0.4571747634443597
+        },
+        {
+          "threshold": 0.9,
+          "coverage": 0.4727272727272727,
+          "accepted_n": 26,
+          "errors": 7,
+          "accuracy_accepted": 0.7307692307692308,
+          "error_upper_wilson_95": 0.46083403419761304
+        },
+        {
+          "threshold": 0.95,
+          "coverage": 0.36363636363636365,
+          "accepted_n": 20,
+          "errors": 4,
+          "accuracy_accepted": 0.8,
+          "error_upper_wilson_95": 0.4160217220257599
+        },
+        {
+          "threshold": 0.975,
+          "coverage": 0.14545454545454545,
+          "accepted_n": 8,
+          "errors": 0,
+          "accuracy_accepted": 1.0,
+          "error_upper_wilson_95": 0.3244156195108769
+        },
+        {
+          "threshold": 0.99,
+          "coverage": 0.01818181818181818,
+          "accepted_n": 1,
+          "errors": 0,
+          "accuracy_accepted": 1.0,
+          "error_upper_wilson_95": 0.7934567085261071
+        }
+      ],
+      "note": "Post-hoc curve on an independent set; not a guarantee on production"
+    },
+    "no_keywords": {
+      "n": 55,
+      "curve": [
+        {
+          "threshold": 0.5,
+          "coverage": 0.5818181818181818,
+          "accepted_n": 32,
+          "errors": 22,
+          "accuracy_accepted": 0.3125,
+          "error_upper_wilson_95": 0.8204764788338126
+        },
+        {
+          "threshold": 0.6,
+          "coverage": 0.4727272727272727,
+          "accepted_n": 26,
+          "errors": 17,
+          "accuracy_accepted": 0.34615384615384615,
+          "error_upper_wilson_95": 0.8058798502714788
+        },
+        {
+          "threshold": 0.7,
+          "coverage": 0.41818181818181815,
+          "accepted_n": 23,
+          "errors": 16,
+          "accuracy_accepted": 0.30434782608695654,
+          "error_upper_wilson_95": 0.8439617197902755
+        },
+        {
+          "threshold": 0.75,
+          "coverage": 0.36363636363636365,
+          "accepted_n": 20,
+          "errors": 14,
+          "accuracy_accepted": 0.30000000000000004,
+          "error_upper_wilson_95": 0.8545247260310062
+        },
+        {
+          "threshold": 0.8,
+          "coverage": 0.3090909090909091,
+          "accepted_n": 17,
+          "errors": 11,
+          "accuracy_accepted": 0.3529411764705882,
+          "error_upper_wilson_95": 0.8269051385609512
+        },
+        {
+          "threshold": 0.85,
+          "coverage": 0.21818181818181817,
+          "accepted_n": 12,
+          "errors": 7,
+          "accuracy_accepted": 0.41666666666666663,
+          "error_upper_wilson_95": 0.8067425380947534
+        },
+        {
+          "threshold": 0.9,
+          "coverage": 0.16363636363636364,
+          "accepted_n": 9,
+          "errors": 5,
+          "accuracy_accepted": 0.4444444444444444,
+          "error_upper_wilson_95": 0.8112245705280859
+        },
+        {
+          "threshold": 0.95,
+          "coverage": 0.12727272727272726,
+          "accepted_n": 7,
+          "errors": 3,
+          "accuracy_accepted": 0.5714285714285714,
+          "error_upper_wilson_95": 0.7495457695909742
+        },
+        {
+          "threshold": 0.975,
+          "coverage": 0.05454545454545454,
+          "accepted_n": 3,
+          "errors": 1,
+          "accuracy_accepted": 0.6666666666666667,
+          "error_upper_wilson_95": 0.7923450448735121
+        },
+        {
+          "threshold": 0.99,
+          "coverage": 0.01818181818181818,
+          "accepted_n": 1,
+          "errors": 1,
+          "accuracy_accepted": 0.0,
+          "error_upper_wilson_95": 1.0
+        }
+      ],
+      "note": "Post-hoc curve on an independent set; not a guarantee on production"
+    }
+  },
+  "calibration": {
+    "calibration_split": {
+      "n": 2240,
+      "min_support": 30,
+      "per_category": {
+        "ACCOUNT": {
+          "support": 467,
+          "support_status": "ADEQUATE",
+          "prevalence": 0.20848214285714287,
+          "mean_predicted_probability": 0.20797739839204768,
+          "brier": 1.2989092391230275e-05,
+          "log_loss": 0.002221530813243795,
+          "ece": 0.0022149766428308628,
+          "precision": 1.0,
+          "recall": 1.0
+        },
+        "CANCELLATION_FEE": {
+          "support": 24,
+          "support_status": "INSUFFICIENT_SUPPORT",
+          "prevalence": 0.010714285714285714,
+          "mean_predicted_probability": 0.011142199439626526,
+          "brier": 3.4869431430221634e-06,
+          "log_loss": 0.0006988946738092195,
+          "ece": 0.0006971034839790536,
+          "precision": 1.0,
+          "recall": 1.0
+        },
+        "CONTACT": {
+          "support": 428,
+          "support_status": "ADEQUATE",
+          "prevalence": 0.19107142857142856,
+          "mean_predicted_probability": 0.189980546745967,
+          "brier": 1.6345995883979012e-05,
+          "log_loss": 0.0022976776096333903,
+          "ece": 0.0022894515277789543,
+          "precision": 1.0,
+          "recall": 1.0
+        },
+        "DELIVERY": {
+          "support": 31,
+          "support_status": "ADEQUATE",
+          "prevalence": 0.013839285714285714,
+          "mean_predicted_probability": 0.014207243289577119,
+          "brier": 0.0002259917434727025,
+          "log_loss": 0.001716451929477241,
+          "ece": 0.0014988793150213027,
+          "precision": 1.0,
+          "recall": 0.967741935483871
+        },
+        "FEEDBACK": {
+          "support": 98,
+          "support_status": "ADEQUATE",
+          "prevalence": 0.04375,
+          "mean_predicted_probability": 0.04400077472182276,
+          "brier": 6.145007693974933e-06,
+          "log_loss": 0.0011481484840089413,
+          "ece": 0.0011450475466653635,
+          "precision": 1.0,
+          "recall": 1.0
+        },
+        "INVOICES": {
+          "support": 425,
+          "support_status": "ADEQUATE",
+          "prevalence": 0.18973214285714285,
+          "mean_predicted_probability": 0.18943541612210155,
+          "brier": 6.459152828659656e-05,
+          "log_loss": 0.002315609814917232,
+          "ece": 0.002278900662821958,
+          "precision": 1.0,
+          "recall": 1.0
+        },
+        "NEWSLETTER": {
+          "support": 6,
+          "support_status": "INSUFFICIENT_SUPPORT",
+          "prevalence": 0.0026785714285714286,
+          "mean_predicted_probability": 0.003106761593225536,
+          "brier": 1.312435634915072e-06,
+          "log_loss": 0.0005262448769118678,
+          "ece": 0.0005255802427707843,
+          "precision": 1.0,
+          "recall": 1.0
+        },
+        "ORDER": {
+          "support": 419,
+          "support_status": "ADEQUATE",
+          "prevalence": 0.18705357142857143,
+          "mean_predicted_probability": 0.18674175265035287,
+          "brier": 0.00019232302199054152,
+          "log_loss": 0.00245436146159402,
+          "ece": 0.002295378493966396,
+          "precision": 0.9976190476190476,
+          "recall": 1.0
+        },
+        "PAYMENT": {
+          "support": 141,
+          "support_status": "ADEQUATE",
+          "prevalence": 0.06294642857142857,
+          "mean_predicted_probability": 0.06309231318591459,
+          "brier": 1.702390598524982e-05,
+          "log_loss": 0.0012762486078000195,
+          "ece": 0.0012670156366473184,
+          "precision": 1.0,
+          "recall": 1.0
+        },
+        "REFUNDS": {
+          "support": 191,
+          "support_status": "ADEQUATE",
+          "prevalence": 0.08526785714285715,
+          "mean_predicted_probability": 0.08543184165875756,
+          "brier": 7.9063185480253e-05,
+          "log_loss": 0.0017367487380569758,
+          "ece": 0.001683830206777197,
+          "precision": 1.0,
+          "recall": 1.0
+        },
+        "SHIPPING": {
+          "support": 10,
+          "support_status": "INSUFFICIENT_SUPPORT",
+          "prevalence": 0.004464285714285714,
+          "mean_predicted_probability": 0.004883752200606754,
+          "brier": 7.762850766358619e-07,
+          "log_loss": 0.0005157020738207269,
+          "ece": 0.0005153118988889128,
+          "precision": 1.0,
+          "recall": 1.0
+        }
+      },
+      "insufficient_support": [
+        "CANCELLATION_FEE",
+        "NEWSLETTER",
+        "SHIPPING"
+      ],
+      "note": "Rare classes cannot support a 100% precision/recall claim"
+    },
+    "overall_calibration_split": {
+      "n": 2240,
+      "confidence_auroc": 1.0,
+      "auroc_status": "AVAILABLE",
+      "log_loss": 0.008520272024361251,
+      "multiclass_brier_sum": 0.0006200491450391006,
+      "ece_top_label": 0.007816552536499053,
+      "bins": [
+        {
+          "bin": 6,
+          "n": 2,
+          "confidence": 0.6035379420639677,
+          "accuracy": 0.5
+        },
+        {
+          "bin": 8,
+          "n": 4,
+          "confidence": 0.8492957223890434,
+          "accuracy": 1.0
+        },
+        {
+          "bin": 9,
+          "n": 2234,
+          "confidence": 0.992524984473059,
+          "accuracy": 1.0
+        }
+      ]
+    },
+    "independent_natural": {
+      "n": 55,
+      "min_support": 30,
+      "per_category": {
+        "ACCOUNT": {
+          "support": 5,
+          "support_status": "INSUFFICIENT_SUPPORT",
+          "prevalence": 0.09090909090909091,
+          "mean_predicted_probability": 0.2219619340592535,
+          "brier": 0.07926011688487716,
+          "log_loss": 0.2702467896517086,
+          "ece": 0.1310528431501626,
+          "precision": 0.38461538461538464,
+          "recall": 1.0
+        },
+        "CANCELLATION_FEE": {
+          "support": 5,
+          "support_status": "INSUFFICIENT_SUPPORT",
+          "prevalence": 0.09090909090909091,
+          "mean_predicted_probability": 0.01507687045172548,
+          "brier": 0.0769422721242698,
+          "log_loss": 0.4128147799005108,
+          "ece": 0.07583222045736542,
+          "precision": 1.0,
+          "recall": 0.2
+        },
+        "CONTACT": {
+          "support": 5,
+          "support_status": "INSUFFICIENT_SUPPORT",
+          "prevalence": 0.09090909090909091,
+          "mean_predicted_probability": 0.11662143487861434,
+          "brier": 0.06339045266666339,
+          "log_loss": 0.2166444657853587,
+          "ece": 0.06583991172671474,
+          "precision": 0.375,
+          "recall": 0.6
+        },
+        "DELIVERY": {
+          "support": 5,
+          "support_status": "INSUFFICIENT_SUPPORT",
+          "prevalence": 0.09090909090909091,
+          "mean_predicted_probability": 0.09953403629695007,
+          "brier": 0.06908797278930734,
+          "log_loss": 0.2820491665764033,
+          "ece": 0.08491667535430458,
+          "precision": 0.3333333333333333,
+          "recall": 0.4
+        },
+        "FEEDBACK": {
+          "support": 5,
+          "support_status": "INSUFFICIENT_SUPPORT",
+          "prevalence": 0.09090909090909091,
+          "mean_predicted_probability": 0.03330097761807653,
+          "brier": 0.06389603161973557,
+          "log_loss": 0.27068845460225227,
+          "ece": 0.05760811329101438,
+          "precision": 1.0,
+          "recall": 0.2
+        },
+        "INVOICES": {
+          "support": 5,
+          "support_status": "INSUFFICIENT_SUPPORT",
+          "prevalence": 0.09090909090909091,
+          "mean_predicted_probability": 0.07036600549306517,
+          "brier": 0.03861695636250512,
+          "log_loss": 0.20942509421421718,
+          "ece": 0.04851693506909863,
+          "precision": 1.0,
+          "recall": 0.6
+        },
+        "NEWSLETTER": {
+          "support": 5,
+          "support_status": "INSUFFICIENT_SUPPORT",
+          "prevalence": 0.09090909090909091,
+          "mean_predicted_probability": 0.007171594873034663,
+          "brier": 0.0858821957261057,
+          "log_loss": 0.3596002791540674,
+          "ece": 0.08373749603605625,
+          "precision": null,
+          "recall": 0.0
+        },
+        "ORDER": {
+          "support": 5,
+          "support_status": "INSUFFICIENT_SUPPORT",
+          "prevalence": 0.09090909090909091,
+          "mean_predicted_probability": 0.2013720138162497,
+          "brier": 0.0773673979496264,
+          "log_loss": 0.271725715725366,
+          "ece": 0.11046292290715883,
+          "precision": 0.5,
+          "recall": 1.0
+        },
+        "PAYMENT": {
+          "support": 5,
+          "support_status": "INSUFFICIENT_SUPPORT",
+          "prevalence": 0.09090909090909091,
+          "mean_predicted_probability": 0.09364091296449398,
+          "brier": 0.05972434074003576,
+          "log_loss": 0.2713379863038209,
+          "ece": 0.05670588106156902,
+          "precision": 0.6,
+          "recall": 0.6
+        },
+        "REFUNDS": {
+          "support": 5,
+          "support_status": "INSUFFICIENT_SUPPORT",
+          "prevalence": 0.09090909090909091,
+          "mean_predicted_probability": 0.13750964052549602,
+          "brier": 0.03374338238282564,
+          "log_loss": 0.11489056665547,
+          "ece": 0.06642238120030951,
+          "precision": 0.625,
+          "recall": 1.0
+        },
+        "SHIPPING": {
+          "support": 5,
+          "support_status": "INSUFFICIENT_SUPPORT",
+          "prevalence": 0.09090909090909091,
+          "mean_predicted_probability": 0.003444579023040505,
+          "brier": 0.08892065025104352,
+          "log_loss": 0.4323205746978412,
+          "ece": 0.08746451188605041,
+          "precision": null,
+          "recall": 0.0
+        }
+      },
+      "insufficient_support": [
+        "ACCOUNT",
+        "CANCELLATION_FEE",
+        "CONTACT",
+        "DELIVERY",
+        "FEEDBACK",
+        "INVOICES",
+        "NEWSLETTER",
+        "ORDER",
+        "PAYMENT",
+        "REFUNDS",
+        "SHIPPING"
+      ],
+      "note": "Rare classes cannot support a 100% precision/recall claim"
+    }
+  },
+  "risk": {
+    "n": 16,
+    "per_flag": {
+      "ABUSE_LANGUAGE": {
+        "tp": 2,
+        "fp": 0,
+        "fn": 0,
+        "precision": 1.0,
+        "recall": 1.0,
+        "recall_wilson_lower_95": 0.3423719528896193
+      },
+      "POSSIBLE_FRAUD": {
+        "tp": 1,
+        "fp": 1,
+        "fn": 2,
+        "precision": 0.5,
+        "recall": 0.3333333333333333,
+        "recall_wilson_lower_95": 0.06149031527616067
+      },
+      "POSSIBLE_LEGAL_CLAIM": {
+        "tp": 2,
+        "fp": 0,
+        "fn": 0,
+        "precision": 1.0,
+        "recall": 1.0,
+        "recall_wilson_lower_95": 0.3423719528896193
+      },
+      "POSSIBLE_THREAT": {
+        "tp": 1,
+        "fp": 1,
+        "fn": 2,
+        "precision": 0.5,
+        "recall": 0.3333333333333333,
+        "recall_wilson_lower_95": 0.06149031527616067
+      }
+    },
+    "any_risk_flag": {
+      "tp": 4,
+      "fp": 2,
+      "fn": 4,
+      "precision": 0.6666666666666666,
+      "recall": 0.5,
+      "recall_wilson_lower_95": 0.21521252682444192
+    },
+    "misses": [
+      {
+        "text": "I am going to come to your office and hurt someone.",
+        "expected": [
+          "POSSIBLE_THREAT"
+        ],
+        "detected": []
+      },
+      {
+        "text": "Tell your driver I will attack him if the parcel is late.",
+        "expected": [
+          "POSSIBLE_THREAT"
+        ],
+        "detected": []
+      },
+      {
+        "text": "Somebody used my card to buy a laptop.",
+        "expected": [
+          "POSSIBLE_FRAUD"
+        ],
+        "detected": []
+      },
+      {
+        "text": "A marketplace seller took my money and never sent the goods.",
+        "expected": [
+          "POSSIBLE_FRAUD"
+        ],
+        "detected": []
+      },
+      {
+        "text": "The article said someone threatened to attack the driver.",
+        "expected": [],
+        "detected": [
+          "POSSIBLE_THREAT"
+        ]
+      },
+      {
+        "text": "How do I report a transaction I did not authorise?",
+        "expected": [],
+        "detected": [
+          "POSSIBLE_FRAUD"
+        ]
+      }
+    ]
+  },
+  "multi_request": {
+    "n": 12,
+    "exact_matches": 9,
+    "exact_match_rate": 0.75,
+    "intent_precision": 1.0,
+    "intent_recall": 0.75,
+    "misses": [
+      {
+        "text": "I need a new password and an invoice for last month.",
+        "expected": [
+          "recover_password",
+          "get_invoice"
+        ],
+        "detected": []
+      },
+      {
+        "text": "The checkout keeps failing; please send me a receipt as well.",
+        "expected": [
+          "payment_issue",
+          "get_invoice"
+        ],
+        "detected": []
+      },
+      {
+        "text": "I want to speak to a person and file a complaint.",
+        "expected": [
+          "contact_human_agent",
+          "complaint"
+        ],
+        "detected": []
+      }
+    ],
+    "controls": {
+      "bitext_test_single_topic": {
+        "n": 3122,
+        "false_splits": 0,
+        "false_split_rate": 0.0,
+        "false_split_upper_wilson_95": 0.0012289810206633632
+      },
+      "hard_test_single_topic": {
+        "n": 220,
+        "false_splits": 0,
+        "false_split_rate": 0.0,
+        "false_split_upper_wilson_95": 0.017162136081943655
+      },
+      "independent_natural_single_topic": {
+        "n": 55,
+        "false_splits": 0,
+        "false_split_rate": 0.0,
+        "false_split_upper_wilson_95": 0.06528714378942788
+      }
+    },
+    "note": "Author-written regression set; not a measure of real-world recall"
+  },
+  "scope": "Frozen author-written benchmark, scored once. Not a customer sample.",
+  "criteria": {
+    "checks": {
+      "no_keywords_top1_at_least_0.50": false,
+      "ood_false_auto_at_most_0.05": true,
+      "cascade_net_positive": true,
+      "risk_recall_at_least_0.80": false
+    },
+    "natural_top1": 0.509090909090909,
+    "no_keywords_top1": 0.21818181818181817,
+    "ood_false_auto_rate": 0.05,
+    "risk_recall": 0.5,
+    "all_passed": false
+  }
+}

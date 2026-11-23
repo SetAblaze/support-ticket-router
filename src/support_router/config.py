@@ -1,7 +1,7 @@
 """Константы проекта: версии, темы и очереди, флаги Bitext."""
 from __future__ import annotations
 
-VERSION = "3.1.1"  # 3.1.1: этап 11, варианты фраз в правилах рисков (_risk_signals)
+VERSION = "3.2.0"
 
 PREPROCESS_VERSION = "2.0-negation-placeholders"
 

@@ -1,0 +1,19 @@
+text,expected_flags
+I will make you a list of the missing items.,
+I will make your store my first stop tomorrow.,
+I will make you pay for this.,POSSIBLE_THREAT
+i m going to kill you,POSSIBLE_THREAT
+I'm gonna kill ya,POSSIBLE_THREAT
+I'm not going to hurt anyone.,
+I see a fraudulent charge on my card.,POSSIBLE_FRAUD
+I have been scammed by your seller.,POSSIBLE_FRAUD
+My card was stolen.,POSSIBLE_FRAUD
+How should I report a fraudulent charge?,
+I have not been scammed.,
+"I was asked to translate ""I have been scammed"".",
+I will take you to court.,POSSIBLE_LEGAL_CLAIM
+My lawyer will send a notice.,POSSIBLE_LEGAL_CLAIM
+I will not sue you.,
+Your service is stupid.,ABUSE_LANGUAGE
+You idiots lost my order.,ABUSE_LANGUAGE
+The parcel went to the wrong street.,

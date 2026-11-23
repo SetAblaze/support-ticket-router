@@ -1,0 +1,13 @@
+id,text,expected_intents,role,used_for_training
+1,I need a new password and an invoice for last month.,recover_password get_invoice,independent_multi_request,False
+2,Please cancel my order and update my card.,cancel_order change_payment_method,independent_multi_request,False
+3,My payment failed and I also want to unsubscribe from the newsletter.,payment_issue unsubscribe_newsletter,independent_multi_request,False
+4,"Where is my parcel, and can you also change my address?",track_order change_shipping_address,independent_multi_request,False
+5,I want a refund and a copy of my invoice.,get_refund get_invoice,independent_multi_request,False
+6,"Reset my password. Also, please close my account.",recover_password delete_account,independent_multi_request,False
+7,The checkout keeps failing; please send me a receipt as well.,payment_issue get_invoice,independent_multi_request,False
+8,Can you track my order and tell me about delivery options?,track_order delivery_options,independent_multi_request,False
+9,I need to update my address and recover my password.,change_shipping_address recover_password,independent_multi_request,False
+10,Please send an invoice and explain the refund policy.,get_invoice check_refund_policy,independent_multi_request,False
+11,I want to speak to a person and file a complaint.,contact_human_agent complaint,independent_multi_request,False
+12,My card was declined and I need a refund for the earlier order.,payment_issue get_refund,independent_multi_request,False

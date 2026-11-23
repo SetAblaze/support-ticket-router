@@ -20,6 +20,7 @@
 from __future__ import annotations
 
 import argparse
+import json
 import sys
 from pathlib import Path
 
@@ -51,7 +52,8 @@ CHECK_TEXTS = ["I want to cancel my order", "I can't log in", "Where is my refun
                "Где мой заказ?", "Reset my password and check my refund"]
 BATCH_COLUMNS = ["row", "text_masked", "suggested_category", "category", "queue", "topic_queue",
                  "status", "priority", "confidence", "similarity", "risk_flags", "reason_codes",
-                 "shadow_status", "shadow_queue", "model_id", "policy_version"]
+                 "shadow_status", "shadow_queue", "model_id", "policy_version", "priority_reasons",
+                 "classification_source", "semantic_status", "primary_category", "primary_confidence", "primary_confidence_threshold"]
 
 
 def load_router(models_dir=MODELS_DIR):
@@ -64,13 +66,21 @@ def deployed_message(result):
     """Тот же текст, что в интерфейсе этапа 9."""
     if result["status"] == "NEEDS_CLARIFICATION":
         return "Нужен текст обращения."
+    if result["status"] == "MODEL_ERROR":
+        return "Ошибка модели. Обращение остаётся оператору."
+    if result.get("request_parts"):
+        parts = [f"{part['intent'].replace('_', ' ')} ({part['category']} → {part['queue']})"
+                 for part in result["request_parts"]]
+        return "Оператору нужно проверить каждый запрос. " + " · ".join(parts)
+    if result.get("semantic_status") in ("ABSTAINED", "UNAVAILABLE", "INPUT_TOO_LONG", "NO_VALIDATED_GATE"):
+        return "Первичный прогноз требует проверки. У MiniLM нет подтверждённой подсказки."
+    if result.get("classification_source") == "minilm":
+        return "MiniLM предложила тему для незнакомой формулировки. Очередь должен подтвердить оператор."
     if result["category"] is None:
         return "Категория не определена для этого ввода. Нужна ручная проверка."
     if result["status"] == "MANUAL_REVIEW":
         return ("Показана предполагаемая тема. Автоматическое направление не подтверждено: "
                 "оператору нужно проверить решение.")
-    if result["status"] == "MODEL_ERROR":
-        return "Ошибка модели. Обращение остаётся оператору."
     return "Сформирована рекомендация категории и очереди. Обращение не отправлено."
 
 
@@ -80,7 +90,7 @@ def shadow_message(shadow_result, shadow_policy):
         return "Теневая политика: нужен текст обращения."
     if shadow_result["status"] == "AUTO_RECOMMENDED":
         return (f"Теневая политика (только для анализа) отправила бы сама: {shadow_result['queue']}. "
-                f"Пороги: уверенность ≥ {shadow_policy.get('confidence_threshold')}, "
+                f"Пороги: уверенность ≥ {shadow_result.get('primary_confidence_threshold') or shadow_policy.get('confidence_threshold')}, "
                 f"сходство с обучением ≥ {shadow_policy.get('similarity_threshold')}.")
     return "Теневая политика (только для анализа) тоже оставила бы обращение оператору."
 
@@ -102,10 +112,11 @@ def explanation_rows(model, text):
     return rows
 
 
-def route_with_shadow(text, model, shadow):
+def route_with_shadow(text, model, shadow, detect_multiple=False):
     """Ответ для внешних систем: рабочее решение плюс теневое для сравнения."""
-    result = sc.route_ticket(text, model)
-    shadow_result = sc.route_ticket(text, shadow)
+    from support_router.routing import route_policy_pair
+
+    result, shadow_result = route_policy_pair(text, model, shadow, detect_multiple=detect_multiple)
     result["shadow"] = {"status": shadow_result["status"], "queue": shadow_result["queue"],
                         "policy_version": shadow_result["policy_version"]}
     return result
@@ -119,6 +130,8 @@ def model_card(meta):
              f"**Политика:** {policy.get('version')}, автоотправка "
              f"{'включена' if policy.get('auto_enabled') else 'выключена'}; теневые пороги: уверенность ≥ "
              f"{policy.get('confidence_threshold')}, сходство ≥ {policy.get('similarity_threshold')}"]
+    if policy.get("misroute_cost"):
+        lines.append("Порог зависит от цены ошибочной очереди. Для незнакомых формулировок доступна подсказка MiniLM.")
     if test:
         lines.append(f"**Test Bitext:** macro-F1 {test.get('macro_f1', 0):.4f}, accuracy "
                      f"{test.get('accuracy', 0):.4f}, ошибок {test.get('errors')} из {test.get('n')}")
@@ -132,14 +145,15 @@ def model_card(meta):
 
 def make_handler(model, shadow):
     """Обработчик кнопки «Анализировать»: рабочее решение, теневое и объяснение."""
-    def process(user_text, history):
-        result, updated = sc.web_request(user_text, history, model)
-        shadow_result = sc.route_ticket(user_text, shadow)
+    def process(user_text, history, detect_multiple=False):
+        result, updated = sc.web_request(user_text, history, model, detect_multiple=detect_multiple)
+        shadow_result = sc.route_ticket(user_text, shadow, detect_multiple=detect_multiple)
         return (result["category"] or "Не определена", result["queue"] or "", result["status"],
                 result["priority"], "; ".join(result["reason_codes"]), result["top3"],
                 pd.DataFrame(updated[::-1], columns=HISTORY_COLUMNS), updated,
-                deployed_message(result), shadow_message(shadow_result, shadow.policy),
-                pd.DataFrame(explanation_rows(model, user_text), columns=["Признак", "Вклад"]))
+                deployed_message(result) + (" Причина приоритета: " + ", ".join(result["priority_reasons"])
+                                            if result["priority_reasons"] else ""), shadow_message(shadow_result, shadow.policy),
+                pd.DataFrame([] if result["classification_source"] == "minilm" else explanation_rows(model, user_text), columns=["Признак", "Вклад"]))
     return process
 
 
@@ -161,6 +175,7 @@ def build_ui(model, shadow, meta):
         with gr.Row():
             with gr.Column():
                 user_text = gr.Textbox(lines=4, label="Обращение клиента")
+                multiple = gr.Checkbox(label="Распознавать несколько запросов в одном обращении", value=False)
                 gr.Examples(examples=[[t] for t in EXAMPLES], inputs=user_text)
                 submit = gr.Button("Анализировать", variant="primary")
                 message = gr.Markdown()
@@ -178,26 +193,26 @@ def build_ui(model, shadow, meta):
                                      label="История этой сессии (до 100 записей)")
         outputs = [category, queue, status, priority, reasons, top3, history_table,
                    session_history, message, shadow_note, explanation]
-        submit.click(process, inputs=[user_text, session_history], outputs=outputs, api_name="analyze")
-        user_text.submit(process, inputs=[user_text, session_history], outputs=outputs,
+        submit.click(process, inputs=[user_text, session_history, multiple], outputs=outputs, api_name="analyze")
+        user_text.submit(process, inputs=[user_text, session_history, multiple], outputs=outputs,
                          api_visibility="private")
 
-        def route_json(text: str) -> dict:
+        def route_json(text: str, detect_multiple: bool = False) -> dict:
             """Полный ответ route_ticket в JSON плюс теневое решение для сравнения."""
-            return route_with_shadow(text, model, shadow)
+            return route_with_shadow(text, model, shadow, detect_multiple=detect_multiple)
 
         gr.api(route_json, api_name="route_json")
     return demo
 
 
-def batch_file(src, dst, model, shadow):
+def batch_file(src, dst, model, shadow, *, detect_multiple=False):
     frame = pd.read_csv(src, dtype=str, keep_default_na=False)
     column = next((c for c in ("text", "utterance") if c in frame.columns), None)
     if column is None:
         raise SystemExit("В CSV нужна колонка text или utterance")
     texts = frame[column].tolist()
-    deployed = sc.batch_route(model, texts) if texts else []
-    shadowed = sc.batch_route(shadow, texts) if texts else []
+    deployed = sc.batch_route(model, texts, detect_multiple=detect_multiple) if texts else []
+    shadowed = sc.batch_route(shadow, texts, detect_multiple=detect_multiple) if texts else []
     rows = []
     for i, (text, r, s) in enumerate(zip(texts, deployed, shadowed)):
         row = {"row": i, "text_masked": sc.redact_text(text),
@@ -207,10 +222,17 @@ def batch_file(src, dst, model, shadow):
                "risk_flags": ";".join(r["risk_flags"]), "reason_codes": ";".join(r["reason_codes"]),
                "shadow_status": s["status"], "shadow_queue": s["queue"],
                "model_id": r["model_id"], "policy_version": r["policy_version"]}
+        row.update({key: r[key] for key in ("classification_source", "semantic_status", "primary_category",
+                                            "primary_confidence", "primary_confidence_threshold")})
+        row["priority_reasons"] = ";".join(r["priority_reasons"])
+        if detect_multiple:
+            row["request_parts"] = json.dumps(r["request_parts"], ensure_ascii=False)
         if "id" in frame.columns:
             row = {"id": frame.at[i, "id"], **row}
         rows.append(row)
     columns = (["id"] if "id" in frame.columns else []) + BATCH_COLUMNS
+    if detect_multiple:
+        columns = columns + ["request_parts"]
     out = pd.DataFrame(rows, columns=columns)
     out.to_csv(dst, index=False)
     return out
@@ -239,6 +261,7 @@ def main(argv=None):
             stream.reconfigure(encoding="utf-8", errors="replace")
     parser = argparse.ArgumentParser(description="Маршрутизация обращений в поддержку (демонстрационная версия)")
     parser.add_argument("--models", default=str(MODELS_DIR), help="папка с router.joblib и router_meta.json")
+    parser.add_argument("--detect-multiple", action="store_true", help="выделить отдельные запросы в пакетном режиме")
     parser.add_argument("--batch", help="CSV с колонкой text или utterance")
     parser.add_argument("--out", help="куда записать результат пакетной разметки")
     parser.add_argument("--check", action="store_true", help="проверить модель на контрольных фразах")
@@ -249,7 +272,7 @@ def main(argv=None):
     model, shadow, meta = load_router(args.models)
     if args.batch:
         out = args.out or str(Path(args.batch).with_name(Path(args.batch).stem + "_routed.csv"))
-        result = batch_file(args.batch, out, model, shadow)
+        result = batch_file(args.batch, out, model, shadow, detect_multiple=args.detect_multiple)
         print(f"Размечено {len(result)} строк: {out}")
         print(result.status.value_counts().to_string())
         return

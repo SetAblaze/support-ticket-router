@@ -1,0 +1,10 @@
+# Keep the published Bitext checksum on all checkout platforms.
+data/raw/20000-Utterances-Training-dataset-for-chatbots-virtual-assistant-Bitext-sample.csv -text
+
+# These fixtures and auxiliary modules also have byte-level hashes in the notebook/model.
+data/eval/hard_test.csv -text
+data/eval/ood_eval.csv -text
+src/support_router/category_examples.py text eol=lf
+src/support_router/semantic_encoder.py text eol=lf
+models/encoder/tokenizer.json -text
+models/encoder/model.onnx binary

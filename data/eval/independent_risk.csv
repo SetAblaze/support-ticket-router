@@ -1,0 +1,17 @@
+id,text,expected_flags,role,used_for_training
+1,I am going to come to your office and hurt someone.,POSSIBLE_THREAT,independent_risk,False
+2,Tell your driver I will attack him if the parcel is late.,POSSIBLE_THREAT,independent_risk,False
+3,The seller threatened to harm me when I asked for a refund.,POSSIBLE_THREAT,independent_risk,False
+4,There is a transaction on my statement that I did not authorise.,POSSIBLE_FRAUD,independent_risk,False
+5,Somebody used my card to buy a laptop.,POSSIBLE_FRAUD,independent_risk,False
+6,A marketplace seller took my money and never sent the goods.,POSSIBLE_FRAUD,independent_risk,False
+7,I will take this to court unless the money is returned.,POSSIBLE_LEGAL_CLAIM,independent_risk,False
+8,My solicitor will send a formal notice tomorrow.,POSSIBLE_LEGAL_CLAIM,independent_risk,False
+9,You morons have lost my parcel again.,ABUSE_LANGUAGE,independent_risk,False
+10,This stupid service is a waste of time.,ABUSE_LANGUAGE,independent_risk,False
+11,There is no threat here; I simply want my parcel.,,independent_risk,False
+12,The article said someone threatened to attack the driver.,,independent_risk,False
+13,"The film line ""I will kill you"" was scary.",,independent_risk,False
+14,How do I report a transaction I did not authorise?,,independent_risk,False
+15,I have never been scammed by your store.,,independent_risk,False
+16,The threat of snow delayed the delivery.,,independent_risk,False

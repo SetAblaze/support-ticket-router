@@ -8,29 +8,32 @@ from datetime import datetime, timezone
 import numpy as np
 import pandas as pd
 
+from .business import REVIEW_ACTION, confidence_floor, cost_sensitive_action, triage
+from .cascade import second_opinion
 from .config import CATEGORY_TO_QUEUE, MANUAL_QUEUE, SCHEMA_VERSION
 from .evaluation import wilson_upper
 from .models import checked_proba
+from .multiple_requests import request_parts
 from .rules import _context_effects, detect_signals
 from .text import preprocess
 
 
-def route_ticket(text, model, context=None, now=None, scored=None):
-    """Single decision function for batch, demos and UI. It DOES NOT enqueue externally."""
+def _assess_ticket(text, model, context, now, scored, detect_multiple):
+    """Compute input signals and model scores before applying a routing policy."""
     now = now or datetime.now(timezone.utc)
-    policy = getattr(model, "policy", {}) or {}
     result = {"schema_version": SCHEMA_VERSION, "category": None, "suggested_category": None,
               "decision_category": None, "accepted_category": None,
               "queue": MANUAL_QUEUE, "topic_queue": None, "confidence": None,
-              "similarity": None, "top3": {}, "status": "MANUAL_REVIEW",
-              "priority": "P3", "risk_flags": [], "reason_codes": [],
+              "similarity": None, "top3": {}, "category_probabilities": {}, "request_parts": [], "status": "MANUAL_REVIEW",
+              "priority": "P3", "priority_reasons": [], "classification_source": None,
+              "primary_category": None, "primary_confidence": None, "primary_confidence_threshold": None,
+              "semantic_status": "NOT_REQUESTED", "semantic_confidence": None, "semantic_similarity": None, "risk_flags": [], "reason_codes": [],
               "model_id": getattr(model, "model_id", "unidentified"),
-              "policy_version": policy.get("version", "missing"),
               "business_policy_approved": False, "delivery_status": "NOT_SENT",
               "created_at_utc": now.isoformat(), "context": {}}
     if not isinstance(text, str) or not preprocess(text):
         result.update(status="NEEDS_CLARIFICATION", reason_codes=["EMPTY_OR_INVALID_INPUT"], queue=None)
-        return result
+        return result, []
     signals = detect_signals(text)
     if getattr(model,'model_name','').startswith('semantic_'):
         from .semantic_encoder import was_truncated
@@ -41,18 +44,20 @@ def route_ticket(text, model, context=None, now=None, scored=None):
     context_reasons, priority, facts = _context_effects(context, now)
     result["context"] = facts
     result["reason_codes"].extend(context_reasons)
-    if any(f in signals["risk_flags"] for f in ["POSSIBLE_THREAT", "POSSIBLE_FRAUD"]):
-        priority = 1
-    elif "POSSIBLE_LEGAL_CLAIM" in signals["risk_flags"]:
-        priority = min(priority, 2)
-    result["priority"] = f"P{priority}"
+    result["priority"], result["priority_reasons"] = triage(text, signals["risk_flags"], context_reasons, priority)
+    if result["priority"] != "P3" and getattr(model, "policy", {}).get("misroute_cost"):
+        result["reason_codes"].append("PRIORITY_REQUIRES_REVIEW")
     for flag in signals["risk_flags"]:
         if flag != "ABUSE_LANGUAGE":
             result["reason_codes"].append(flag + "_SPECIALIST_REVIEW")
     if any(reason in signals['input_reasons'] for reason in
            ['POSSIBLY_UNSUPPORTED_LANGUAGE','INSUFFICIENT_SUPPORTED_TEXT']):
         result['decision_category'] = 'OTHER'
-        return result
+        return result, context_reasons
+    if detect_multiple:
+        result["request_parts"] = request_parts(text)
+        if result["request_parts"] and "POSSIBLE_MULTIPLE_REQUESTS" not in result["reason_codes"]:
+            result["reason_codes"].append("POSSIBLE_MULTIPLE_REQUESTS")
     try:
         if scored is None:
             p = checked_proba(model, [text])[0]
@@ -70,17 +75,63 @@ def route_ticket(text, model, context=None, now=None, scored=None):
         result.update(category=cat if cat in CATEGORY_TO_QUEUE else None,
                       suggested_category=cat, confidence=conf, similarity=sim,
                       topic_queue=CATEGORY_TO_QUEUE.get(cat),
-                      top3={str(model.classes_[i]): float(p[i]) for i in order[:3]})
+                      top3={str(model.classes_[i]): float(p[i]) for i in order[:3]},
+                      category_probabilities={str(model.classes_[i]): float(p[i]) for i in range(len(model.classes_))})
+        result.update(classification_source="primary", primary_category=cat, primary_confidence=conf,
+                      primary_confidence_threshold=confidence_floor(getattr(model, "policy", {}), cat))
         if cat == "OTHER":
             result["reason_codes"].append("MODEL_OTHER")
         elif cat not in CATEGORY_TO_QUEUE:
             result["reason_codes"].append("UNKNOWN_CATEGORY")
+        second_opinion(result, text, model)
+    except Exception as exc:
+        result["reason_codes"].append("MODEL_CAPABILITY_OR_SCORING_ERROR")
+        result["error_type"] = type(exc).__name__
+        result["status"] = "MODEL_ERROR"
+    return result, context_reasons
+
+
+def _apply_expected_loss(result, policy):
+    """Guard auto-routing with the full cost matrix, not only the predicted class."""
+    costs = policy.get("misroute_cost")
+    probabilities = result.get("category_probabilities") or {}
+    predicted = result.get("primary_category")
+    if not costs or not probabilities or predicted not in probabilities:
+        return
+    classes = list(probabilities)
+    review_cost = float(policy.get("review_cost", 1.))
+    actions, losses, action_names = cost_sensitive_action(
+        [probabilities[c] for c in classes], classes, costs=costs, review_cost=review_cost,
+        default_misroute_cost=float(policy.get("default_misroute_cost", 5.)))
+    row = losses[0]
+    best = action_names[int(np.argmin(row))]
+    result["expected_loss"] = {action: float(value) for action, value in zip(action_names, row)}
+    result["expected_loss_action"] = best
+    result["expected_loss_review"] = review_cost
+    if best == REVIEW_ACTION:
+        result["reason_codes"].append("EXPECTED_LOSS_PREFERS_REVIEW")
+    elif best != predicted:
+        result["reason_codes"].append("EXPECTED_LOSS_DIFFERS_FROM_PREDICTION")
+    if row[action_names.index(predicted)] >= review_cost:
+        result["reason_codes"].append("EXPECTED_LOSS_ROUTE_NOT_BETTER_THAN_REVIEW")
+
+
+def _apply_policy(assessment, policy):
+    facts, context_reasons = assessment
+    result = {**facts, "reason_codes": list(facts["reason_codes"]),
+              "policy_version": policy.get("version", "missing")}
+    if result["confidence"] is None or result["status"] == "MODEL_ERROR":
+        return result
+    cat = result["suggested_category"]
+    conf, sim = result["primary_confidence"], result["similarity"]
+    try:
         if not policy.get("auto_enabled", False):
             result["reason_codes"].append("AUTO_POLICY_DISABLED")
-        if conf < float(policy.get("confidence_threshold", 1.)):
+        if conf < confidence_floor(policy, result["primary_category"]):
             result["reason_codes"].append("LOW_CONFIDENCE")
         if sim < float(policy.get("similarity_threshold", 1.)):
             result["reason_codes"].append("LOW_TRAINING_SIMILARITY")
+        _apply_expected_loss(result, policy)
         blockers = [r for r in result["reason_codes"] if r not in context_reasons]
         if blockers:
             result['decision_category'] = 'OTHER'
@@ -88,17 +139,45 @@ def route_ticket(text, model, context=None, now=None, scored=None):
             result.update(queue=CATEGORY_TO_QUEUE[cat], status="AUTO_RECOMMENDED",
                           decision_category=cat,accepted_category=cat)
             result["reason_codes"].append("CATEGORY_AND_POLICY_ACCEPTED")
-    except Exception as exc:
+    except (ValueError, TypeError) as exc:
         result["reason_codes"].append("MODEL_CAPABILITY_OR_SCORING_ERROR")
-        result["error_type"] = type(exc).__name__
-        result["status"] = "MODEL_ERROR"
+        result.update(status="MODEL_ERROR", error_type=type(exc).__name__)
     result["reason_codes"] = list(dict.fromkeys(result["reason_codes"]))
     return result
 
-def batch_route(model, texts):
+
+def route_ticket(text, model, context=None, now=None, scored=None, *, detect_multiple=False):
+    """Return a recommendation without sending the ticket to an external queue."""
+    assessment = _assess_ticket(text, model, context, now, scored, detect_multiple)
+    return _apply_policy(assessment, getattr(model, "policy", {}) or {})
+
+
+def _batch_scores(model, texts):
+    probabilities = checked_proba(model, texts)
+    similarities = model.similarity(texts)
+    return list(zip(probabilities, similarities, strict=True))
+
+
+def batch_route(model, texts, *, detect_multiple=False):
     texts = list(texts)
-    p, sims = checked_proba(model, texts), model.similarity(texts)
-    return [route_ticket(t, model, scored=(row, sim)) for t, row, sim in zip(texts, p, sims)]
+    return [route_ticket(text, model, scored=score, detect_multiple=detect_multiple)
+            for text, score in zip(texts, _batch_scores(model, texts), strict=True)]
+
+
+def route_policy_pair(text, model, shadow, scored=None, *, detect_multiple=False):
+    assessment = _assess_ticket(text, model, None, None, scored, detect_multiple)
+    return _apply_policy(assessment, model.policy), _apply_policy(assessment, shadow.policy)
+
+
+def batch_policy_pairs(texts, model, shadow, *, detect_multiple=False):
+    try:
+        scores = _batch_scores(model, texts)
+    except Exception:
+        # Isolate a bad input or a model that cannot score a batch.
+        scores = [None] * len(texts)
+    return [route_policy_pair(text, model, shadow, scored=score, detect_multiple=detect_multiple)
+            for text, score in zip(texts, scores, strict=True)]
+
 
 def select_policy(bundle, val, ood_dev, target_error_upper=.01, min_auto=30,
                   false_auto_cost=25., review_cost=1.):
@@ -170,9 +249,9 @@ def redact_text(text):
     t = re.sub(r"(?<!\w)\+?\d[\d ()-]{6,}\d(?!\w)", "[NUMBER]", t)
     return t[:500]
 
-def web_request(text, history, model):
+def web_request(text, history, model, *, detect_multiple=False):
     """No global history. Returns a fresh per-session list."""
-    result = route_ticket(text, model)
+    result = route_ticket(text, model, detect_multiple=detect_multiple)
     new_history = copy.deepcopy(history or [])
     if result["status"] != "NEEDS_CLARIFICATION":
         new_history.append({"Время UTC": result["created_at_utc"], "Текст (маскир.)": redact_text(text),

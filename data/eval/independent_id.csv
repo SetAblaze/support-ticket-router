@@ -1,0 +1,111 @@
+id,text,category,difficulty,role,used_for_training
+1,I changed my email and now I cannot access my profile at all.,ACCOUNT,natural,independent_post_selection_benchmark,False
+2,The sign-in page keeps rejecting the password I just created.,ACCOUNT,natural,independent_post_selection_benchmark,False
+3,Please help me remove the personal details stored in my profile.,ACCOUNT,natural,independent_post_selection_benchmark,False
+4,I want to register a new profile but the form says I already have one.,ACCOUNT,natural,independent_post_selection_benchmark,False
+5,My security question answers are no longer accepted when I sign in.,ACCOUNT,natural,independent_post_selection_benchmark,False
+6,Will money be taken from my card if I call off the reservation?,CANCELLATION_FEE,natural,independent_post_selection_benchmark,False
+7,Is there a penalty for backing out of the booking after confirmation?,CANCELLATION_FEE,natural,independent_post_selection_benchmark,False
+8,How much do you keep when a customer calls off a reservation?,CANCELLATION_FEE,natural,independent_post_selection_benchmark,False
+9,I stopped the booking yesterday; what charge should I expect on my statement?,CANCELLATION_FEE,natural,independent_post_selection_benchmark,False
+10,Does ending the arrangement before the event cost anything?,CANCELLATION_FEE,natural,independent_post_selection_benchmark,False
+11,Please put me through to a member of your support team.,CONTACT,natural,independent_post_selection_benchmark,False
+12,What is the best way to reach a human advisor about my case?,CONTACT,natural,independent_post_selection_benchmark,False
+13,Could this conversation be handed over to a real adviser?,CONTACT,natural,independent_post_selection_benchmark,False
+14,Can you give me the phone line for customer care?,CONTACT,natural,independent_post_selection_benchmark,False
+15,How do I start a live conversation with your staff?,CONTACT,natural,independent_post_selection_benchmark,False
+16,What delivery choices do I have if I order today?,DELIVERY,natural,independent_post_selection_benchmark,False
+17,How quickly can an order reach me with the standard service?,DELIVERY,natural,independent_post_selection_benchmark,False
+18,Can I arrange for the parcel to arrive tomorrow morning?,DELIVERY,natural,independent_post_selection_benchmark,False
+19,Which courier services are offered at the checkout?,DELIVERY,natural,independent_post_selection_benchmark,False
+20,Is there a faster option than the usual delivery time?,DELIVERY,natural,independent_post_selection_benchmark,False
+21,I want to praise the adviser who solved my problem today.,FEEDBACK,natural,independent_post_selection_benchmark,False
+22,Where can I send a complaint about the way I was treated?,FEEDBACK,natural,independent_post_selection_benchmark,False
+23,The service I received was excellent and I would like to say so.,FEEDBACK,natural,independent_post_selection_benchmark,False
+24,Please pass on my disappointment to the team that handled my case.,FEEDBACK,natural,independent_post_selection_benchmark,False
+25,I want to tell you how pleased I am with the agent I spoke to.,FEEDBACK,natural,independent_post_selection_benchmark,False
+26,Could you email the billing document for last month's purchase?,INVOICES,natural,independent_post_selection_benchmark,False
+27,I need a copy of the receipt for my accounting records.,INVOICES,natural,independent_post_selection_benchmark,False
+28,Where can I find the bill for the order I received on Monday?,INVOICES,natural,independent_post_selection_benchmark,False
+29,Please resend the invoice to my work email address.,INVOICES,natural,independent_post_selection_benchmark,False
+30,The amount on my bill does not match what I was charged.,INVOICES,natural,independent_post_selection_benchmark,False
+31,Please stop the sale announcements arriving in my inbox.,NEWSLETTER,natural,independent_post_selection_benchmark,False
+32,I want to receive your weekly product updates by email.,NEWSLETTER,natural,independent_post_selection_benchmark,False
+33,I no longer wish to receive advertising campaigns.,NEWSLETTER,natural,independent_post_selection_benchmark,False
+34,How can I join the mailing list for seasonal offers?,NEWSLETTER,natural,independent_post_selection_benchmark,False
+35,The promotional emails are too frequent; please end them.,NEWSLETTER,natural,independent_post_selection_benchmark,False
+36,I placed a purchase this morning and need to change the items.,ORDER,natural,independent_post_selection_benchmark,False
+37,Where is the parcel from the purchase I made last Friday?,ORDER,natural,independent_post_selection_benchmark,False
+38,Please stop the purchase I made a few minutes ago.,ORDER,natural,independent_post_selection_benchmark,False
+39,I ordered the wrong size and want to amend the purchase.,ORDER,natural,independent_post_selection_benchmark,False
+40,Can you tell me when my purchase will be dispatched?,ORDER,natural,independent_post_selection_benchmark,False
+41,The checkout rejects my debit card every time I attempt to pay.,PAYMENT,natural,independent_post_selection_benchmark,False
+42,Can I settle the amount with a bank transfer?,PAYMENT,natural,independent_post_selection_benchmark,False
+43,The same purchase appears twice on my bank statement.,PAYMENT,natural,independent_post_selection_benchmark,False
+44,Which payment options can I use at the checkout?,PAYMENT,natural,independent_post_selection_benchmark,False
+45,"My bank says the transaction went through, but your store says it did not.",PAYMENT,natural,independent_post_selection_benchmark,False
+46,"Your team accepted the return, yet the amount is still missing from my statement.",REFUNDS,natural,independent_post_selection_benchmark,False
+47,What are the rules for getting my funds returned?,REFUNDS,natural,independent_post_selection_benchmark,False
+48,I returned the purchase and would like to request reimbursement.,REFUNDS,natural,independent_post_selection_benchmark,False
+49,How long does it usually take for a refund to appear?,REFUNDS,natural,independent_post_selection_benchmark,False
+50,The item went back last week; where is my money?,REFUNDS,natural,independent_post_selection_benchmark,False
+51,The destination address saved for deliveries is out of date.,SHIPPING,natural,independent_post_selection_benchmark,False
+52,I need parcels sent to my new flat from now on.,SHIPPING,natural,independent_post_selection_benchmark,False
+53,The flat number in my destination details is wrong.,SHIPPING,natural,independent_post_selection_benchmark,False
+54,Can I add a second delivery address to my profile?,SHIPPING,natural,independent_post_selection_benchmark,False
+55,The last parcel went to my old street; please update the details.,SHIPPING,natural,independent_post_selection_benchmark,False
+56,I am shut out of my personal area and the recovery message never arrives.,ACCOUNT,no_keywords,independent_post_selection_benchmark,False
+57,The site refuses the secret phrase I set up yesterday.,ACCOUNT,no_keywords,independent_post_selection_benchmark,False
+58,I want my personal details erased from your system.,ACCOUNT,no_keywords,independent_post_selection_benchmark,False
+59,The form says I am already registered although this is my first visit.,ACCOUNT,no_keywords,independent_post_selection_benchmark,False
+60,The questions used to prove it is me are no longer accepted.,ACCOUNT,no_keywords,independent_post_selection_benchmark,False
+61,"If I call off the booking, will any money be taken from my card?",CANCELLATION_FEE,no_keywords,independent_post_selection_benchmark,False
+62,What does backing out after confirmation cost me?,CANCELLATION_FEE,no_keywords,independent_post_selection_benchmark,False
+63,How much do you keep when a reservation is called off?,CANCELLATION_FEE,no_keywords,independent_post_selection_benchmark,False
+64,I stopped the booking yesterday; what will appear on my statement?,CANCELLATION_FEE,no_keywords,independent_post_selection_benchmark,False
+65,Does ending the arrangement before the date cost anything?,CANCELLATION_FEE,no_keywords,independent_post_selection_benchmark,False
+66,Please put me through to a real person.,CONTACT,no_keywords,independent_post_selection_benchmark,False
+67,What is the best way to reach a human about my case?,CONTACT,no_keywords,independent_post_selection_benchmark,False
+68,I prefer dealing with a human rather than this bot.,CONTACT,no_keywords,independent_post_selection_benchmark,False
+69,Can you give me the number for customer care?,CONTACT,no_keywords,independent_post_selection_benchmark,False
+70,How do I start a live conversation with your staff?,CONTACT,no_keywords,independent_post_selection_benchmark,False
+71,What choices do I have for getting something to my door?,DELIVERY,no_keywords,independent_post_selection_benchmark,False
+72,How quickly can an item reach me with the usual service?,DELIVERY,no_keywords,independent_post_selection_benchmark,False
+73,Can I arrange for the parcel to arrive tomorrow morning?,DELIVERY,no_keywords,independent_post_selection_benchmark,False
+74,Which services are offered at the checkout for sending goods?,DELIVERY,no_keywords,independent_post_selection_benchmark,False
+75,Is there a faster option than the usual timeframe?,DELIVERY,no_keywords,independent_post_selection_benchmark,False
+76,I want to praise the adviser who solved my problem today.,FEEDBACK,no_keywords,independent_post_selection_benchmark,False
+77,Where can I send a grievance about the way I was treated?,FEEDBACK,no_keywords,independent_post_selection_benchmark,False
+78,The service was excellent and I would like to say so.,FEEDBACK,no_keywords,independent_post_selection_benchmark,False
+79,Please pass on my disappointment to the team that handled my case.,FEEDBACK,no_keywords,independent_post_selection_benchmark,False
+80,How do I share my opinion after an experience with your staff?,FEEDBACK,no_keywords,independent_post_selection_benchmark,False
+81,Could you email the paperwork showing what I paid last month?,INVOICES,no_keywords,independent_post_selection_benchmark,False
+82,I need a copy of the payment document for my accountant.,INVOICES,no_keywords,independent_post_selection_benchmark,False
+83,Where can I find the statement for the order I received on Monday?,INVOICES,no_keywords,independent_post_selection_benchmark,False
+84,Please resend the paperwork to my work email address.,INVOICES,no_keywords,independent_post_selection_benchmark,False
+85,The amount on the document does not match what left my bank.,INVOICES,no_keywords,independent_post_selection_benchmark,False
+86,Please stop the sale announcements arriving in my inbox.,NEWSLETTER,no_keywords,independent_post_selection_benchmark,False
+87,I want to receive your weekly product updates by email.,NEWSLETTER,no_keywords,independent_post_selection_benchmark,False
+88,I no longer wish to receive advertising campaigns.,NEWSLETTER,no_keywords,independent_post_selection_benchmark,False
+89,How can I join the group that gets seasonal offers?,NEWSLETTER,no_keywords,independent_post_selection_benchmark,False
+90,The promotional emails are too frequent; please end them.,NEWSLETTER,no_keywords,independent_post_selection_benchmark,False
+91,I bought something this morning and need to change the items.,ORDER,no_keywords,independent_post_selection_benchmark,False
+92,Where is the item I paid for last Friday?,ORDER,no_keywords,independent_post_selection_benchmark,False
+93,I want to stop the request I sent a few minutes ago.,ORDER,no_keywords,independent_post_selection_benchmark,False
+94,I chose the wrong size and want to amend my basket.,ORDER,no_keywords,independent_post_selection_benchmark,False
+95,Can you tell me when my goods will be sent out?,ORDER,no_keywords,independent_post_selection_benchmark,False
+96,The checkout rejects my Visa every time I try to finish.,PAYMENT,no_keywords,independent_post_selection_benchmark,False
+97,Is a bank transfer accepted by your store?,PAYMENT,no_keywords,independent_post_selection_benchmark,False
+98,My bank shows two identical amounts for one purchase.,PAYMENT,no_keywords,independent_post_selection_benchmark,False
+99,Which ways can I settle the amount at the checkout?,PAYMENT,no_keywords,independent_post_selection_benchmark,False
+100,The transaction failed although there is enough money in my bank.,PAYMENT,no_keywords,independent_post_selection_benchmark,False
+101,The return was approved but the amount has not reached my bank.,REFUNDS,no_keywords,independent_post_selection_benchmark,False
+102,Please explain the conditions for getting my funds returned.,REFUNDS,no_keywords,independent_post_selection_benchmark,False
+103,I sent the item back and would like the amount credited.,REFUNDS,no_keywords,independent_post_selection_benchmark,False
+104,How long does it usually take for the amount to appear?,REFUNDS,no_keywords,independent_post_selection_benchmark,False
+105,The item went back last week; where are my funds?,REFUNDS,no_keywords,independent_post_selection_benchmark,False
+106,The destination saved for parcels is out of date.,SHIPPING,no_keywords,independent_post_selection_benchmark,False
+107,I need goods sent to my new flat from now on.,SHIPPING,no_keywords,independent_post_selection_benchmark,False
+108,Please correct the house number on the destination details.,SHIPPING,no_keywords,independent_post_selection_benchmark,False
+109,Can I add a second destination to my profile?,SHIPPING,no_keywords,independent_post_selection_benchmark,False
+110,The last parcel went to my old street; please update the details.,SHIPPING,no_keywords,independent_post_selection_benchmark,False

@@ -30,6 +30,7 @@ class RouterMetrics:
                                  ["status", "queue", "priority"], registry=r)
         self.shadow = Counter("router_shadow_decisions", "Решения теневой политики (ничего не отправляют)",
                               ["status"], registry=r)
+        self.semantic = Counter("router_semantic_decisions", "Итог обращения к MiniLM", ["status"], registry=r)
         self.categories = Counter("router_suggested_category", "Тема, предложенная моделью",
                                   ["category"], registry=r)
         self.risk_flags = Counter("router_risk_flags", "Флаги риска", ["flag"], registry=r)
@@ -45,6 +46,8 @@ class RouterMetrics:
                                   registry=r)
         self.model_info = Gauge("router_model_info", "Паспорт загруженной модели",
                                 ["model_id", "model_name", "policy_version", "code_version"], registry=r)
+        self.feedback = Counter("router_feedback_total", "Подтверждённые и исправленные оператором решения",
+                                ["outcome", "proposed_category", "final_category"], registry=r)
 
     def observe_request(self, endpoint, method, status_code, seconds):
         self.requests.labels(endpoint, method, str(status_code)).inc()
@@ -53,6 +56,7 @@ class RouterMetrics:
     def observe_decision(self, result, shadow_result, text_length):
         self.decisions.labels(result["status"], result["queue"] or "none", result["priority"]).inc()
         self.shadow.labels(shadow_result["status"]).inc()
+        self.semantic.labels(result.get("semantic_status", "NOT_REQUESTED")).inc()
         self.text_length.observe(text_length)
         if result.get("suggested_category"):
             self.categories.labels(result["suggested_category"]).inc()
@@ -66,6 +70,10 @@ class RouterMetrics:
             self.similarity.observe(result["similarity"])
         if result["status"] == "MODEL_ERROR":
             self.model_errors.inc()
+
+    def observe_feedback(self, event):
+        self.feedback.labels(str(event.get("outcome")), str(event.get("proposed_category")),
+                             str(event.get("final_category"))).inc()
 
     def set_model(self, meta, code_version):
         self.model_loaded.set(1)

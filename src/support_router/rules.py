@@ -11,16 +11,16 @@ def _risk_signals(text):
     t = preprocess(text)
     # 3.1.1 (этап 11): preprocess разворачивает только n't, поэтому «I'm going to kill you»
     # не совпадало с шаблоном «i am going to …». Нормализуем только для правил рисков.
-    t = re.sub(r"\bi'?m\b", "i am", t)
+    t = re.sub(r"\bi(?:'| )?m\b", "i am", t)
     t = re.sub(r"\bgonna\b", "going to", t)
     # Quotes in an educational/example context do not directly establish intent.
     quoted = re.sub(r'"[^"\n]*"|“[^”\n]*”', " ", t)
     reported = bool(re.search(r"\b(threatened me|threatening me|sent me (?:a )?threat|someone threatened|"
                               r"(?:threatened|threatening) to (?:kill|hurt|attack|shoot|harm))\b", t))
-    direct = bool(re.search(r"\bi(?: will|'ll| am going to| intend to)\s+"
-                            r"(?:kill|hurt|attack|shoot|make)\s+"
-                            r"(?:you|your|the courier|the driver|staff|someone|you pay)\b", quoted))
-    direct = direct or bool(re.search(r"\bi(?: will|'ll)\s+make you pay\b", quoted))
+    direct = bool(re.search(
+        r"\bi(?: will|'ll| am going to| intend to)\s+"
+        r"(?:(?:kill|hurt|attack|shoot)\s+(?:you|ya|your|the courier|the driver|staff|someone)|make you pay)\b",
+        quoted))
     fraud = bool(re.search(r"\b(unauthori[sz]ed (?:payment|charge|transaction)|(?:account|card) (?:was |has been |got )?(?:hacked|stolen|compromised)|did not authori[sz]e|do not recogni[sz]e (?:this|the|a) (?:charge|payment)|"
                            r"(?:someone|somebody|hackers?) (?:hacked|broke into) my (?:account|card)|(?:charge|payment|transaction) i do not recogni[sz]e)\b", t))
     legal = bool(re.search(r"\b(i(?: will|'ll| intend to| am going to) (?:sue|take (?:you|this) to court)|formal (?:legal )?(?:claim|notice)|legal (?:notice|proceedings)|my lawyer (?:has|will|is))\b", quoted))
@@ -32,6 +32,10 @@ def _risk_signals(text):
                                   r"(?:this|that|the) (?:purchase|order|payment|transaction)|"
                                   r"someone (?:used|is using) my (?:card|account)|"
                                   r"this (?:purchase|charge|payment|transaction) (?:is not|was not) mine)\b", t))
+    # Require a first-person report. Advice, quotations and denials are common in support tickets.
+    fraud = fraud or bool(re.search(
+        r"\bi (?:see|noticed|found|have) (?:a |an )?fraudulent (?:charge|transaction)\b|"
+        r"\bi(?: have|'ve) been scammed\b", quoted))
     if fraud:
         flags.append("POSSIBLE_FRAUD")
     if legal:
@@ -75,8 +79,8 @@ def _context_effects(context, now):
     if not context or context.get("source") != "trusted_crm":
         return [], 3, {"vip": "unknown", "repeat": "unknown", "sla_overdue": "unknown"}
     reasons, priority = [], 3
-    facts = {"vip": bool(context.get("vip_verified", False)),
-             "repeat": bool(context.get("open_related_ticket", False) and
+    facts = {"vip": context.get("vip_verified") is True,
+             "repeat": bool(context.get("open_related_ticket") is True and
                             isinstance(context.get("contact_count"), int) and context["contact_count"] >= 2),
              "sla_overdue": "unknown"}
     if facts["vip"]:

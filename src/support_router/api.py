@@ -32,7 +32,7 @@ from .artifacts import decision_code_sha256, load_bundle
 from .config import VERSION
 from .monitoring import RouterMetrics
 from .paths import models_dir
-from .routing import batch_route, route_ticket, shadow_bundle
+from .routing import batch_policy_pairs, route_policy_pair, shadow_bundle
 
 MAX_TEXT_CHARS = int(os.environ.get("ROUTER_MAX_TEXT_CHARS", "5000"))
 MAX_BATCH = int(os.environ.get("ROUTER_MAX_BATCH", "100"))
@@ -69,7 +69,14 @@ class ShadowOut(BaseModel):
     policy_version: str
 
 
+class RequestPart(BaseModel):
+    intent: str
+    category: str
+    queue: str
+
+
 class DecisionOut(BaseModel):
+    request_parts: list[RequestPart]
     ticket_id: str | None
     status: Literal["NEEDS_CLARIFICATION", "MANUAL_REVIEW", "AUTO_RECOMMENDED", "MODEL_ERROR"]
     category: str | None
@@ -77,9 +84,21 @@ class DecisionOut(BaseModel):
     queue: str | None
     topic_queue: str | None
     priority: Literal["P1", "P2", "P3"]
+    priority_reasons: list[str]
+    classification_source: Literal["primary", "minilm"] | None
+    primary_category: str | None
+    primary_confidence: float | None
+    primary_confidence_threshold: float | None
+    semantic_status: str
+    semantic_confidence: float | None
+    semantic_similarity: float | None
     confidence: float | None
     similarity: float | None
     top3: dict[str, float]
+    category_probabilities: dict[str, float] = Field(default_factory=dict)
+    expected_loss: dict[str, float] | None = None
+    expected_loss_action: str | None = None
+    expected_loss_review: float | None = None
     risk_flags: list[str]
     reason_codes: list[str]
     model_id: str
@@ -98,7 +117,7 @@ def _json_log(event, **fields):
 
 
 def _decision(result, shadow_result, ticket_id):
-    out = {key: result[key] for key in DecisionOut.model_fields if key not in ("ticket_id", "shadow")}
+    out = {key: result.get(key) for key in DecisionOut.model_fields if key not in ("ticket_id", "shadow")}
     out["ticket_id"] = ticket_id
     out["shadow"] = {"status": shadow_result["status"], "queue": shadow_result["queue"],
                      "policy_version": shadow_result["policy_version"]}
@@ -177,6 +196,7 @@ def create_app(models_directory=None, registry=None) -> FastAPI:
                   status=result["status"], priority=result["priority"], category=result["suggested_category"],
                   queue=result["queue"], risk_flags=result["risk_flags"], reason_codes=result["reason_codes"],
                   confidence=result["confidence"], similarity=result["similarity"],
+                  classification_source=result["classification_source"], semantic_status=result["semantic_status"],
                   shadow_status=shadow_result["status"], text_length=len(ticket.text),
                   model_id=result["model_id"])
 
@@ -205,7 +225,8 @@ def create_app(models_directory=None, registry=None) -> FastAPI:
         return {"model_id": meta["model_id"], "model_name": meta["model_name"], "classes": meta["classes"],
                 "policy": {k: meta["policy"].get(k) for k in ["version", "auto_enabled", "candidate_auto_enabled",
                                                                "confidence_threshold", "similarity_threshold",
-                                                               "status"]},
+                                                               "status", "misroute_cost", "default_misroute_cost",
+                                                               "review_cost", "semantic_gate"]},
                 "scikit_learn": meta["versions"].get("scikit-learn"), "code_version": VERSION,
                 "decision_code_sha256": decision_code_sha256(),
                 "test": {"n": classification.get("n"), "macro_f1": classification.get("macro_f1"),
@@ -213,24 +234,19 @@ def create_app(models_directory=None, registry=None) -> FastAPI:
                          "shadow_errors": shadow.get("automatic_queue_errors")}}
 
     @app.post("/v1/route", response_model=DecisionOut)
-    def route(ticket: TicketIn, request: Request):
+    def route(ticket: TicketIn, request: Request, detect_multiple: bool = False):
         model, shadow = require_model()
-        result = route_ticket(ticket.text, model)
-        shadow_result = route_ticket(ticket.text, shadow)
+        result, shadow_result = route_policy_pair(ticket.text, model, shadow, detect_multiple=detect_multiple)
         record_decision(request, ticket, result, shadow_result)
         return _decision(result, shadow_result, ticket.ticket_id)
 
     @app.post("/v1/route/batch", response_model=BatchOut)
-    def route_batch(batch: BatchIn, request: Request):
+    def route_batch(batch: BatchIn, request: Request, detect_multiple: bool = False):
         model, shadow = require_model()
         texts = [t.text for t in batch.tickets]
-        try:
-            results, shadow_results = batch_route(model, texts), batch_route(shadow, texts)
-        except Exception:  # оценка пачкой упала: решаем по одному, ошибка станет статусом MODEL_ERROR
-            results = [route_ticket(t, model) for t in texts]
-            shadow_results = [route_ticket(t, shadow) for t in texts]
+        pairs = batch_policy_pairs(texts, model, shadow, detect_multiple=detect_multiple)
         out = []
-        for ticket, result, shadow_result in zip(batch.tickets, results, shadow_results):
+        for ticket, (result, shadow_result) in zip(batch.tickets, pairs, strict=True):
             record_decision(request, ticket, result, shadow_result)
             out.append(_decision(result, shadow_result, ticket.ticket_id))
         return {"results": out}

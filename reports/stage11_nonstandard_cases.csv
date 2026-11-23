@@ -29,4 +29,4 @@
 риски,иск через «gonna»,I'm gonna sue you,к оператору,CONTACT,0.464,P2,MANUAL_REVIEW,MANUAL_REVIEW,,✓,True
 риски,отрицание угрозы,"I'm not going to hurt anyone, I just want my refund",REFUNDS,REFUNDS,0.984,P3,MANUAL_REVIEW,MANUAL_REVIEW,✓,✓,True
 риски,взлом другим порядком слов,Someone hacked my account and ordered things I never asked for,к оператору,ACCOUNT,0.975,P1,MANUAL_REVIEW,MANUAL_REVIEW,,✓,True
-риски,мошенничество новыми словами,I see a fraudulent charge on my card,к оператору,PAYMENT,0.405,P3,MANUAL_REVIEW,MANUAL_REVIEW,,✗,False
+риски,мошенничество новыми словами,I see a fraudulent charge on my card,к оператору,PAYMENT,0.405,P1,MANUAL_REVIEW,MANUAL_REVIEW,,✓,True

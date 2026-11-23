@@ -1,0 +1,21 @@
+id,text,topic,role,used_for_training
+1,Who wrote the play Hamlet?,off_topic,independent_ood,False
+2,Explain how a combustion engine works.,off_topic,independent_ood,False
+3,Recommend a book about ancient Rome.,off_topic,independent_ood,False
+4,How many players are on a football team?,off_topic,independent_ood,False
+5,What is the tallest mountain in Africa?,off_topic,independent_ood,False
+6,Is this coat available in a medium?,out_of_scope,independent_ood,False
+7,Can you gift wrap the item in blue paper?,out_of_scope,independent_ood,False
+8,Is the blue dress available in a larger size?,out_of_scope,independent_ood,False
+9,Can I reserve a table for dinner on Friday?,out_of_scope,independent_ood,False
+10,The application shuts down the moment I launch it.,app_failure,independent_ood,False
+11,Your website shows a blank page after I sign in.,app_failure,independent_ood,False
+12,The checkout freezes when I press continue.,app_failure,independent_ood,False
+13,The mobile app crashes every time I add an item.,app_failure,independent_ood,False
+14,zzzz pppp vvvv llll rrrr,gibberish,independent_ood,False
+15,flim flam womp zizzle,gibberish,independent_ood,False
+16,nnnn kkkk pppp qqqq,gibberish,independent_ood,False
+17,"Guten Tag, ich möchte meine Bestellung stornieren.",other_language,independent_ood,False
+18,"Bonjour, je voudrais une facture s'il vous plaît.",other_language,independent_ood,False
+19,Come posso modificare il mio indirizzo di spedizione?,other_language,independent_ood,False
+20,Mi pedido todavía no ha llegado.,other_language,independent_ood,False

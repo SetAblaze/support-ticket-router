@@ -1,6 +1,6 @@
 """Обучение итоговой модели вне ноутбука: те же шаги и те же функции, что в этапах 4-7.
 
-    python -m support_router.train --raw data/raw/<Bitext>.csv --out models
+    python -m support_router.train --out models
 
 Шаги: очистка (clean_frame) → группы похожих фраз (lexical_groups) → разбиение по группам
 (make_splits) → обучение выбранной конфигурации с калибровкой на отдельной части
@@ -22,8 +22,10 @@ import pandas as pd
 
 from . import scenario_data
 from .artifacts import save_bundle
+from .business import misroute_costs
+from .cascade import fit_business_cascade
 from .config import SEED
-from .data import assert_split_integrity, clean_frame, lexical_groups, make_splits
+from .data import assert_split_integrity, clean_frame, cross_split_similarity, lexical_groups, make_splits
 from .evaluation import classification_metrics, routing_metrics
 from .models import CONFIG_NAMES, fit_calibrated_bundle
 from .paths import models_dir, project_root
@@ -43,13 +45,16 @@ def build_splits(raw_path, processed_dir):
     splits = make_splits(frame)
     processed_dir.mkdir(parents=True, exist_ok=True)
     for name, part in splits.items():
-        part.to_csv(processed_dir / f"{name}.csv", index=False)
+        part.to_csv(processed_dir / f"{name}.csv", index=False, lineterminator="\n")
     short.to_csv(processed_dir / "short_examples_retained.csv", index=False)
     # Ноутбук обучает модель на частях, прочитанных из CSV (ячейка 24): повторяем это дословно.
     splits = {k: pd.read_csv(processed_dir / f"{k}.csv", keep_default_na=False) for k in SPLIT_ROLES}
     overlap = assert_split_integrity(splits)
+    similarity_checks = {name: cross_split_similarity(splits["train"], splits[name])[0]
+                         for name in ("calibration", "val", "test")}
     manifest = {"seed": SEED, "raw_sha256": sha256_file(raw_path), "cleaning": cleaning,
-                "grouping": grouping, "overlap_checks": overlap, "roles": SPLIT_ROLES,
+                "grouping": grouping, "overlap_checks": overlap,
+                "similarity_checks": similarity_checks, "roles": SPLIT_ROLES,
                 "splits": {k: {"rows": len(v), "sha256": sha256_file(processed_dir / f"{k}.csv"),
                                "class_counts": v.category.value_counts().to_dict()}
                            for k, v in splits.items()},
@@ -58,12 +63,13 @@ def build_splits(raw_path, processed_dir):
     return splits, manifest
 
 
-def train(raw_path, out_dir, model_name="linsvc_wc_C1", processed_dir=None, log=print):
+def train(raw_path, out_dir, model_name="linsvc_wc_C1", processed_dir=None, log=print, *, cost_overrides=None):
     started = time.time()
     raw_path, out_dir = Path(raw_path), Path(out_dir)
     processed_dir = Path(processed_dir) if processed_dir else out_dir.parent / "data" / "processed"
     if model_name not in CONFIG_NAMES:
         raise ValueError(f"Неизвестная конфигурация {model_name!r}; доступны: {CONFIG_NAMES}")
+    costs = misroute_costs(cost_overrides)
     splits, manifest = build_splits(raw_path, processed_dir)
     train_part, calibration, val, test = (splits[k] for k in SPLIT_ROLES)
     log("Части: " + ", ".join(f"{k} {len(v)}" for k, v in splits.items()))
@@ -72,6 +78,7 @@ def train(raw_path, out_dir, model_name="linsvc_wc_C1", processed_dir=None, log=
     ood_dev, _ = scenario_data.frames()
     policy, _ = select_policy(bundle, val, ood_dev, target_error_upper=.01, min_auto=30,
                               false_auto_cost=25., review_cost=1.)
+    fit_business_cascade(bundle, train_part, calibration, val, ood_dev, cost_overrides=costs)
     assert policy["auto_enabled"] is False, "автоотправка в рабочей политике должна быть выключена"
     bundle.metadata = {"split_manifest": manifest,
                        "model_selection": {"selected": model_name,
@@ -110,11 +117,18 @@ def main(argv=None):
     parser.add_argument("--processed", default=None, help="куда сохранить части выборки (data/processed)")
     parser.add_argument("--model", default="linsvc_wc_C1", choices=CONFIG_NAMES,
                         help="конфигурация, выбранная на этапе 6")
+    parser.add_argument("--misroute-cost", action="append", default=[], metavar="CATEGORY=UNITS",
+                        help="цена ошибки в единицах ручного разбора, например PAYMENT=40 (можно повторять)")
     args = parser.parse_args(argv)
+    try:
+        entries = (item.split("=", 1) for item in args.misroute_cost)
+        costs = misroute_costs({category: float(cost) for category, cost in entries})
+    except ValueError as exc:
+        parser.error(str(exc))
     if not Path(args.raw).exists():
-        sys.exit(f"Нет файла {args.raw}: скачайте датасет Bitext с Kaggle и положите его в data/raw")
+        sys.exit(f"Нет файла {args.raw}: восстановите CSV из репозитория или укажите путь через --raw")
     processed = args.processed or str(Path(args.out).resolve().parent / "data" / "processed")
-    train(args.raw, args.out, model_name=args.model, processed_dir=processed)
+    train(args.raw, args.out, model_name=args.model, processed_dir=processed, cost_overrides=costs)
 
 
 if __name__ == "__main__":

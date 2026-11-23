@@ -76,15 +76,18 @@ def test_fixed_rules_keep_hard_negatives(text):
     assert not {"POSSIBLE_THREAT", "POSSIBLE_LEGAL_CLAIM", "POSSIBLE_FRAUD"} & set(flags)
 
 
-# Известные пропуски сознательно не исправлены: это новые виды фраз, а не варианты
-# существующих правил. Без экспертной разметки рисков не измерить, сколько ложных
-# тревог дадут новые правила. strict=True: если пропуск исправят, тест напомнит
-# перенести фразу в список выше.
-@pytest.mark.xfail(reason="не исправлено на этапе 11: нужна экспертная разметка рисков", strict=True)
-@pytest.mark.parametrize("text", ["I see a fraudulent charge on my card", "I have been scammed by your seller",
-                                  "i m going to kill you", "I'm gonna kill ya"])
-def test_known_gaps_in_risk_rules(text):
-    assert s.detect_signals(text)["risk_flags"]
+def test_labelled_risk_regressions():
+    import csv
+
+    with (ROOT / "data/eval/risk_regression.csv").open(encoding="utf-8") as source:
+        for case in csv.DictReader(source):
+            expected = set(case["expected_flags"].split())
+            result = s.route_ticket(case["text"], Confident())
+            assert set(result["risk_flags"]) == expected, case["text"]
+            if expected & {"POSSIBLE_FRAUD", "POSSIBLE_THREAT"}:
+                assert (result["priority"], result["status"]) == ("P1", "MANUAL_REVIEW")
+            elif not expected:
+                assert result["priority"] == "P3"
 
 
 @pytest.mark.parametrize("text", [None, 123, 4.5, "", "   ", "\n\t", "{{Order Number}}"])

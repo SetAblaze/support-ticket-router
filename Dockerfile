@@ -18,12 +18,15 @@ WORKDIR /app
 
 # Сначала зависимости: этот слой пересобирается, только когда меняется список пакетов.
 COPY requirements-api.txt .
-RUN pip install -r requirements-api.txt
+RUN --mount=type=secret,id=pip_ca \
+    if [ -f /run/secrets/pip_ca ]; then export PIP_CERT=/run/secrets/pip_ca; fi && \
+    pip install -r requirements-api.txt
 
 COPY src ./src
 COPY models/router.joblib models/router_meta.json ./models/
+COPY models/encoder ./models/encoder
 
-RUN useradd --create-home --uid 10001 router
+RUN chmod -R a+rX /app/src /app/models && useradd --create-home --uid 10001 router
 USER router
 
 EXPOSE 8000
