@@ -2,7 +2,7 @@
 
 Версия кода 3.2.0. Модель `linsvc_wc_C1`, номер `router-c551bd5d209a4d1a`,
 политика `retail-cascade-v1`, `experiment_id` =
-`aa72e1aeb0d0369534811808a2cf9aa5d59834e89211e13bdb95a77cc2de0497`.
+`91886a55f6895478e095219fd721a01b6dcffb9b0f76786e5ba6691ea8fe5f2f`.
 Паспорт выпуска: [release_manifest.json](release_manifest.json). Сравнивать
 отчёты можно только при совпадении `experiment_id`, хешей наборов оценки и
 версии политики.
